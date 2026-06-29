@@ -4,22 +4,23 @@ def run_rules(df, rules):
 
     for rule in rules:
 
-        # RULE ES DICT → NO STRING
-        rule_type = rule.get("type")
-        column = rule.get("column")
+        field = rule["field"]
+        condition = rule["condition"]
 
-        if rule_type == "null_check":
-            errors = df[df[column].isnull()]
-            results.append({
-                "rule": rule,
-                "errors": len(errors)
-            })
+        if ">=" in condition:
+            value = float(condition.split(">=")[1])
+            errors = df[df[field] < value]
 
-        elif rule_type == "positive_check":
-            errors = df[df[column] <= 0]
-            results.append({
-                "rule": rule,
-                "errors": len(errors)
-            })
+        elif "<=" in condition:
+            value = float(condition.split("<=")[1])
+            errors = df[df[field] > value]
+
+        else:
+            errors = []
+
+        results.append({
+            "rule": rule,
+            "errors": len(errors)
+        })
 
     return results

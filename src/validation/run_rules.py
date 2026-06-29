@@ -1,23 +1,22 @@
-import pandas as pd
-
 def run_rules(df, rules):
 
     results = []
 
     for rule in rules:
 
-        # ejemplo simple de reglas tipo texto
-        if "no nulos" in rule.lower():
-            col = rule.split(" ")[0]
-            errors = df[df[col].isnull()]
+        # RULE ES DICT → NO STRING
+        rule_type = rule.get("type")
+        column = rule.get("column")
+
+        if rule_type == "null_check":
+            errors = df[df[column].isnull()]
             results.append({
                 "rule": rule,
                 "errors": len(errors)
             })
 
-        elif "positivo" in rule.lower():
-            col = rule.split(" ")[0]
-            errors = df[df[col] <= 0]
+        elif rule_type == "positive_check":
+            errors = df[df[column] <= 0]
             results.append({
                 "rule": rule,
                 "errors": len(errors)

@@ -1,0 +1,376 @@
+{
+  "descripcion": "Registro de anomalias inyectadas en el dataset. Cada entrada representa un error introducido de forma controlada. Este archivo es la verdad fundamental para el modulo de evaluacion.",
+  "total_anomalias": 40,
+  "anomalias_por_tipo": {
+    "email_formato_invalido": 5,
+    "precio_negativo": 5,
+    "cantidad_cero": 5,
+    "nulo_en_campo_obligatorio": 5,
+    "fecha_entrega_anterior_pedido": 5,
+    "total_pedido_incorrecto": 5,
+    "precio_linea_distinto_catalogo": 5,
+    "pedido_entregado_fecha_futura": 5
+  },
+  "detalle": [
+    {
+      "tipo": "email_formato_invalido",
+      "tabla": "clientes",
+      "columna": "email",
+      "fila_id": 104,
+      "valor_original": "diezadoracion@example.net",
+      "valor_nuevo": "diezadoracionexample",
+      "descripcion": "Email sin @ ni dominio valido"
+    },
+    {
+      "tipo": "email_formato_invalido",
+      "tabla": "clientes",
+      "columna": "email",
+      "fila_id": 98,
+      "valor_original": "lara47@example.org",
+      "valor_nuevo": "lara47example",
+      "descripcion": "Email sin @ ni dominio valido"
+    },
+    {
+      "tipo": "email_formato_invalido",
+      "tabla": "clientes",
+      "columna": "email",
+      "fila_id": 52,
+      "valor_original": "rubioabel@example.net",
+      "valor_nuevo": "rubioabelexample",
+      "descripcion": "Email sin @ ni dominio valido"
+    },
+    {
+      "tipo": "email_formato_invalido",
+      "tabla": "clientes",
+      "columna": "email",
+      "fila_id": 154,
+      "valor_original": "herminia16@example.com",
+      "valor_nuevo": "herminia16example",
+      "descripcion": "Email sin @ ni dominio valido"
+    },
+    {
+      "tipo": "email_formato_invalido",
+      "tabla": "clientes",
+      "columna": "email",
+      "fila_id": 46,
+      "valor_original": "rosauracamara@example.org",
+      "valor_nuevo": "rosauracamaraexample",
+      "descripcion": "Email sin @ ni dominio valido"
+    },
+    {
+      "tipo": "precio_negativo",
+      "tabla": "productos",
+      "columna": "precio_unitario",
+      "fila_id": 15,
+      "valor_original": "77.21",
+      "valor_nuevo": "-77.21",
+      "descripcion": "Precio unitario negativo"
+    },
+    {
+      "tipo": "precio_negativo",
+      "tabla": "productos",
+      "columna": "precio_unitario",
+      "fila_id": 16,
+      "valor_original": "227.4",
+      "valor_nuevo": "-227.4",
+      "descripcion": "Precio unitario negativo"
+    },
+    {
+      "tipo": "precio_negativo",
+      "tabla": "productos",
+      "columna": "precio_unitario",
+      "fila_id": 9,
+      "valor_original": "103.82",
+      "valor_nuevo": "-103.82",
+      "descripcion": "Precio unitario negativo"
+    },
+    {
+      "tipo": "precio_negativo",
+      "tabla": "productos",
+      "columna": "precio_unitario",
+      "fila_id": 49,
+      "valor_original": "33.36",
+      "valor_nuevo": "-33.36",
+      "descripcion": "Precio unitario negativo"
+    },
+    {
+      "tipo": "precio_negativo",
+      "tabla": "productos",
+      "columna": "precio_unitario",
+      "fila_id": 6,
+      "valor_original": "444.9",
+      "valor_nuevo": "-444.9",
+      "descripcion": "Precio unitario negativo"
+    },
+    {
+      "tipo": "cantidad_cero",
+      "tabla": "lineas_pedido",
+      "columna": "cantidad",
+      "fila_id": 515,
+      "valor_original": "4",
+      "valor_nuevo": "0",
+      "descripcion": "Cantidad 0 en linea de pedido"
+    },
+    {
+      "tipo": "cantidad_cero",
+      "tabla": "lineas_pedido",
+      "columna": "cantidad",
+      "fila_id": 1494,
+      "valor_original": "3",
+      "valor_nuevo": "0",
+      "descripcion": "Cantidad 0 en linea de pedido"
+    },
+    {
+      "tipo": "cantidad_cero",
+      "tabla": "lineas_pedido",
+      "columna": "cantidad",
+      "fila_id": 785,
+      "valor_original": "3",
+      "valor_nuevo": "0",
+      "descripcion": "Cantidad 0 en linea de pedido"
+    },
+    {
+      "tipo": "cantidad_cero",
+      "tabla": "lineas_pedido",
+      "columna": "cantidad",
+      "fila_id": 1088,
+      "valor_original": "4",
+      "valor_nuevo": "0",
+      "descripcion": "Cantidad 0 en linea de pedido"
+    },
+    {
+      "tipo": "cantidad_cero",
+      "tabla": "lineas_pedido",
+      "columna": "cantidad",
+      "fila_id": 1402,
+      "valor_original": "2",
+      "valor_nuevo": "0",
+      "descripcion": "Cantidad 0 en linea de pedido"
+    },
+    {
+      "tipo": "nulo_en_campo_obligatorio",
+      "tabla": "pedidos",
+      "columna": "estado",
+      "fila_id": 359,
+      "valor_original": "entregado",
+      "valor_nuevo": "None",
+      "descripcion": "Campo obligatorio 'estado' con valor nulo"
+    },
+    {
+      "tipo": "nulo_en_campo_obligatorio",
+      "tabla": "pedidos",
+      "columna": "estado",
+      "fila_id": 276,
+      "valor_original": "enviado",
+      "valor_nuevo": "None",
+      "descripcion": "Campo obligatorio 'estado' con valor nulo"
+    },
+    {
+      "tipo": "nulo_en_campo_obligatorio",
+      "tabla": "pedidos",
+      "columna": "estado",
+      "fila_id": 46,
+      "valor_original": "entregado",
+      "valor_nuevo": "None",
+      "descripcion": "Campo obligatorio 'estado' con valor nulo"
+    },
+    {
+      "tipo": "nulo_en_campo_obligatorio",
+      "tabla": "pedidos",
+      "columna": "estado",
+      "fila_id": 481,
+      "valor_original": "entregado",
+      "valor_nuevo": "None",
+      "descripcion": "Campo obligatorio 'estado' con valor nulo"
+    },
+    {
+      "tipo": "nulo_en_campo_obligatorio",
+      "tabla": "pedidos",
+      "columna": "estado",
+      "fila_id": 320,
+      "valor_original": "cancelado",
+      "valor_nuevo": "None",
+      "descripcion": "Campo obligatorio 'estado' con valor nulo"
+    },
+    {
+      "tipo": "fecha_entrega_anterior_pedido",
+      "tabla": "pedidos",
+      "columna": "fecha_entrega",
+      "fila_id": 251,
+      "valor_original": "2023-03-15",
+      "valor_nuevo": "2023-02-19",
+      "descripcion": "Fecha de entrega (2023-02-19) anterior a fecha de pedido (2023-03-01)"
+    },
+    {
+      "tipo": "fecha_entrega_anterior_pedido",
+      "tabla": "pedidos",
+      "columna": "fecha_entrega",
+      "fila_id": 103,
+      "valor_original": "2024-01-10",
+      "valor_nuevo": "2024-01-02",
+      "descripcion": "Fecha de entrega (2024-01-02) anterior a fecha de pedido (2024-01-06)"
+    },
+    {
+      "tipo": "fecha_entrega_anterior_pedido",
+      "tabla": "pedidos",
+      "columna": "fecha_entrega",
+      "fila_id": 216,
+      "valor_original": "2023-04-06",
+      "valor_nuevo": "2023-03-09",
+      "descripcion": "Fecha de entrega (2023-03-09) anterior a fecha de pedido (2023-03-22)"
+    },
+    {
+      "tipo": "fecha_entrega_anterior_pedido",
+      "tabla": "pedidos",
+      "columna": "fecha_entrega",
+      "fila_id": 370,
+      "valor_original": "2023-03-23",
+      "valor_nuevo": "2023-03-03",
+      "descripcion": "Fecha de entrega (2023-03-03) anterior a fecha de pedido (2023-03-18)"
+    },
+    {
+      "tipo": "fecha_entrega_anterior_pedido",
+      "tabla": "pedidos",
+      "columna": "fecha_entrega",
+      "fila_id": 314,
+      "valor_original": "2023-12-09",
+      "valor_nuevo": "2023-11-06",
+      "descripcion": "Fecha de entrega (2023-11-06) anterior a fecha de pedido (2023-11-19)"
+    },
+    {
+      "tipo": "total_pedido_incorrecto",
+      "tabla": "pedidos",
+      "columna": "total",
+      "fila_id": 192,
+      "valor_original": "624.24",
+      "valor_nuevo": "414.36",
+      "descripcion": "Total del pedido modificado (624.24 -> 414.36). No coincide con la suma de sus lineas."
+    },
+    {
+      "tipo": "total_pedido_incorrecto",
+      "tabla": "pedidos",
+      "columna": "total",
+      "fila_id": 422,
+      "valor_original": "1338.15",
+      "valor_nuevo": "988.15",
+      "descripcion": "Total del pedido modificado (1338.15 -> 988.15). No coincide con la suma de sus lineas."
+    },
+    {
+      "tipo": "total_pedido_incorrecto",
+      "tabla": "pedidos",
+      "columna": "total",
+      "fila_id": 199,
+      "valor_original": "2261.51",
+      "valor_nuevo": "1478.35",
+      "descripcion": "Total del pedido modificado (2261.51 -> 1478.35). No coincide con la suma de sus lineas."
+    },
+    {
+      "tipo": "total_pedido_incorrecto",
+      "tabla": "pedidos",
+      "columna": "total",
+      "fila_id": 442,
+      "valor_original": "979.3",
+      "valor_nuevo": "754.13",
+      "descripcion": "Total del pedido modificado (979.3 -> 754.13). No coincide con la suma de sus lineas."
+    },
+    {
+      "tipo": "total_pedido_incorrecto",
+      "tabla": "pedidos",
+      "columna": "total",
+      "fila_id": 350,
+      "valor_original": "573.82",
+      "valor_nuevo": "358.57",
+      "descripcion": "Total del pedido modificado (573.82 -> 358.57). No coincide con la suma de sus lineas."
+    },
+    {
+      "tipo": "precio_linea_distinto_catalogo",
+      "tabla": "lineas_pedido",
+      "columna": "precio_unitario",
+      "fila_id": 1468,
+      "valor_original": "484.1",
+      "valor_nuevo": "121.02",
+      "descripcion": "Precio en linea (121.02) distinto al catalogo (484.1) para producto_id=2. Sin descuento registrado."
+    },
+    {
+      "tipo": "precio_linea_distinto_catalogo",
+      "tabla": "lineas_pedido",
+      "columna": "precio_unitario",
+      "fila_id": 1083,
+      "valor_original": "33.36",
+      "valor_nuevo": "-66.72",
+      "descripcion": "Precio en linea (-66.72) distinto al catalogo (-33.36) para producto_id=49. Sin descuento registrado."
+    },
+    {
+      "tipo": "precio_linea_distinto_catalogo",
+      "tabla": "lineas_pedido",
+      "columna": "precio_unitario",
+      "fila_id": 1388,
+      "valor_original": "433.48",
+      "valor_nuevo": "108.37",
+      "descripcion": "Precio en linea (108.37) distinto al catalogo (433.48) para producto_id=4. Sin descuento registrado."
+    },
+    {
+      "tipo": "precio_linea_distinto_catalogo",
+      "tabla": "lineas_pedido",
+      "columna": "precio_unitario",
+      "fila_id": 1587,
+      "valor_original": "15.98",
+      "valor_nuevo": "7.99",
+      "descripcion": "Precio en linea (7.99) distinto al catalogo (15.98) para producto_id=39. Sin descuento registrado."
+    },
+    {
+      "tipo": "precio_linea_distinto_catalogo",
+      "tabla": "lineas_pedido",
+      "columna": "precio_unitario",
+      "fila_id": 180,
+      "valor_original": "65.24",
+      "valor_nuevo": "130.48",
+      "descripcion": "Precio en linea (130.48) distinto al catalogo (65.24) para producto_id=35. Sin descuento registrado."
+    },
+    {
+      "tipo": "pedido_entregado_fecha_futura",
+      "tabla": "pedidos",
+      "columna": "fecha_entrega",
+      "fila_id": 480,
+      "valor_original": "2024-08-21",
+      "valor_nuevo": "2026-06-16",
+      "descripcion": "Pedido marcado como 'entregado' pero fecha_entrega (2026-06-16) es futura"
+    },
+    {
+      "tipo": "pedido_entregado_fecha_futura",
+      "tabla": "pedidos",
+      "columna": "fecha_entrega",
+      "fila_id": 7,
+      "valor_original": "2023-09-02",
+      "valor_nuevo": "2026-02-20",
+      "descripcion": "Pedido marcado como 'entregado' pero fecha_entrega (2026-02-20) es futura"
+    },
+    {
+      "tipo": "pedido_entregado_fecha_futura",
+      "tabla": "pedidos",
+      "columna": "fecha_entrega",
+      "fila_id": 374,
+      "valor_original": "2024-03-03",
+      "valor_nuevo": "2026-05-29",
+      "descripcion": "Pedido marcado como 'entregado' pero fecha_entrega (2026-05-29) es futura"
+    },
+    {
+      "tipo": "pedido_entregado_fecha_futura",
+      "tabla": "pedidos",
+      "columna": "fecha_entrega",
+      "fila_id": 176,
+      "valor_original": "2023-07-23",
+      "valor_nuevo": "2026-06-12",
+      "descripcion": "Pedido marcado como 'entregado' pero fecha_entrega (2026-06-12) es futura"
+    },
+    {
+      "tipo": "pedido_entregado_fecha_futura",
+      "tabla": "pedidos",
+      "columna": "fecha_entrega",
+      "fila_id": 321,
+      "valor_original": "2024-03-29",
+      "valor_nuevo": "2026-03-22",
+      "descripcion": "Pedido marcado como 'entregado' pero fecha_entrega (2026-03-22) es futura"
+    }
+  ]
+}

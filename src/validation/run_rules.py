@@ -59,7 +59,7 @@ def run_rules(dfs, rules):
             else:
                 totales = (
                     df_lineas.groupby("pedido_id")
-                    .apply(lambda x: (x["cantidad"] * x["precio_unitario"]).sum())
+                    .apply(lambda x: (x["cantidad"] * x["precio_unitario"]).sum(), include_groups=False)
                     .reset_index(name="total_calculado")
                 )
                 merged = df.merge(totales, on="pedido_id")

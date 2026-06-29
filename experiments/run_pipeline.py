@@ -6,6 +6,7 @@ import json
 import pandas as pd
 from src.llm.generate_rules import generate_rules
 from src.validation.run_rules import run_rules
+from src.evaluation.evaluation import evaluate, imprimir_metricas
 
 RAW_DIR   = os.path.join(os.path.dirname(__file__), "..", "data", "raw")
 DIRTY_DIR = os.path.join(os.path.dirname(__file__), "..", "data", "dirty")
@@ -21,7 +22,7 @@ def cargar_dfs(directorio):
 
 
 def main():
-    # 1. Cargar dataset sucio (con anomalias inyectadas)
+    # 1. Cargar dataset sucio
     print("Cargando dataset...")
     dfs_dirty = cargar_dfs(DIRTY_DIR)
 
@@ -30,8 +31,7 @@ def main():
     with open(log_path, "r", encoding="utf-8") as f:
         injection_log = json.load(f)
 
-    total_inyectadas = injection_log["total_anomalias"]
-    print(f"Anomalias inyectadas: {total_inyectadas}")
+    print(f"Anomalias inyectadas: {injection_log['total_anomalias']}")
 
     # 3. Cargar perfil del dataset para el LLM
     summary_path = os.path.join(
@@ -40,14 +40,14 @@ def main():
     with open(summary_path, "r", encoding="utf-8") as f:
         summary = json.load(f)
 
-    # 4. LLM genera reglas a partir del perfil y la descripcion de transformaciones
+    # 4. LLM genera reglas
     print("Generando reglas con el LLM...")
     schema = json.dumps(summary, ensure_ascii=False, indent=2)
     transformation = (
-        "Transformacion 1 — Calculo del total del pedido: "
+        "Transformacion 1 - Calculo del total del pedido: "
         "el campo 'total' en la tabla pedidos debe coincidir con la suma de "
         "(cantidad * precio_unitario) de sus lineas en lineas_pedido agrupadas por pedido_id. "
-        "Transformacion 2 — Consistencia referencial: "
+        "Transformacion 2 - Consistencia referencial: "
         "el campo 'precio_unitario' en lineas_pedido debe coincidir con el 'precio_unitario' "
         "del mismo producto en la tabla productos. "
         "Validaciones adicionales: emails con formato valido en clientes, "
@@ -59,13 +59,13 @@ def main():
     rules = rules_json["rules"]
     print(f"Reglas generadas: {len(rules)}")
 
-    # 5. Validar dataset sucio con las reglas generadas
+    # 5. Validar dataset sucio
     print("Validando dataset...")
     results = run_rules(dfs_dirty, rules)
 
-    # 6. Separar resultados con errores
+    # 6. Calcular metricas
     results_con_fallos = [r for r in results if r["errors"] > 0]
-    results_ok         = [r for r in results if r["errors"] == 0]
+    metricas = evaluate(injection_log, results_con_fallos)
 
     # 7. Mostrar resultados
     print("\n=== REGLAS GENERADAS ===")
@@ -77,12 +77,7 @@ def main():
         estado = "FALLO" if r["errors"] > 0 else "OK"
         print(f"  [{estado}] {r['rule'].get('type')} - {r.get('detalle', '')}")
 
-    print("\n=== RESUMEN ===")
-    print(f"  Total reglas aplicadas:  {len(results)}")
-    print(f"  Reglas con fallos:       {len(results_con_fallos)}")
-    print(f"  Reglas sin fallos:       {len(results_ok)}")
-    print(f"  Anomalias inyectadas:    {total_inyectadas}")
-    print(f"  Tipos detectados:        {len(results_con_fallos)}")
+    imprimir_metricas(metricas)
 
 
 if __name__ == "__main__":

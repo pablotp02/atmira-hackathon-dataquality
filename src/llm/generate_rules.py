@@ -13,7 +13,7 @@ def extract_json(text):
     """
     try:
         return json.loads(text)
-    except:
+    except (json.JSONDecodeError, ValueError):
         # intenta limpiar formato ```json ... ```
         import re
 
@@ -29,15 +29,30 @@ def generate_rules(schema, transformation):
     prompt = f"""
 Eres un experto en calidad de datos y testing de pipelines.
 
-Genera reglas de validación para este pipeline.
+Genera reglas de validacion para este pipeline.
 
-Devuelve SOLO JSON válido SIN texto adicional.
+Devuelve SOLO JSON valido SIN texto adicional.
+No expliques nada. No añadas texto.
 
-Si no puedes generar JSON válido, intenta de nuevo internamente.
-No expliques nada.
-No añadas texto.
+Las reglas en el array "rules" deben seguir EXACTAMENTE este formato,
+usando solo estos tipos soportados:
 
-Formato:
+- null_check:      campo no puede ser nulo
+  ejemplo: {{"type": "null_check", "column": "estado", "tabla": "pedidos", "descripcion": "El estado es obligatorio"}}
+
+- positive_check:  campo debe ser mayor que cero
+  ejemplo: {{"type": "positive_check", "column": "precio_unitario", "tabla": "productos", "descripcion": "El precio debe ser positivo"}}
+
+- email_check:     campo debe tener formato de email valido
+  ejemplo: {{"type": "email_check", "column": "email", "tabla": "clientes", "descripcion": "El email debe tener formato valido"}}
+
+- date_order_check: una fecha debe ser posterior a otra
+  ejemplo: {{"type": "date_order_check", "column_after": "fecha_entrega", "column_before": "fecha_pedido", "tabla": "pedidos", "descripcion": "La entrega debe ser posterior al pedido"}}
+
+- total_check:     el total del pedido debe coincidir con la suma de sus lineas
+  ejemplo: {{"type": "total_check", "tabla": "pedidos", "descripcion": "El total debe coincidir con la suma de lineas_pedido"}}
+
+Formato de respuesta:
 
 {{
   "rules": [],
@@ -50,7 +65,7 @@ Formato:
 SCHEMA:
 {schema}
 
-TRANSFORMACIÓN:
+TRANSFORMACION:
 {transformation}
 """
 

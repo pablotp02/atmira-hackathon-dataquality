@@ -49,14 +49,14 @@
         "fecha_registro": {
           "nulos": 0,
           "porcentaje_nulos": 0.0,
-          "valores_unicos": 173,
+          "valores_unicos": 171,
           "tipo": "texto_o_categorico",
           "valores_frecuentes": {
-            "2023-09-29": 4,
-            "2024-07-06": 3,
-            "2023-07-14": 3,
-            "2024-10-27": 2,
-            "2024-07-12": 2
+            "2023-07-03": 4,
+            "2023-03-30": 3,
+            "2024-01-24": 3,
+            "2023-06-14": 2,
+            "2023-02-07": 2
           }
         },
         "pais": {
@@ -65,10 +65,10 @@
           "valores_unicos": 4,
           "tipo": "texto_o_categorico",
           "valores_frecuentes": {
-            "ES": 101,
-            "AR": 38,
-            "CO": 36,
-            "MX": 25
+            "ES": 92,
+            "CO": 37,
+            "MX": 36,
+            "AR": 35
           }
         },
         "fecha_nacimiento": {
@@ -77,11 +77,11 @@
           "valores_unicos": 197,
           "tipo": "texto_o_categorico",
           "valores_frecuentes": {
-            "1978-07-15": 2,
-            "1976-02-23": 2,
-            "1960-07-26": 2,
-            "1960-05-14": 1,
-            "1964-06-02": 1
+            "1978-07-19": 2,
+            "1976-02-27": 2,
+            "1960-07-30": 2,
+            "1960-05-18": 1,
+            "1964-06-06": 1
           }
         }
       }
@@ -124,10 +124,10 @@
           "valores_unicos": 7,
           "tipo": "texto_o_categorico",
           "valores_frecuentes": {
-            "Electrónica": 8,
+            "Deportes": 8,
             "Ropa": 7,
+            "Electrónica": 7,
             "Hogar": 7,
-            "Deportes": 7,
             "Alimentación": 7
           }
         },
@@ -136,25 +136,25 @@
           "porcentaje_nulos": 0.0,
           "valores_unicos": 50,
           "tipo": "numerico",
-          "min": 10.39,
-          "max": 1126.5,
-          "media": 160.517,
-          "mediana": 64.995,
-          "std": 226.2733,
+          "min": 7.77,
+          "max": 1418.28,
+          "media": 201.685,
+          "mediana": 79.79499999999999,
+          "std": 329.6682,
           "ceros": 0,
           "negativos": 0
         },
         "stock": {
           "nulos": 0,
           "porcentaje_nulos": 0.0,
-          "valores_unicos": 48,
+          "valores_unicos": 46,
           "tipo": "numerico",
-          "min": 6.0,
-          "max": 199.0,
-          "media": 92.1,
-          "mediana": 86.0,
-          "std": 59.8598,
-          "ceros": 0,
+          "min": 0.0,
+          "max": 198.0,
+          "media": 91.52,
+          "mediana": 81.5,
+          "std": 60.2929,
+          "ceros": 1,
           "negativos": 0
         }
       }
@@ -181,40 +181,40 @@
         "cliente_id": {
           "nulos": 0,
           "porcentaje_nulos": 0.0,
-          "valores_unicos": 183,
+          "valores_unicos": 187,
           "tipo": "numerico",
           "min": 1.0,
           "max": 200.0,
-          "media": 97.072,
-          "mediana": 96.0,
-          "std": 57.8481,
+          "media": 101.09,
+          "mediana": 101.0,
+          "std": 57.4203,
           "ceros": 0,
           "negativos": 0
         },
         "fecha_pedido": {
           "nulos": 0,
           "porcentaje_nulos": 0.0,
-          "valores_unicos": 359,
+          "valores_unicos": 361,
           "tipo": "texto_o_categorico",
           "valores_frecuentes": {
-            "2023-04-06": 4,
-            "2023-05-16": 4,
-            "2024-10-14": 4,
-            "2024-04-20": 4,
-            "2024-06-11": 3
+            "2024-04-13": 4,
+            "2023-02-27": 4,
+            "2023-10-16": 4,
+            "2024-03-18": 4,
+            "2023-09-08": 3
           }
         },
         "fecha_entrega": {
           "nulos": 0,
           "porcentaje_nulos": 0.0,
-          "valores_unicos": 356,
+          "valores_unicos": 358,
           "tipo": "texto_o_categorico",
           "valores_frecuentes": {
-            "2023-09-26": 5,
-            "2023-12-06": 5,
-            "2024-08-29": 5,
-            "2023-10-10": 4,
-            "2024-05-08": 4
+            "2023-04-23": 4,
+            "2024-11-21": 4,
+            "2023-08-15": 4,
+            "2024-09-20": 4,
+            "2024-07-07": 4
           }
         },
         "estado": {
@@ -223,10 +223,10 @@
           "valores_unicos": 4,
           "tipo": "texto_o_categorico",
           "valores_frecuentes": {
-            "entregado": 301,
-            "enviado": 98,
-            "cancelado": 55,
-            "pendiente": 46
+            "entregado": 273,
+            "enviado": 114,
+            "cancelado": 60,
+            "pendiente": 53
           }
         },
         "total": {
@@ -234,11 +234,11 @@
           "porcentaje_nulos": 0.0,
           "valores_unicos": 490,
           "tipo": "numerico",
-          "min": 17.26,
-          "max": 10486.95,
-          "media": 1807.2445,
-          "mediana": 1351.5349999999999,
-          "std": 1712.5621,
+          "min": 7.77,
+          "max": 13490.62,
+          "media": 2041.2758,
+          "mediana": 1288.1999999999998,
+          "std": 2142.1809,
           "ceros": 0,
           "negativos": 0
         }
@@ -246,20 +246,20 @@
     },
     "lineas_pedido": {
       "tabla": "lineas_pedido",
-      "filas": 1834,
+      "filas": 1757,
       "columnas": 5,
       "filas_duplicadas": 0,
       "columnas_detalle": {
         "linea_id": {
           "nulos": 0,
           "porcentaje_nulos": 0.0,
-          "valores_unicos": 1834,
+          "valores_unicos": 1757,
           "tipo": "numerico",
           "min": 1.0,
-          "max": 1834.0,
-          "media": 917.5,
-          "mediana": 917.5,
-          "std": 529.5745,
+          "max": 1757.0,
+          "media": 879.0,
+          "mediana": 879.0,
+          "std": 507.3465,
           "ceros": 0,
           "negativos": 0
         },
@@ -270,9 +270,9 @@
           "tipo": "numerico",
           "min": 1.0,
           "max": 500.0,
-          "media": 244.072,
-          "mediana": 238.0,
-          "std": 143.5803,
+          "media": 255.2686,
+          "mediana": 258.0,
+          "std": 141.8243,
           "ceros": 0,
           "negativos": 0
         },
@@ -283,9 +283,9 @@
           "tipo": "numerico",
           "min": 1.0,
           "max": 50.0,
-          "media": 25.3402,
+          "media": 25.5196,
           "mediana": 25.0,
-          "std": 14.5056,
+          "std": 14.5017,
           "ceros": 0,
           "negativos": 0
         },
@@ -296,9 +296,9 @@
           "tipo": "numerico",
           "min": 1.0,
           "max": 5.0,
-          "media": 3.03,
+          "media": 2.9727,
           "mediana": 3.0,
-          "std": 1.416,
+          "std": 1.376,
           "ceros": 0,
           "negativos": 0
         },
@@ -307,11 +307,11 @@
           "porcentaje_nulos": 0.0,
           "valores_unicos": 50,
           "tipo": "numerico",
-          "min": 10.39,
-          "max": 1126.5,
-          "media": 164.7941,
-          "mediana": 65.24,
-          "std": 231.8698,
+          "min": 7.77,
+          "max": 1418.28,
+          "media": 199.4122,
+          "mediana": 77.13,
+          "std": 328.1736,
           "ceros": 0,
           "negativos": 0
         }

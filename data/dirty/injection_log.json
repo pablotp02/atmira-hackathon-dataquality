@@ -324,8 +324,8 @@
       "columna": "precio_unitario",
       "fila_id": 1462,
       "valor_original": "116.93",
-      "valor_nuevo": "-58.46",
-      "descripcion": "Precio en linea (-58.46) distinto al catalogo (-116.93) para producto_id=49. Sin descuento registrado."
+      "valor_nuevo": "58.46",
+      "descripcion": "Precio en linea (58.46) distinto al catalogo (116.93) para producto_id=49. Sin descuento registrado."
     },
     {
       "tipo": "pedido_entregado_fecha_futura",

@@ -154,7 +154,7 @@ def inyectar_precio_linea_distinto(lineas: pd.DataFrame, productos: pd.DataFrame
     for lid in ids:
         idx = lineas[lineas["linea_id"] == lid].index[0]
         pid = lineas.at[idx, "producto_id"]
-        precio_catalogo = productos.loc[productos["producto_id"] == pid, "precio_unitario"].values[0]
+        precio_catalogo = abs(productos.loc[productos["producto_id"] == pid, "precio_unitario"].values[0])
         original = lineas.at[idx, "precio_unitario"]
         # Precio distinto al catalogo (multiplicamos por un factor aleatorio)
         factor = random.choice([0.5, 1.5, 2.0, 0.25])

@@ -8,6 +8,14 @@ def run_rules(dfs, rules):
     dfs: diccionario con los DataFrames por nombre de tabla
          ej. {"pedidos": df_pedidos, "clientes": df_clientes, ...}
     rules: lista de reglas generadas por el LLM
+
+    Tipos de regla soportados:
+      - null_check
+      - positive_check
+      - email_check
+      - date_order_check
+      - delivered_future_check
+      - total_check
     """
     results = []
 
@@ -15,7 +23,6 @@ def run_rules(dfs, rules):
         rule_type   = rule.get("type")
         column      = rule.get("column")
         tabla       = rule.get("tabla")
-        descripcion = rule.get("descripcion", "")
 
         df = dfs.get(tabla)
         if df is None:
@@ -55,8 +62,6 @@ def run_rules(dfs, rules):
         elif rule_type == "delivered_future_check":
             df_temp = df.copy()
             df_temp["fecha_entrega"] = pd.to_datetime(df_temp["fecha_entrega"], errors="coerce")
-            # Fecha de corte fija: cualquier entrega a partir de 2025 en un pedido
-            # entregado se considera anomalia
             fecha_referencia = pd.Timestamp("2025-01-01")
             mask = (df_temp["estado"] == "entregado") & (df_temp["fecha_entrega"] >= fecha_referencia)
             errores = int(mask.sum())
@@ -66,18 +71,17 @@ def run_rules(dfs, rules):
             )
 
         elif rule_type == "total_check":
-            df_lineas = dfs.get("lineas_pedido")
-            if df_lineas is None:
-                detalle = "Tabla 'lineas_pedido' no encontrada"
-            else:
-                totales = (
-                    df_lineas.groupby("pedido_id")
-                    .apply(lambda x: (x["cantidad"] * x["precio_unitario"]).sum(), include_groups=False)
-                    .reset_index(name="total_calculado")
-                )
-                merged = df.merge(totales, on="pedido_id")
-                errores = int((abs(merged["total"] - merged["total_calculado"]) > 0.01).sum())
-                detalle = f"{errores} pedidos cuyo total no coincide con la suma de sus lineas"
+            pedidos = dfs["pedidos"]
+            lineas  = dfs["lineas_pedido"]
+            calculado = (
+                lineas.assign(subtotal=lineas["cantidad"] * lineas["precio_unitario"])
+                .groupby("pedido_id")["subtotal"]
+                .sum()
+                .reset_index()
+            )
+            merged  = pedidos.merge(calculado, on="pedido_id")
+            errores = int((abs(merged["total"] - merged["subtotal"]) > 0.01).sum())
+            detalle = f"{errores} pedidos cuyo total no coincide con la suma de sus lineas"
 
         else:
             detalle = f"Tipo de regla '{rule_type}' no soportado"

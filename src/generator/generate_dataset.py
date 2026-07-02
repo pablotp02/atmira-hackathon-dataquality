@@ -32,7 +32,7 @@ NUM_PEDIDOS       = 500
 MIN_LINEAS        = 1
 MAX_LINEAS        = 6   # líneas por pedido
 FECHA_INICIO      = datetime(2023, 1, 1)
-FECHA_FIN         = datetime(2024, 12, 31)
+FECHA_FIN         = datetime(2024, 12, 1)
 
 OUTPUT_DIR = os.path.join(os.path.dirname(__file__), "..", "..", "data", "raw")
 
@@ -227,7 +227,7 @@ def main():
     # Validación rápida: comprobad que los totales cuadran (dataset limpio = 0 errores)
     lineas_agg = (
         lineas.groupby("pedido_id")
-        .apply(lambda df: (df["cantidad"] * df["precio_unitario"]).sum())
+        .apply(lambda df: (df["cantidad"] * df["precio_unitario"]).sum(), include_groups=False)
         .reset_index(name="total_calculado")
     )
     merged = pedidos.merge(lineas_agg, on="pedido_id")

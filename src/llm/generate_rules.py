@@ -52,6 +52,9 @@ usando solo estos tipos soportados:
 - total_check:     el total del pedido debe coincidir con la suma de sus lineas
   ejemplo: {{"type": "total_check", "tabla": "pedidos", "descripcion": "El total debe coincidir con la suma de lineas_pedido"}}
 
+- delivered_future_check: pedido en estado 'entregado' con fecha de entrega en el futuro
+  ejemplo: {{"type": "delivered_future_check", "tabla": "pedidos", "descripcion": "Un pedido entregado no puede tener fecha de entrega futura"}}
+
 Formato de respuesta:
 
 {{

@@ -18,7 +18,7 @@ MAPEO_ANOMALIA_REGLA = {
     "fecha_entrega_anterior_pedido":  ["date_order_check"],
     "total_pedido_incorrecto":        ["total_check"],
     "precio_linea_distinto_catalogo": ["total_check"],
-    "pedido_entregado_fecha_futura":  ["date_future_check"],
+    "pedido_entregado_fecha_futura":  ["delivered_future_check"],  # antes no detectado
 }
 
 

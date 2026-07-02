@@ -52,6 +52,19 @@ def run_rules(dfs, rules):
             errores = int((df_temp[col_after] < df_temp[col_before]).sum())
             detalle = f"{errores} filas donde '{col_after}' es anterior a '{col_before}'"
 
+        elif rule_type == "delivered_future_check":
+            df_temp = df.copy()
+            df_temp["fecha_entrega"] = pd.to_datetime(df_temp["fecha_entrega"], errors="coerce")
+            # Fecha de corte fija: cualquier entrega a partir de 2025 en un pedido
+            # entregado se considera anomalia
+            fecha_referencia = pd.Timestamp("2025-01-01")
+            mask = (df_temp["estado"] == "entregado") & (df_temp["fecha_entrega"] >= fecha_referencia)
+            errores = int(mask.sum())
+            detalle = (
+                f"{errores} pedidos en estado 'entregado' con fecha_entrega "
+                f"a partir de {fecha_referencia.date()}"
+            )
+
         elif rule_type == "total_check":
             df_lineas = dfs.get("lineas_pedido")
             if df_lineas is None:

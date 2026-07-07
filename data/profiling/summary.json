@@ -26,11 +26,11 @@
           "valores_unicos": 200,
           "tipo": "texto_o_categorico",
           "valores_frecuentes": {
-            "Buenaventura de Bonet": 1,
-            "José Antonio de Flor": 1,
-            "Reynaldo Cuervo Rocamora": 1,
-            "Goyo Caballero Palomar": 1,
-            "Beatriz del Bermúdez": 1
+            "René Salazar": 1,
+            "Anastasio Mas-Calderón": 1,
+            "Hector Carro Ferrando": 1,
+            "Blas Martin Vila": 1,
+            "Concepción Carranza Albero": 1
           }
         },
         "email": {
@@ -39,24 +39,24 @@
           "valores_unicos": 200,
           "tipo": "texto_o_categorico",
           "valores_frecuentes": {
-            "amayamanuela@example.com": 1,
-            "banton@example.org": 1,
-            "cgimenez@example.net": 1,
-            "leopoldo23@example.com": 1,
-            "elisabet40@example.net": 1
+            "condealmudena@example.com": 1,
+            "jimenaarribas@example.org": 1,
+            "ecastells@example.org": 1,
+            "bilbaovirgilio@example.net": 1,
+            "jorgegaray@example.com": 1
           }
         },
         "fecha_registro": {
           "nulos": 0,
           "porcentaje_nulos": 0.0,
-          "valores_unicos": 169,
+          "valores_unicos": 179,
           "tipo": "texto_o_categorico",
           "valores_frecuentes": {
-            "2023-09-29": 4,
-            "2023-07-14": 3,
-            "2024-03-08": 3,
-            "2023-02-02": 2,
-            "2024-07-12": 2
+            "2023-08-26": 3,
+            "2024-04-04": 3,
+            "2024-01-15": 3,
+            "2023-02-07": 2,
+            "2023-01-08": 2
           }
         },
         "pais": {
@@ -65,23 +65,23 @@
           "valores_unicos": 4,
           "tipo": "texto_o_categorico",
           "valores_frecuentes": {
-            "ES": 97,
-            "AR": 40,
-            "CO": 38,
-            "MX": 25
+            "ES": 100,
+            "CO": 37,
+            "AR": 35,
+            "MX": 28
           }
         },
         "fecha_nacimiento": {
           "nulos": 0,
           "porcentaje_nulos": 0.0,
-          "valores_unicos": 197,
+          "valores_unicos": 200,
           "tipo": "texto_o_categorico",
           "valores_frecuentes": {
-            "1978-07-24": 2,
-            "1976-03-03": 2,
-            "1960-08-04": 2,
-            "1960-05-23": 1,
-            "1964-06-11": 1
+            "1946-12-07": 1,
+            "1998-08-11": 1,
+            "1951-07-10": 1,
+            "2001-06-21": 1,
+            "1968-10-30": 1
           }
         }
       }
@@ -124,7 +124,7 @@
           "valores_unicos": 7,
           "tipo": "texto_o_categorico",
           "valores_frecuentes": {
-            "Juguetes": 8,
+            "Libros": 8,
             "Ropa": 7,
             "Electronica": 7,
             "Hogar": 7,
@@ -136,24 +136,24 @@
           "porcentaje_nulos": 0.0,
           "valores_unicos": 50,
           "tipo": "numerico",
-          "min": 10.39,
-          "max": 1411.45,
-          "media": 182.956,
-          "mediana": 63.505,
-          "std": 304.6429,
+          "min": 2.1,
+          "max": 1243.1,
+          "media": 187.2928,
+          "mediana": 69.905,
+          "std": 272.5932,
           "ceros": 0,
           "negativos": 0
         },
         "stock": {
           "nulos": 0,
           "porcentaje_nulos": 0.0,
-          "valores_unicos": 48,
+          "valores_unicos": 46,
           "tipo": "numerico",
-          "min": 6.0,
-          "max": 199.0,
-          "media": 93.54,
-          "mediana": 86.0,
-          "std": 61.1409,
+          "min": 5.0,
+          "max": 197.0,
+          "media": 101.08,
+          "mediana": 96.5,
+          "std": 53.9357,
           "ceros": 0,
           "negativos": 0
         }
@@ -181,40 +181,40 @@
         "cliente_id": {
           "nulos": 0,
           "porcentaje_nulos": 0.0,
-          "valores_unicos": 178,
+          "valores_unicos": 192,
           "tipo": "numerico",
           "min": 1.0,
           "max": 200.0,
-          "media": 97.404,
-          "mediana": 97.5,
-          "std": 57.7167,
+          "media": 100.668,
+          "mediana": 98.5,
+          "std": 57.2468,
           "ceros": 0,
           "negativos": 0
         },
         "fecha_pedido": {
           "nulos": 0,
           "porcentaje_nulos": 0.0,
-          "valores_unicos": 361,
+          "valores_unicos": 360,
           "tipo": "texto_o_categorico",
           "valores_frecuentes": {
-            "2023-05-16": 4,
-            "2024-01-17": 4,
-            "2023-04-29": 4,
-            "2024-01-03": 3,
-            "2023-10-20": 3
+            "2024-11-03": 4,
+            "2023-01-08": 4,
+            "2023-08-04": 4,
+            "2023-12-25": 4,
+            "2023-08-09": 3
           }
         },
         "fecha_entrega": {
           "nulos": 0,
           "porcentaje_nulos": 0.0,
-          "valores_unicos": 355,
+          "valores_unicos": 363,
           "tipo": "texto_o_categorico",
           "valores_frecuentes": {
-            "2023-09-26": 5,
-            "2024-08-29": 5,
-            "2023-10-10": 4,
-            "2023-09-24": 4,
-            "2023-12-06": 4
+            "2024-09-19": 4,
+            "2023-03-04": 4,
+            "2023-12-31": 4,
+            "2024-10-05": 4,
+            "2023-01-24": 4
           }
         },
         "estado": {
@@ -223,22 +223,22 @@
           "valores_unicos": 4,
           "tipo": "texto_o_categorico",
           "valores_frecuentes": {
-            "entregado": 293,
-            "enviado": 100,
-            "cancelado": 58,
-            "pendiente": 49
+            "entregado": 281,
+            "enviado": 101,
+            "pendiente": 67,
+            "cancelado": 51
           }
         },
         "total": {
           "nulos": 0,
           "porcentaje_nulos": 0.0,
-          "valores_unicos": 490,
+          "valores_unicos": 483,
           "tipo": "numerico",
-          "min": 10.39,
-          "max": 14345.62,
-          "media": 2056.0657,
-          "mediana": 1413.8899999999999,
-          "std": 2137.3965,
+          "min": 4.2,
+          "max": 11098.7,
+          "media": 1989.4837,
+          "mediana": 1256.69,
+          "std": 1945.2593,
           "ceros": 0,
           "negativos": 0
         }
@@ -246,20 +246,20 @@
     },
     "lineas_pedido": {
       "tabla": "lineas_pedido",
-      "filas": 1829,
+      "filas": 1743,
       "columnas": 5,
       "filas_duplicadas": 0,
       "columnas_detalle": {
         "linea_id": {
           "nulos": 0,
           "porcentaje_nulos": 0.0,
-          "valores_unicos": 1829,
+          "valores_unicos": 1743,
           "tipo": "numerico",
           "min": 1.0,
-          "max": 1829.0,
-          "media": 915.0,
-          "mediana": 915.0,
-          "std": 528.1311,
+          "max": 1743.0,
+          "media": 872.0,
+          "mediana": 872.0,
+          "std": 503.3051,
           "ceros": 0,
           "negativos": 0
         },
@@ -270,9 +270,9 @@
           "tipo": "numerico",
           "min": 1.0,
           "max": 500.0,
-          "media": 243.7343,
-          "mediana": 237.0,
-          "std": 143.1979,
+          "media": 248.1612,
+          "mediana": 250.0,
+          "std": 147.1003,
           "ceros": 0,
           "negativos": 0
         },
@@ -283,9 +283,9 @@
           "tipo": "numerico",
           "min": 1.0,
           "max": 50.0,
-          "media": 25.2767,
+          "media": 25.1274,
           "mediana": 25.0,
-          "std": 14.4698,
+          "std": 14.4422,
           "ceros": 0,
           "negativos": 0
         },
@@ -296,9 +296,9 @@
           "tipo": "numerico",
           "min": 1.0,
           "max": 5.0,
-          "media": 3.0213,
+          "media": 2.9816,
           "mediana": 3.0,
-          "std": 1.4181,
+          "std": 1.3986,
           "ceros": 0,
           "negativos": 0
         },
@@ -307,11 +307,11 @@
           "porcentaje_nulos": 0.0,
           "valores_unicos": 50,
           "tipo": "numerico",
-          "min": 10.39,
-          "max": 1411.45,
-          "media": 189.7223,
-          "mediana": 63.74,
-          "std": 308.3991,
+          "min": 2.1,
+          "max": 1243.1,
+          "media": 193.1065,
+          "mediana": 69.64,
+          "std": 275.7481,
           "ceros": 0,
           "negativos": 0
         }

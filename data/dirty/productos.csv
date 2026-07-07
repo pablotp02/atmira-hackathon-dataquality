@@ -1,51 +1,51 @@
 producto_id,nombre,categoria,precio_unitario,stock
-1,Auriculares BT,Electronica,1411.45,34
-2,Teclado mecanico,Electronica,433.48,27
-3,Raton gaming,Electronica,1126.5,39
-4,"Monitor 24""",Electronica,444.9,154
-5,Webcam HD,Electronica,355.41,87
-6,SSD 1TB,Electronica,-345.22,162
-7,Hub USB-C,Electronica,1286.72,129
-8,Camiseta basica,Ropa,63.74,13
-9,Pantalon vaquero,Ropa,-20.15,108
-10,Sudadera,Ropa,101.23,11
-11,Zapatillas,Ropa,10.39,197
-12,Chaqueta impermeable,Ropa,24.39,19
-13,Calcetines pack 5,Ropa,27.77,113
-14,Gorra visera,Ropa,70.68,42
-15,Lampara escritorio,Hogar,-230.95,28
-16,Funda nordica,Hogar,-43.97,176
-17,Set sartenes,Hogar,363.01,43
-18,Organizador cajones,Hogar,28.87,94
-19,Humidificador,Hogar,239.27,37
-20,Difusor aromas,Hogar,180.47,10
-21,Lampara escritorio v3,Hogar,133.68,10
-22,Esterilla yoga,Deportes,271.7,53
-23,Mancuernas 5kg,Deportes,210.98,170
-24,Cuerda saltar,Deportes,48.78,199
-25,Botella termica,Deportes,176.77,104
-26,Banda resistencia,Deportes,292.67,191
-27,Rodillo espuma,Deportes,63.27,60
-28,Esterilla yoga v3,Deportes,262.09,45
-29,Cafe molido 500g,Alimentacion,70.75,36
-30,Aceite oliva 1L,Alimentacion,15.99,85
-31,Miel 350g,Alimentacion,63.03,105
-32,Proteina whey 1kg,Alimentacion,64.57,188
-33,Te verde 100 sobres,Alimentacion,65.24,36
-34,Cafe molido 500g v3,Alimentacion,14.42,179
-35,Aceite oliva 1L v3,Alimentacion,10.43,9
-36,Python para todos,Libros,52.22,56
-37,Clean Code,Libros,15.98,117
-38,El Quijote,Libros,24.23,58
-39,Habitos atomicos,Libros,17.26,168
-40,Sapiens,Libros,15.62,84
-41,Python para todos v3,Libros,20.32,17
-42,Clean Code v3,Libros,58.18,71
-43,Puzzle 1000 piezas,Juguetes,57.86,130
-44,LEGO City,Juguetes,64.75,137
-45,Muneca articulada,Juguetes,55.02,7
-46,Coche teledirigido,Juguetes,24.38,66
-47,Set construccion madera,Juguetes,33.36,67
-48,Puzzle 1000 piezas v3,Juguetes,13.43,152
-49,LEGO City v3,Juguetes,-69.71,186
-50,Producto extra 50,Juguetes,52.54,155
+1,Auriculares BT,Electronica,633.18,76
+2,Teclado mecanico,Electronica,884.84,83
+3,Raton gaming,Electronica,877.26,140
+4,"Monitor 24""",Electronica,544.81,124
+5,Webcam HD,Electronica,624.19,175
+6,SSD 1TB,Electronica,1243.1,189
+7,Hub USB-C,Electronica,762.1,34
+8,Camiseta basica,Ropa,29.39,122
+9,Pantalon vaquero,Ropa,-28.39,5
+10,Sudadera,Ropa,25.89,33
+11,Zapatillas,Ropa,34.09,144
+12,Chaqueta impermeable,Ropa,78.58,96
+13,Calcetines pack 5,Ropa,17.78,197
+14,Gorra visera,Ropa,73.56,52
+15,Lampara escritorio,Hogar,309.79,96
+16,Funda nordica,Hogar,283.25,39
+17,Set sartenes,Hogar,36.01,163
+18,Organizador cajones,Hogar,159.56,177
+19,Humidificador,Hogar,160.98,120
+20,Difusor aromas,Hogar,264.25,50
+21,Lampara escritorio v3,Hogar,55.46,65
+22,Esterilla yoga,Deportes,123.28,23
+23,Mancuernas 5kg,Deportes,47.46,60
+24,Cuerda saltar,Deportes,262.83,39
+25,Botella termica,Deportes,211.78,70
+26,Banda resistencia,Deportes,98.45,120
+27,Rodillo espuma,Deportes,133.54,36
+28,Esterilla yoga v3,Deportes,284.09,194
+29,Cafe molido 500g,Alimentacion,59.59,102
+30,Aceite oliva 1L,Alimentacion,9.41,29
+31,Miel 350g,Alimentacion,42.7,74
+32,Proteina whey 1kg,Alimentacion,68.52,173
+33,Te verde 100 sobres,Alimentacion,73.85,77
+34,Cafe molido 500g v3,Alimentacion,2.1,46
+35,Aceite oliva 1L v3,Alimentacion,12.84,62
+36,Python para todos,Libros,44.59,59
+37,Clean Code,Libros,6.16,125
+38,El Quijote,Libros,-17.5,6
+39,Habitos atomicos,Libros,57.62,90
+40,Sapiens,Libros,-52.29,172
+41,Python para todos v3,Libros,-43.16,97
+42,Clean Code v3,Libros,21.23,46
+43,Puzzle 1000 piezas,Juguetes,102.37,119
+44,LEGO City,Juguetes,69.64,54
+45,Muneca articulada,Juguetes,16.43,180
+46,Coche teledirigido,Juguetes,-70.17,52
+47,Set construccion madera,Juguetes,85.13,99
+48,Puzzle 1000 piezas v3,Juguetes,55.94,23
+49,LEGO City v3,Juguetes,106.58,193
+50,Producto extra 50,Libros,58.93,110

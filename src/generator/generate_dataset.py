@@ -221,10 +221,12 @@ def main(seed=42):
     print(f"   lineas_pedido.csv -> {len(lineas)} filas")
 
     lineas_agg = (
-        lineas.groupby("pedido_id")
-        .apply(lambda df: (df["cantidad"] * df["precio_unitario"]).sum(), include_groups=False)
-        .reset_index(name="total_calculado")
+    lineas.assign(
+        total_calculado=lineas["cantidad"] * lineas["precio_unitario"]
     )
+    .groupby("pedido_id", as_index=False)["total_calculado"]
+    .sum()
+)
     merged = pedidos.merge(lineas_agg, on="pedido_id")
     merged["diferencia"] = (merged["total"] - merged["total_calculado"]).abs()
     errores = merged[merged["diferencia"] > 0.01]

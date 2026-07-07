@@ -1,65 +1,65 @@
 [
   {
+    "type": "total_check",
+    "tabla": "pedidos",
+    "descripcion": "El total del pedido debe coincidir con la suma de (cantidad * precio_unitario) de sus lineas en lineas_pedido."
+  },
+  {
     "type": "null_check",
     "column": "estado",
     "tabla": "pedidos",
-    "descripcion": "El estado es obligatorio"
+    "descripcion": "El campo estado no puede ser nulo."
   },
   {
     "type": "null_check",
     "column": "cliente_id",
     "tabla": "pedidos",
-    "descripcion": "El cliente_id es obligatorio"
+    "descripcion": "El campo cliente_id no puede ser nulo."
   },
   {
     "type": "null_check",
     "column": "producto_id",
     "tabla": "lineas_pedido",
-    "descripcion": "El producto_id es obligatorio"
+    "descripcion": "El campo producto_id no puede ser nulo."
   },
   {
     "type": "positive_check",
     "column": "precio_unitario",
     "tabla": "lineas_pedido",
-    "descripcion": "El precio debe ser positivo"
+    "descripcion": "El precio_unitario debe ser positivo."
   },
   {
     "type": "positive_check",
     "column": "cantidad",
     "tabla": "lineas_pedido",
-    "descripcion": "La cantidad debe ser positiva"
-  },
-  {
-    "type": "email_check",
-    "column": "email",
-    "tabla": "clientes",
-    "descripcion": "El email debe tener formato valido"
+    "descripcion": "La cantidad debe ser positiva."
   },
   {
     "type": "date_order_check",
     "column_after": "fecha_entrega",
     "column_before": "fecha_pedido",
     "tabla": "pedidos",
-    "descripcion": "La entrega debe ser posterior al pedido"
+    "descripcion": "La fecha de entrega debe ser posterior a la fecha del pedido."
   },
   {
     "type": "delivered_future_check",
     "tabla": "pedidos",
-    "descripcion": "Un pedido entregado no puede tener fecha de entrega futura"
-  },
-  {
-    "type": "total_check",
-    "tabla": "pedidos",
-    "descripcion": "El total debe coincidir con la suma de lineas_pedido"
+    "descripcion": "Los pedidos en estado entregado no pueden tener fecha de entrega futura."
   },
   {
     "type": "stock_check",
-    "tabla": "productos",
-    "descripcion": "La cantidad total pedida no puede superar el stock disponible"
+    "tabla": "lineas_pedido",
+    "descripcion": "La cantidad total pedida de un producto no puede superar su stock disponible."
   },
   {
     "type": "registration_date_check",
     "tabla": "clientes",
-    "descripcion": "La fecha de registro no puede ser posterior al primer pedido del cliente"
+    "descripcion": "La fecha de registro del cliente no puede ser posterior a su primer pedido."
+  },
+  {
+    "type": "email_check",
+    "column": "email",
+    "tabla": "clientes",
+    "descripcion": "El email debe tener un formato válido."
   }
 ]

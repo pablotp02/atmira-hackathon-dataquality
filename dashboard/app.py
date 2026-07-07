@@ -605,6 +605,16 @@ def pagina_reglas():
             df = pd.DataFrame(filas)
             st.dataframe(df, use_container_width=True, hide_index=True)
 
+st.header("🤖 Tests generados automáticamente por IA")
+
+if results:
+
+    tab1, tab2, tab3, tab4 = st.tabs([
+        "Unit Tests",
+        "Integration Tests",
+        "Edge Cases",
+        "UAT Tests"
+    ])
 
 def pagina_resultados():
     st.title("Resultados y metricas")

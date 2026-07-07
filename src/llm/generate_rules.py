@@ -1,16 +1,17 @@
 from openai import OpenAI
 from dotenv import load_dotenv
-load_dotenv()
 import os
 import json
 import re
+
+load_dotenv()
 
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 
 def extract_json(text):
     """
-    Extrae JSON aunque el modelo devuelva texto extra.
+    Extrae un JSON aunque el modelo devuelva texto adicional.
     """
     try:
         return json.loads(text)
@@ -18,70 +19,206 @@ def extract_json(text):
         match = re.search(r"\{.*\}", text, re.DOTALL)
         if match:
             return json.loads(match.group())
-        raise ValueError("No se pudo parsear JSON")
+        raise ValueError("No se pudo parsear el JSON devuelto por el modelo.")
 
 
 def generate_rules(schema, transformation):
 
     prompt = f"""
-Eres un experto en calidad de datos y testing de pipelines.
+Eres un experto en calidad de datos, validación de pipelines ETL y generación automática de casos de prueba.
 
-Genera reglas de validacion para este pipeline.
+Analiza el esquema del dataset y la transformación indicada.
 
-Devuelve SOLO JSON valido SIN texto adicional.
-No expliques nada. No añadas texto.
+Devuelve EXCLUSIVAMENTE un JSON válido.
 
-Las reglas en el array "rules" deben seguir EXACTAMENTE este formato,
-usando solo estos tipos soportados:
+No escribas explicaciones.
+No escribas markdown.
+No añadas comentarios.
 
-- null_check: campo no puede ser nulo
-  ejemplo: {{"type": "null_check", "column": "estado", "tabla": "pedidos", "descripcion": "El estado es obligatorio"}}
+--------------------------------------------------
+REGLAS SOPORTADAS
+--------------------------------------------------
 
-- positive_check: campo debe ser mayor que cero
-  ejemplo: {{"type": "positive_check", "column": "precio_unitario", "tabla": "productos", "descripcion": "El precio debe ser positivo"}}
+Solo puedes utilizar estos tipos:
 
-- email_check: campo debe tener formato de email valido
-  ejemplo: {{"type": "email_check", "column": "email", "tabla": "clientes", "descripcion": "El email debe tener formato valido"}}
+- null_check
+- positive_check
+- email_check
+- date_order_check
+- delivered_future_check
+- total_check
+- stock_check
+- registration_date_check
 
-- date_order_check: una fecha debe ser posterior a otra
-  ejemplo: {{"type": "date_order_check", "column_after": "fecha_entrega", "column_before": "fecha_pedido", "tabla": "pedidos", "descripcion": "La entrega debe ser posterior al pedido"}}
-
-- delivered_future_check: pedido en estado entregado con fecha de entrega futura
-  ejemplo: {{"type": "delivered_future_check", "tabla": "pedidos", "descripcion": "Un pedido entregado no puede tener fecha de entrega futura"}}
-
-- total_check: el total del pedido debe coincidir con la suma de sus lineas
-  ejemplo: {{"type": "total_check", "tabla": "pedidos", "descripcion": "El total debe coincidir con la suma de lineas_pedido"}}
-
-- stock_check: la cantidad total pedida de un producto no puede superar su stock disponible
-  ejemplo: {{"type": "stock_check", "tabla": "productos", "descripcion": "La cantidad total pedida no puede superar el stock disponible"}}
-
-- registration_date_check: la fecha de registro de un cliente no puede ser posterior a su primer pedido
-  ejemplo: {{"type": "registration_date_check", "tabla": "clientes", "descripcion": "La fecha de registro no puede ser posterior al primer pedido del cliente"}}
-
-Formato de respuesta:
+Cada regla debe tener este formato:
 
 {{
-  "rules": [],
-  "unit_tests": [],
-  "integration_tests": [],
-  "edge_cases": [],
-  "uat_tests": []
+    "type": "...",
+    "tabla": "...",
+    "descripcion": "..."
 }}
 
-SCHEMA:
+Las reglas que necesiten columnas deberán incluir además:
+
+"column"
+
+o
+
+"column_after"
+"column_before"
+
+--------------------------------------------------
+TESTS
+--------------------------------------------------
+
+Además genera automáticamente:
+
+- unit_tests
+- integration_tests
+- edge_cases
+- uat_tests
+
+NO dejes ninguna lista vacía.
+
+Genera al menos 3 elementos por categoría.
+
+Cada test debe tener EXACTAMENTE este formato:
+
+{{
+    "type": "total_check | stock_check | date_order_check | delivered_future_check | null_check | positive_check | email_check | registration_date_check",
+    "name": "...",
+    "description": "...",
+    "expected": true
+}}
+
+El campo "type" debe coincidir con alguno de los tipos soportados por el motor de validación.
+
+Los tests deben comprobar la lógica del pipeline y no únicamente el formato de los datos.
+
+Ejemplos:
+
+Unit Test:
+- comprobar que el total del pedido coincide con la suma de sus líneas.
+
+Integration Test:
+- comprobar que el precio_unitario de lineas_pedido coincide con productos.
+
+Edge Case:
+- pedido sin líneas
+- cantidad cero
+- producto sin stock
+- cliente sin pedidos
+
+UAT:
+- el total mostrado debe ser correcto
+- un pedido entregado no puede tener fecha futura
+- un cliente debe registrarse antes de comprar
+
+--------------------------------------------------
+RESPUESTA
+--------------------------------------------------
+{
+
+    "type":"total_check",
+
+    "name":"Pedido con dos líneas",
+
+    "description":"Comprobar cálculo del total",
+
+    "input":{
+
+        "lineas":[
+
+            {
+
+                "cantidad":2,
+
+                "precio_unitario":10
+
+            },
+
+            {
+
+                "cantidad":3,
+
+                "precio_unitario":5
+
+            }
+
+        ]
+
+    },
+
+    "expected":35
+
+}
+
+
+
+{
+
+    "type":"date_order_check",
+
+    "name":"Entrega posterior",
+
+    "input":{
+
+        "fecha_pedido":"2024-01-01",
+
+        "fecha_entrega":"2024-01-03"
+
+    },
+
+    "expected":true
+
+}
+
+
+
+{
+
+    "type":"stock_check",
+
+    "name":"Stock suficiente",
+
+    "input":{
+
+        "stock":100,
+
+        "cantidad_total":80
+
+    },
+
+    "expected":true
+
+}
+
+--------------------------------------------------
+SCHEMA
+--------------------------------------------------
+
 {schema}
 
-TRANSFORMACION:
+--------------------------------------------------
+TRANSFORMACION
+--------------------------------------------------
+
 {transformation}
 """
 
     response = client.chat.completions.create(
         model="gpt-4o-mini",
         messages=[
-            {"role": "system", "content": "Eres un generador de tests de datos estructurados"},
-            {"role": "user", "content": prompt}
+            {
+                "role": "system",
+                "content": "Eres un experto en calidad de datos y generación automática de reglas de validación y casos de prueba."
+            },
+            {
+                "role": "user",
+                "content": prompt
+            }
         ],
-        temperature=0.2
+        temperature=0.4
     )
 
     return extract_json(response.choices[0].message.content)

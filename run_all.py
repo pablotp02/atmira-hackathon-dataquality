@@ -94,6 +94,30 @@ def main(seed_dataset=42, seed_anomalias=99):
     )
 
     rules_json = generate_rules(schema, transformation)
+    from experiments.test_runner import run_generated_tests
+    from src.testing.fixture_runner import run_fixture_tests
+
+fixture_tests = (
+    rules_json["unit_tests"]
+    + rules_json["integration_tests"]
+    + rules_json["edge_cases"]
+    + rules_json["uat_tests"]
+)
+
+fixture_results = run_fixture_tests(fixture_tests)
+
+print("\n========== FIXTURE TESTS ==========\n")
+
+for r in fixture_results:
+    estado = "OK" if r["passed"] else "FALLO"
+    print(f"[{estado}] {r['name']} -> {r['detail']}")
+    tests = (
+    rules_json["unit_tests"]
+    + rules_json["integration_tests"]
+    + rules_json["edge_cases"]
+    + rules_json["uat_tests"]
+)
+    test_results = run_generated_tests(dfs_dirty, tests)
     rules = rules_json["rules"]
     print(f"Reglas generadas: {len(rules)}")
 
@@ -127,10 +151,13 @@ def main(seed_dataset=42, seed_anomalias=99):
     os.makedirs(os.path.dirname(results_path), exist_ok=True)
     with open(results_path, "w", encoding="utf-8") as f:
         json.dump({
-            "rules":    rules,
-            "results":  results,
-            "metricas": metricas,
-        }, f, ensure_ascii=False, indent=2)
+
+    "rules": rules,
+    "results": results,
+    "metricas": metricas,
+    "tests": test_results
+
+    }, f, ensure_ascii=False, indent=2)
     print("Resultados guardados en data/results.json")
 
     separador("PIPELINE COMPLETADO")

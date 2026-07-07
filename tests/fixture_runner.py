@@ -116,14 +116,47 @@ def ejecutar_delivered_future_check(test: dict) -> tuple[bool, str]:
         f"Valido={es_valido} | Esperado={expected}"
     )
 
+def ejecutar_email_check(test: dict) -> tuple[bool, str]:
+    """
+    Verifica que un email tiene formato valido.
+    Input esperado: {"email": "usuario@ejemplo.com"}
+    Expected: true (email valido) o false (email invalido)
+    """
+    import re
+    input_data = test.get("input", {})
+    email      = input_data.get("email", "")
+    expected   = test.get("expected", True)
+
+    patron    = r"^[^@]+@[^@]+\.[^@]+"
+    resultado = bool(re.match(patron, email))
+    ok        = resultado == expected
+    return ok, f"Email='{email}' | Valido={resultado} | Esperado={expected}"
+
+
+def ejecutar_positive_check(test: dict) -> tuple[bool, str]:
+    """
+    Verifica que un valor numerico es positivo.
+    Input esperado: {"valor": -5}
+    Expected: true (positivo) o false (negativo o cero)
+    """
+    input_data = test.get("input", {})
+    valor      = input_data.get("valor", 0)
+    expected   = test.get("expected", True)
+
+    resultado = valor > 0
+    ok        = resultado == expected
+    return ok, f"Valor={valor} | Positivo={resultado} | Esperado={expected}"
+
 
 # ── Dispatcher ────────────────────────────────────────────────────────────────
 
 RUNNERS = {
-    "total_check":           ejecutar_total_check,
-    "stock_check":           ejecutar_stock_check,
-    "date_order_check":      ejecutar_date_order_check,
+    "total_check":            ejecutar_total_check,
+    "stock_check":            ejecutar_stock_check,
+    "date_order_check":       ejecutar_date_order_check,
     "delivered_future_check": ejecutar_delivered_future_check,
+    "email_check":            ejecutar_email_check,
+    "positive_check":         ejecutar_positive_check,
 }
 
 

@@ -97,6 +97,12 @@ def main(seed_dataset=42, seed_anomalias=99):
     rules = rules_json["rules"]
     print(f"Reglas generadas: {len(rules)}")
 
+    # Guardar reglas propuestas para revision human-in-the-loop
+    rules_propuestas_path = os.path.join(os.path.dirname(__file__), "data", "rules_propuestas.json")
+    with open(rules_propuestas_path, "w", encoding="utf-8") as f:
+        json.dump(rules, f, ensure_ascii=False, indent=2)
+    print("Reglas propuestas guardadas en data/rules_propuestas.json")
+
     print("Validando dataset...")
     results = run_rules(dfs_dirty, rules)
 

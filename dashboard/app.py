@@ -26,10 +26,11 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 # ── Rutas ─────────────────────────────────────────────────────────────────────
 
-BASE_DIR      = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-DIRTY_DIR     = os.path.join(BASE_DIR, "data", "dirty")
-PROFILING_DIR = os.path.join(BASE_DIR, "data", "profiling")
-RESULTS_PATH  = os.path.join(BASE_DIR, "data", "results.json")
+BASE_DIR              = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+DIRTY_DIR             = os.path.join(BASE_DIR, "data", "dirty")
+PROFILING_DIR         = os.path.join(BASE_DIR, "data", "profiling")
+RESULTS_PATH          = os.path.join(BASE_DIR, "data", "results.json")
+RULES_PROPUESTAS_PATH = os.path.join(BASE_DIR, "data", "rules_propuestas.json")
 
 # ── Configuracion de pagina ───────────────────────────────────────────────────
 
@@ -64,6 +65,14 @@ def cargar_results():
     if not os.path.exists(RESULTS_PATH):
         return None
     with open(RESULTS_PATH, "r", encoding="utf-8") as f:
+        return json.load(f)
+
+
+@st.cache_data
+def cargar_rules_propuestas():
+    if not os.path.exists(RULES_PROPUESTAS_PATH):
+        return None
+    with open(RULES_PROPUESTAS_PATH, "r", encoding="utf-8") as f:
         return json.load(f)
 
 
@@ -108,7 +117,6 @@ def generar_pdf_informe(summary, log, results=None):
 
     fecha_analisis = obtener_fecha_ultimo_run()
 
-    # ── Portada ───────────────────────────────────────────────────────────────
     story.append(Spacer(1, 40))
     story.append(Paragraph("Informe de Calidad de Datos", styles["Title"]))
     story.append(Spacer(1, 10))
@@ -117,11 +125,9 @@ def generar_pdf_informe(summary, log, results=None):
     story.append(Paragraph(f"Fecha del ultimo analisis: <b>{fecha_analisis}</b>", styles["Normal"]))
     story.append(Spacer(1, 30))
 
-    # ── Resumen de metricas ───────────────────────────────────────────────────
     if metricas:
         story.append(Paragraph("1. Resumen de deteccion", styles["Heading2"]))
         story.append(Spacer(1, 8))
-
         datos_metricas = [
             ["Metrica", "Valor"],
             ["Total anomalias inyectadas", str(metricas.get("total_inyectadas", ""))],
@@ -136,11 +142,9 @@ def generar_pdf_informe(summary, log, results=None):
         story.append(t)
         story.append(Spacer(1, 20))
 
-    # ── Desglose de deteccion por tipo ────────────────────────────────────────
     if metricas and metricas.get("deteccion_por_tipo"):
         story.append(Paragraph("2. Deteccion por tipo de anomalia", styles["Heading2"]))
         story.append(Spacer(1, 8))
-
         cab = [["Tipo de anomalia", "Cantidad inyectada", "Detectado"]]
         filas_det = []
         for tipo, detalle in metricas["deteccion_por_tipo"].items():
@@ -163,11 +167,9 @@ def generar_pdf_informe(summary, log, results=None):
 
     story.append(PageBreak())
 
-    # ── Reglas generadas por el LLM ───────────────────────────────────────────
     if rules:
         story.append(Paragraph("3. Reglas generadas por el LLM", styles["Heading2"]))
         story.append(Spacer(1, 8))
-
         cab   = [["Tipo", "Tabla", "Columna", "Descripcion"]]
         filas = []
         for r in rules:
@@ -182,11 +184,9 @@ def generar_pdf_informe(summary, log, results=None):
         story.append(t)
         story.append(Spacer(1, 20))
 
-    # ── Resultados de validacion ──────────────────────────────────────────────
     if resultados:
         story.append(Paragraph("4. Resultados de validacion por regla", styles["Heading2"]))
         story.append(Spacer(1, 8))
-
         cab   = [["Estado", "Tipo", "Tabla", "Errores", "Detalle"]]
         filas = []
         for r in resultados:
@@ -212,10 +212,8 @@ def generar_pdf_informe(summary, log, results=None):
 
     story.append(PageBreak())
 
-    # ── Profiling del dataset ─────────────────────────────────────────────────
     story.append(Paragraph("5. Profiling del dataset", styles["Heading2"]))
     story.append(Spacer(1, 8))
-
     for nombre_tabla, info in summary["tablas"].items():
         story.append(Paragraph(nombre_tabla, styles["Heading3"]))
         story.append(Paragraph(
@@ -227,11 +225,9 @@ def generar_pdf_informe(summary, log, results=None):
 
     story.append(PageBreak())
 
-    # ── Anomalias inyectadas ──────────────────────────────────────────────────
     story.append(Paragraph("6. Anomalias inyectadas", styles["Heading2"]))
     story.append(Paragraph(f"Total: {log['total_anomalias']}", styles["Normal"]))
     story.append(Spacer(1, 10))
-
     cab   = [["Tipo", "Tabla", "Columna", "Fila ID"]]
     filas = []
     for anomalia in log["detalle"]:
@@ -249,36 +245,38 @@ def generar_pdf_informe(summary, log, results=None):
     buffer.seek(0)
     return buffer
 
+
 # ── Sidebar ───────────────────────────────────────────────────────────────────
- 
+
 with st.sidebar:
     st.title("Data Quality")
     st.caption("Hackathon Atmira — Reto 03")
     st.divider()
- 
+
     pagina = st.radio(
         "Navegacion",
         options=[
             "Resumen",
             "Profiling del dataset",
             "Anomalias inyectadas",
+            "Revision de reglas",
             "Reglas generadas",
             "Resultados y metricas",
         ],
         label_visibility="collapsed",
     )
- 
+
     st.divider()
- 
+
     st.markdown("**Ejecutar pipeline**")
     st.caption("Regenera el dataset, inyecta anomalias y ejecuta la validacion completa.")
- 
+
     regenerar = st.checkbox(
         "Generar dataset nuevo (seed aleatoria)",
         value=False,
         help="Sin marcar: datos reproducibles con seed fija. Marcado: dataset completamente nuevo en cada ejecucion.",
     )
- 
+
     if st.button("Ejecutar pipeline completo", use_container_width=True, type="primary"):
         with st.spinner("Ejecutando pipeline..."):
             try:
@@ -286,7 +284,7 @@ with st.sidebar:
                 if regenerar:
                     seed_aleatoria = random.randint(1, 999999)
                     cmd.append(f"--seed={seed_aleatoria}")
- 
+
                 result = subprocess.run(
                     cmd,
                     capture_output=True,
@@ -305,9 +303,9 @@ with st.sidebar:
                     st.code(result.stderr)
             except Exception as e:
                 st.error(f"Error: {e}")
- 
+
     st.divider()
- 
+
     if st.button("Exportar informe PDF", use_container_width=True):
         summary = cargar_summary()
         log     = cargar_injection_log()
@@ -324,7 +322,8 @@ with st.sidebar:
             )
         else:
             st.warning("Ejecuta el pipeline primero.")
-            
+
+
 # ── Paginas ───────────────────────────────────────────────────────────────────
 
 def pagina_resumen():
@@ -335,10 +334,8 @@ def pagina_resumen():
         "del dataset y las aplica para detectar errores antes de que lleguen a produccion."
     )
 
-    # Fecha de ultima ejecucion
     fecha = obtener_fecha_ultimo_run()
     st.caption(f"Ultimo pipeline ejecutado: {fecha}")
-
     st.divider()
 
     summary = cargar_summary()
@@ -346,19 +343,15 @@ def pagina_resumen():
     results = cargar_results()
 
     col1, col2, col3, col4 = st.columns(4)
-
     with col1:
         filas = sum(t["filas"] for t in summary["tablas"].values()) if summary else 0
         st.metric("Registros analizados", f"{filas:,}")
-
     with col2:
         total = log["total_anomalias"] if log else 0
         st.metric("Anomalias inyectadas", total)
-
     with col3:
         reglas = len(results["rules"]) if results else 0
         st.metric("Reglas generadas", reglas)
-
     with col4:
         tasa = results["metricas"]["tasa_deteccion_tipos"] if results else 0
         st.metric("Tasa de deteccion", f"{tasa}%")
@@ -379,14 +372,12 @@ def pagina_profiling():
     for tab, nombre_tabla in zip(tabs, nombres_tablas):
         with tab:
             info = tablas[nombre_tabla]
-
             col1, col2, col3 = st.columns(3)
             col1.metric("Filas", info["filas"])
             col2.metric("Columnas", info["columnas"])
             col3.metric("Filas duplicadas", info["filas_duplicadas"])
 
             st.subheader("Detalle por columna")
-
             filas_tabla = []
             for nombre_col, detalle in info["columnas_detalle"].items():
                 fila = {
@@ -397,13 +388,13 @@ def pagina_profiling():
                     "valores_unicos": detalle.get("valores_unicos", ""),
                 }
                 if detalle.get("tipo") == "numerico":
-                    fila["min"]      = detalle.get("min", "")
-                    fila["max"]      = detalle.get("max", "")
-                    fila["media"]    = round(detalle.get("media", 0), 2) if detalle.get("media") is not None else ""
-                    fila["mediana"]  = detalle.get("mediana", "")
-                    fila["std"]      = round(detalle.get("std", 0), 2) if detalle.get("std") is not None else ""
-                    fila["ceros"]    = detalle.get("ceros", "")
-                    fila["negativos"]= detalle.get("negativos", "")
+                    fila["min"]       = detalle.get("min", "")
+                    fila["max"]       = detalle.get("max", "")
+                    fila["media"]     = round(detalle.get("media", 0), 2) if detalle.get("media") is not None else ""
+                    fila["mediana"]   = detalle.get("mediana", "")
+                    fila["std"]       = round(detalle.get("std", 0), 2) if detalle.get("std") is not None else ""
+                    fila["ceros"]     = detalle.get("ceros", "")
+                    fila["negativos"] = detalle.get("negativos", "")
                 else:
                     vf = detalle.get("valores_frecuentes", {})
                     if vf:
@@ -438,18 +429,130 @@ def pagina_anomalias():
 
     st.subheader("Detalle de anomalias")
     df_detalle = pd.DataFrame(log["detalle"])
-
-    columnas_orden    = ["tipo", "tabla", "columna", "fila_id", "valor_original", "valor_nuevo"]
+    columnas_orden     = ["tipo", "tabla", "columna", "fila_id", "valor_original", "valor_nuevo"]
     columnas_presentes = [c for c in columnas_orden if c in df_detalle.columns]
-    df_detalle        = df_detalle[columnas_presentes]
+    df_detalle         = df_detalle[columnas_presentes]
 
     tipos_disponibles = ["Todos"] + sorted(df_detalle["tipo"].unique().tolist())
     tipo_seleccionado = st.selectbox("Filtrar por tipo", tipos_disponibles)
-
     if tipo_seleccionado != "Todos":
         df_detalle = df_detalle[df_detalle["tipo"] == tipo_seleccionado]
 
     st.dataframe(df_detalle, use_container_width=True, hide_index=True)
+
+
+def pagina_revision_reglas():
+    st.title("Revision de reglas propuestas por la IA")
+    st.markdown(
+        "La IA ha analizado el dataset y propone las siguientes reglas de validacion. "
+        "Marca o desmarca cada regla antes de ejecutar la validacion. "
+        "Solo se aplicaran las reglas que apruebes."
+    )
+
+    rules = cargar_rules_propuestas()
+
+    if rules is None:
+        st.warning("No hay reglas propuestas. Ejecuta el pipeline primero.")
+        return
+
+    filas = []
+    for r in rules:
+        filas.append({
+            "aprobada":    True,
+            "tipo":        r.get("type", ""),
+            "tabla":       r.get("tabla", ""),
+            "columna":     r.get("column") or r.get("column_after") or "-",
+            "descripcion": r.get("descripcion", ""),
+        })
+
+    df_rules = pd.DataFrame(filas)
+
+    df_editado = st.data_editor(
+        df_rules,
+        column_config={
+            "aprobada":    st.column_config.CheckboxColumn("Aplicar", help="Marca para incluir esta regla en la validacion"),
+            "tipo":        st.column_config.TextColumn("Tipo"),
+            "tabla":       st.column_config.TextColumn("Tabla"),
+            "columna":     st.column_config.TextColumn("Columna"),
+            "descripcion": st.column_config.TextColumn("Descripcion"),
+        },
+        disabled=["tipo", "tabla", "columna", "descripcion"],
+        use_container_width=True,
+        hide_index=True,
+    )
+
+    n_aprobadas = int(df_editado["aprobada"].sum())
+    n_total     = len(df_editado)
+    st.caption(f"{n_aprobadas} de {n_total} reglas seleccionadas")
+
+    if n_aprobadas == 0:
+        st.warning("Selecciona al menos una regla para continuar.")
+        return
+
+    if st.button("Aplicar reglas seleccionadas", type="primary"):
+        indices_aprobados = df_editado[df_editado["aprobada"]].index.tolist()
+        reglas_aprobadas  = [rules[i] for i in indices_aprobados]
+
+        dfs_dirty = {
+            "clientes":      pd.read_csv(os.path.join(DIRTY_DIR, "clientes.csv")),
+            "productos":     pd.read_csv(os.path.join(DIRTY_DIR, "productos.csv")),
+            "pedidos":       pd.read_csv(os.path.join(DIRTY_DIR, "pedidos.csv")),
+            "lineas_pedido": pd.read_csv(os.path.join(DIRTY_DIR, "lineas_pedido.csv")),
+        }
+
+        log_path = os.path.join(DIRTY_DIR, "injection_log.json")
+        with open(log_path, "r", encoding="utf-8") as f:
+            injection_log = json.load(f)
+
+        from src.validation.run_rules import run_rules
+        from src.evaluation.evaluation import evaluate
+
+        with st.spinner("Ejecutando validacion con las reglas seleccionadas..."):
+            results            = run_rules(dfs_dirty, reglas_aprobadas)
+            results_con_fallos = [r for r in results if r["errors"] > 0]
+            metricas           = evaluate(injection_log, results_con_fallos)
+
+        results_data = {
+            "rules":    reglas_aprobadas,
+            "results":  results,
+            "metricas": metricas,
+        }
+        with open(RESULTS_PATH, "w", encoding="utf-8") as f:
+            json.dump(results_data, f, ensure_ascii=False, indent=2)
+
+        st.cache_data.clear()
+
+        st.success(f"{n_aprobadas} reglas aplicadas. Tasa de deteccion: {metricas['tasa_deteccion_tipos']}%")
+        st.divider()
+
+        col1, col2, col3 = st.columns(3)
+        col1.metric("Reglas aplicadas",   n_aprobadas)
+        col2.metric("Errores detectados", metricas["errores_detectados_total"])
+        col3.metric("Tasa de deteccion",  f"{metricas['tasa_deteccion_tipos']}%")
+
+        st.subheader("Resultados por regla")
+        filas_res = []
+        for r in results:
+            estado = "FALLO" if r["errors"] > 0 else "OK"
+            filas_res.append({
+                "Estado":  estado,
+                "Tipo":    r["rule"].get("type", ""),
+                "Tabla":   r["rule"].get("tabla", ""),
+                "Errores": r["errors"],
+                "Detalle": r.get("detalle", ""),
+            })
+        df_res = pd.DataFrame(filas_res)
+
+        def colorear_estado(val):
+            if val == "FALLO":
+                return "background-color: #c0392b; color: white; font-weight: bold"
+            return "background-color: #1e7e34; color: white; font-weight: bold"
+
+        st.dataframe(
+            df_res.style.applymap(colorear_estado, subset=["Estado"]),
+            use_container_width=True,
+            hide_index=True,
+        )
 
 
 def pagina_reglas():
@@ -461,7 +564,6 @@ def pagina_reglas():
         return
 
     rules = results["rules"]
-
     tablas_cubiertas = len(set(r.get("tabla", "") for r in rules))
     tipos_distintos  = len(set(r.get("type", "") for r in rules))
 
@@ -607,6 +709,8 @@ elif pagina == "Profiling del dataset":
     pagina_profiling()
 elif pagina == "Anomalias inyectadas":
     pagina_anomalias()
+elif pagina == "Revision de reglas":
+    pagina_revision_reglas()
 elif pagina == "Reglas generadas":
     pagina_reglas()
 elif pagina == "Resultados y metricas":

@@ -8,12 +8,6 @@
     },
     {
       "type": "null_check",
-      "column": "cliente_id",
-      "tabla": "pedidos",
-      "descripcion": "El cliente_id es obligatorio"
-    },
-    {
-      "type": "null_check",
       "column": "producto_id",
       "tabla": "lineas_pedido",
       "descripcion": "El producto_id es obligatorio"
@@ -25,33 +19,15 @@
       "descripcion": "El precio debe ser positivo"
     },
     {
-      "type": "positive_check",
-      "column": "cantidad",
-      "tabla": "lineas_pedido",
-      "descripcion": "La cantidad debe ser positiva"
-    },
-    {
       "type": "email_check",
       "column": "email",
       "tabla": "clientes",
       "descripcion": "El email debe tener formato valido"
     },
     {
-      "type": "date_order_check",
-      "column_after": "fecha_entrega",
-      "column_before": "fecha_pedido",
-      "tabla": "pedidos",
-      "descripcion": "La entrega debe ser posterior al pedido"
-    },
-    {
       "type": "delivered_future_check",
       "tabla": "pedidos",
       "descripcion": "Un pedido entregado no puede tener fecha de entrega futura"
-    },
-    {
-      "type": "total_check",
-      "tabla": "pedidos",
-      "descripcion": "El total debe coincidir con la suma de lineas_pedido"
     },
     {
       "type": "stock_check",
@@ -78,16 +54,6 @@
     {
       "rule": {
         "type": "null_check",
-        "column": "cliente_id",
-        "tabla": "pedidos",
-        "descripcion": "El cliente_id es obligatorio"
-      },
-      "errors": 0,
-      "detalle": "0 filas con nulo en 'cliente_id'"
-    },
-    {
-      "rule": {
-        "type": "null_check",
         "column": "producto_id",
         "tabla": "lineas_pedido",
         "descripcion": "El producto_id es obligatorio"
@@ -107,16 +73,6 @@
     },
     {
       "rule": {
-        "type": "positive_check",
-        "column": "cantidad",
-        "tabla": "lineas_pedido",
-        "descripcion": "La cantidad debe ser positiva"
-      },
-      "errors": 5,
-      "detalle": "5 filas con valor <= 0 en 'cantidad'"
-    },
-    {
-      "rule": {
         "type": "email_check",
         "column": "email",
         "tabla": "clientes",
@@ -127,32 +83,12 @@
     },
     {
       "rule": {
-        "type": "date_order_check",
-        "column_after": "fecha_entrega",
-        "column_before": "fecha_pedido",
-        "tabla": "pedidos",
-        "descripcion": "La entrega debe ser posterior al pedido"
-      },
-      "errors": 5,
-      "detalle": "5 filas donde 'fecha_entrega' es anterior a 'fecha_pedido'"
-    },
-    {
-      "rule": {
         "type": "delivered_future_check",
         "tabla": "pedidos",
         "descripcion": "Un pedido entregado no puede tener fecha de entrega futura"
       },
       "errors": 5,
       "detalle": "5 pedidos en estado 'entregado' con fecha_entrega a partir de 2025-01-01"
-    },
-    {
-      "rule": {
-        "type": "total_check",
-        "tabla": "pedidos",
-        "descripcion": "El total debe coincidir con la suma de lineas_pedido"
-      },
-      "errors": 15,
-      "detalle": "15 pedidos cuyo total no coincide con la suma de sus lineas"
     },
     {
       "rule": {
@@ -189,16 +125,16 @@
     },
     "tipos_detectados": [
       "email_formato_invalido",
-      "precio_negativo",
-      "cantidad_cero",
       "nulo_en_campo_obligatorio",
-      "fecha_entrega_anterior_pedido",
-      "total_pedido_incorrecto",
-      "precio_linea_distinto_catalogo",
       "pedido_entregado_fecha_futura",
       "stock_superado"
     ],
     "tipos_no_detectados": [
+      "precio_negativo",
+      "cantidad_cero",
+      "fecha_entrega_anterior_pedido",
+      "total_pedido_incorrecto",
+      "precio_linea_distinto_catalogo",
       "fecha_registro_posterior_pedido"
     ],
     "deteccion_por_tipo": {
@@ -214,14 +150,14 @@
         "reglas_esperadas": [
           "positive_check"
         ],
-        "detectado": true
+        "detectado": false
       },
       "cantidad_cero": {
         "cantidad_inyectada": 5,
         "reglas_esperadas": [
           "positive_check"
         ],
-        "detectado": true
+        "detectado": false
       },
       "nulo_en_campo_obligatorio": {
         "cantidad_inyectada": 5,
@@ -235,21 +171,21 @@
         "reglas_esperadas": [
           "date_order_check"
         ],
-        "detectado": true
+        "detectado": false
       },
       "total_pedido_incorrecto": {
         "cantidad_inyectada": 5,
         "reglas_esperadas": [
           "total_check"
         ],
-        "detectado": true
+        "detectado": false
       },
       "precio_linea_distinto_catalogo": {
         "cantidad_inyectada": 5,
         "reglas_esperadas": [
           "total_check"
         ],
-        "detectado": true
+        "detectado": false
       },
       "pedido_entregado_fecha_futura": {
         "cantidad_inyectada": 5,
@@ -273,7 +209,7 @@
         "detectado": false
       }
     },
-    "tasa_deteccion_tipos": 90.0,
-    "errores_detectados_total": 72
+    "tasa_deteccion_tipos": 40.0,
+    "errores_detectados_total": 47
   }
 }

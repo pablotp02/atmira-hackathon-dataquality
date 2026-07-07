@@ -6,7 +6,7 @@ Sistema de detección de anomalías en datos que usa IA generativa para analizar
 generar automáticamente reglas de calidad y casos de prueba de transformaciones ETL, y
 validar ambos antes de que los datos lleguen a producción.
 
-> Equipo: Pablo Tovar y Juan Torres — estudiantes de informática 
+> Equipo: Pablo Tovar y Juan Torres — estudiantes de informática  
 > Hackathon de Atmira, 22 junio – 10 julio 2025
 
 ---
@@ -49,7 +49,7 @@ flowchart TD
     I["🛡️ Motor de validación<br/>run_rules.py"]
     J["📈 Evaluación de métricas<br/>evaluation.py"]
     K[["💾 results.json"]]
-    L["📱 Dashboard Streamlit<br/>7 páginas"]
+    L["📱 Dashboard Streamlit<br/>8 páginas"]
 
     A --> B
     A --> C
@@ -239,12 +239,13 @@ lógica de la transformación** contra inputs conocidos:
 | Revisión de reglas | Human-in-the-loop: aprobar/descartar reglas |
 | Reglas generadas | Reglas del LLM, gráfico por tipo, detalle por tabla |
 | Tests IA | Fixture tests con resultado OK / FALLO / PENDIENTE |
+| Estabilidad del sistema | Análisis de consistencia del LLM entre ejecuciones |
 | Resultados y métricas | Tasa de detección + comparativa inyectadas vs detectadas |
 
 **Funcionalidades del sidebar:**
 - ▶️ Ejecutar pipeline completo en vivo
 - 🎲 Checkbox para generar dataset nuevo con seed aleatoria (demo de generalización)
-- 📄 Exportar informe PDF con fecha del último análisis
+- 📄 Exportar informe PDF con fecha del último análisis (7 secciones)
 
 ---
 
@@ -254,7 +255,7 @@ lógica de la transformación** contra inputs conocidos:
 atmira-hackathon-dataquality/
 ├── run_all.py                          # Pipeline completo end-to-end
 ├── dashboard/
-│   └── app.py                          # Dashboard Streamlit (7 paginas)
+│   └── app.py                          # Dashboard Streamlit (8 paginas)
 ├── src/
 │   ├── generator/
 │   │   ├── generate_dataset.py
@@ -265,8 +266,10 @@ atmira-hackathon-dataquality/
 │   │   └── generate_rules.py
 │   ├── validation/
 │   │   └── run_rules.py
-│   └── evaluation/
-│       └── evaluation.py
+│   ├── evaluation/
+│   │   └── evaluation.py
+│   └── analysis/
+│       └── stability_analysis.py
 ├── tests/
 │   └── fixture_runner.py
 ├── experiments/
@@ -325,6 +328,9 @@ streamlit run dashboard/app.py
   **casos de prueba de transformaciones ETL** (unit, integration, edge cases, UAT) —
   cubriendo la parte del reto que suele pasarse por alto.
 - **Human-in-the-loop**: la IA propone, el analista decide qué reglas aplicar.
+- **Análisis de estabilidad**: el sistema registra el historial de reglas generadas en cada
+  ejecución y permite llamar al LLM para que analice si sus propias respuestas son consistentes
+  entre ejecuciones con distintos datasets — una IA evaluando a otra IA.
 - **Transparencia sobre limitaciones**: mostramos honestamente el 10% no detectado y por qué,
   en vez de presentar una tasa de detección artificialmente perfecta.
 - **Demo en vivo**: el dashboard permite regenerar el dataset con una seed aleatoria delante
@@ -335,5 +341,6 @@ streamlit run dashboard/app.py
 ## 📅 Roadmap
 
 - [ ] Implementar `registration_date_check` en el motor de validación (cruce clientes/pedidos).
+- [ ] Análisis de estabilidad en lote: ejecutar N ejecuciones seguidas y comparar consistencia estadística.
 - [ ] Añadir detección de anomalías estadísticas (outliers) y semánticas.
 - [ ] Tests automatizados (`pytest`) sobre el propio motor de validación.

@@ -26,11 +26,11 @@
           "valores_unicos": 200,
           "tipo": "texto_o_categorico",
           "valores_frecuentes": {
-            "Rafa Calatayud Bonet": 1,
-            "María Cristina Amor": 1,
-            "Sandalio Agudo-Cuervo": 1,
-            "Aroa Bru Pinto": 1,
-            "Pánfilo Segovia Casanovas": 1
+            "Buenaventura de Bonet": 1,
+            "José Antonio de Flor": 1,
+            "Reynaldo Cuervo Rocamora": 1,
+            "Goyo Caballero Palomar": 1,
+            "Beatriz del Bermúdez": 1
           }
         },
         "email": {
@@ -41,9 +41,9 @@
           "valores_frecuentes": {
             "amayamanuela@example.com": 1,
             "banton@example.org": 1,
-            "liliarivas@example.org": 1,
-            "rnieto@example.org": 1,
-            "palomarrebeca@example.com": 1
+            "cgimenez@example.net": 1,
+            "leopoldo23@example.com": 1,
+            "elisabet40@example.net": 1
           }
         },
         "fecha_registro": {
@@ -74,14 +74,14 @@
         "fecha_nacimiento": {
           "nulos": 0,
           "porcentaje_nulos": 0.0,
-          "valores_unicos": 200,
+          "valores_unicos": 197,
           "tipo": "texto_o_categorico",
           "valores_frecuentes": {
-            "1960-12-10": 1,
-            "1959-04-16": 1,
-            "1973-10-24": 1,
-            "1959-01-29": 1,
-            "1983-07-20": 1
+            "1978-07-24": 2,
+            "1976-03-03": 2,
+            "1960-08-04": 2,
+            "1960-05-23": 1,
+            "1964-06-11": 1
           }
         }
       }
@@ -201,7 +201,7 @@
             "2023-02-27": 4,
             "2023-10-16": 4,
             "2024-03-18": 4,
-            "2024-10-03": 3
+            "2023-09-08": 3
           }
         },
         "fecha_entrega": {
@@ -211,9 +211,9 @@
           "tipo": "texto_o_categorico",
           "valores_frecuentes": {
             "2023-04-23": 4,
-            "2024-09-20": 4,
-            "2023-08-15": 4,
             "2024-11-21": 4,
+            "2023-08-15": 4,
+            "2024-09-20": 4,
             "2024-07-07": 4
           }
         },

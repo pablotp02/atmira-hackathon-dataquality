@@ -17,8 +17,8 @@
       "tabla": "clientes",
       "columna": "email",
       "fila_id": 71,
-      "valor_original": "florencio99@example.net",
-      "valor_nuevo": "florencio99example",
+      "valor_original": "romeroelpidio@example.com",
+      "valor_nuevo": "romeroelpidioexample",
       "descripcion": "Email sin @ ni dominio valido"
     },
     {
@@ -26,8 +26,8 @@
       "tabla": "clientes",
       "columna": "email",
       "fila_id": 147,
-      "valor_original": "dario49@example.org",
-      "valor_nuevo": "dario49example",
+      "valor_original": "encarnacionaroca@example.net",
+      "valor_nuevo": "encarnacionarocaexample",
       "descripcion": "Email sin @ ni dominio valido"
     },
     {
@@ -35,8 +35,8 @@
       "tabla": "clientes",
       "columna": "email",
       "fila_id": 99,
-      "valor_original": "svalbuena@example.net",
-      "valor_nuevo": "svalbuenaexample",
+      "valor_original": "icardona@example.org",
+      "valor_nuevo": "icardonaexample",
       "descripcion": "Email sin @ ni dominio valido"
     },
     {
@@ -44,8 +44,8 @@
       "tabla": "clientes",
       "columna": "email",
       "fila_id": 96,
-      "valor_original": "bravojenaro@example.net",
-      "valor_nuevo": "bravojenaroexample",
+      "valor_original": "galianoeufemia@example.org",
+      "valor_nuevo": "galianoeufemiaexample",
       "descripcion": "Email sin @ ni dominio valido"
     },
     {
@@ -53,8 +53,8 @@
       "tabla": "clientes",
       "columna": "email",
       "fila_id": 88,
-      "valor_original": "hurtadodiego@example.net",
-      "valor_nuevo": "hurtadodiegoexample",
+      "valor_original": "mariano43@example.org",
+      "valor_nuevo": "mariano43example",
       "descripcion": "Email sin @ ni dominio valido"
     },
     {

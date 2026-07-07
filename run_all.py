@@ -116,6 +116,17 @@ def main():
 
     imprimir_metricas(metricas)
 
+    # Guardar resultados para el dashboard
+    results_path = os.path.join(os.path.dirname(__file__), "data", "results.json")
+    os.makedirs(os.path.dirname(results_path), exist_ok=True)
+    with open(results_path, "w", encoding="utf-8") as f:
+        json.dump({
+            "rules":    rules,
+            "results":  results,
+            "metricas": metricas,
+        }, f, ensure_ascii=False, indent=2)
+    print("Resultados guardados en data/results.json")
+
     separador("PIPELINE COMPLETADO")
     print(f"  Tasa de deteccion final: {metricas['tasa_deteccion_tipos']}%")
 

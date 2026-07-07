@@ -1,0 +1,232 @@
+{
+  "rules": [
+    {
+      "type": "null_check",
+      "column": "estado",
+      "tabla": "pedidos",
+      "descripcion": "El estado es obligatorio"
+    },
+    {
+      "type": "null_check",
+      "column": "cliente_id",
+      "tabla": "pedidos",
+      "descripcion": "El cliente_id es obligatorio"
+    },
+    {
+      "type": "null_check",
+      "column": "producto_id",
+      "tabla": "lineas_pedido",
+      "descripcion": "El producto_id es obligatorio"
+    },
+    {
+      "type": "positive_check",
+      "column": "precio_unitario",
+      "tabla": "lineas_pedido",
+      "descripcion": "El precio debe ser positivo"
+    },
+    {
+      "type": "positive_check",
+      "column": "cantidad",
+      "tabla": "lineas_pedido",
+      "descripcion": "La cantidad debe ser positiva"
+    },
+    {
+      "type": "email_check",
+      "column": "email",
+      "tabla": "clientes",
+      "descripcion": "El email debe tener formato valido"
+    },
+    {
+      "type": "date_order_check",
+      "column_after": "fecha_entrega",
+      "column_before": "fecha_pedido",
+      "tabla": "pedidos",
+      "descripcion": "La entrega debe ser posterior al pedido"
+    },
+    {
+      "type": "total_check",
+      "tabla": "pedidos",
+      "descripcion": "El total debe coincidir con la suma de lineas_pedido"
+    },
+    {
+      "type": "delivered_future_check",
+      "tabla": "pedidos",
+      "descripcion": "Un pedido entregado no puede tener fecha de entrega futura"
+    }
+  ],
+  "results": [
+    {
+      "rule": {
+        "type": "null_check",
+        "column": "estado",
+        "tabla": "pedidos",
+        "descripcion": "El estado es obligatorio"
+      },
+      "errors": 5,
+      "detalle": "5 filas con nulo en 'estado'"
+    },
+    {
+      "rule": {
+        "type": "null_check",
+        "column": "cliente_id",
+        "tabla": "pedidos",
+        "descripcion": "El cliente_id es obligatorio"
+      },
+      "errors": 0,
+      "detalle": "0 filas con nulo en 'cliente_id'"
+    },
+    {
+      "rule": {
+        "type": "null_check",
+        "column": "producto_id",
+        "tabla": "lineas_pedido",
+        "descripcion": "El producto_id es obligatorio"
+      },
+      "errors": 0,
+      "detalle": "0 filas con nulo en 'producto_id'"
+    },
+    {
+      "rule": {
+        "type": "positive_check",
+        "column": "precio_unitario",
+        "tabla": "lineas_pedido",
+        "descripcion": "El precio debe ser positivo"
+      },
+      "errors": 0,
+      "detalle": "0 filas con valor <= 0 en 'precio_unitario'"
+    },
+    {
+      "rule": {
+        "type": "positive_check",
+        "column": "cantidad",
+        "tabla": "lineas_pedido",
+        "descripcion": "La cantidad debe ser positiva"
+      },
+      "errors": 5,
+      "detalle": "5 filas con valor <= 0 en 'cantidad'"
+    },
+    {
+      "rule": {
+        "type": "email_check",
+        "column": "email",
+        "tabla": "clientes",
+        "descripcion": "El email debe tener formato valido"
+      },
+      "errors": 5,
+      "detalle": "5 emails con formato invalido en 'email'"
+    },
+    {
+      "rule": {
+        "type": "date_order_check",
+        "column_after": "fecha_entrega",
+        "column_before": "fecha_pedido",
+        "tabla": "pedidos",
+        "descripcion": "La entrega debe ser posterior al pedido"
+      },
+      "errors": 5,
+      "detalle": "5 filas donde 'fecha_entrega' es anterior a 'fecha_pedido'"
+    },
+    {
+      "rule": {
+        "type": "total_check",
+        "tabla": "pedidos",
+        "descripcion": "El total debe coincidir con la suma de lineas_pedido"
+      },
+      "errors": 15,
+      "detalle": "15 pedidos cuyo total no coincide con la suma de sus lineas"
+    },
+    {
+      "rule": {
+        "type": "delivered_future_check",
+        "tabla": "pedidos",
+        "descripcion": "Un pedido entregado no puede tener fecha de entrega futura"
+      },
+      "errors": 5,
+      "detalle": "5 pedidos en estado 'entregado' con fecha_entrega a partir de 2025-01-01"
+    }
+  ],
+  "metricas": {
+    "total_inyectadas": 40,
+    "tipos_inyectados": {
+      "email_formato_invalido": 5,
+      "precio_negativo": 5,
+      "cantidad_cero": 5,
+      "nulo_en_campo_obligatorio": 5,
+      "fecha_entrega_anterior_pedido": 5,
+      "total_pedido_incorrecto": 5,
+      "precio_linea_distinto_catalogo": 5,
+      "pedido_entregado_fecha_futura": 5
+    },
+    "tipos_detectados": [
+      "email_formato_invalido",
+      "precio_negativo",
+      "cantidad_cero",
+      "nulo_en_campo_obligatorio",
+      "fecha_entrega_anterior_pedido",
+      "total_pedido_incorrecto",
+      "precio_linea_distinto_catalogo",
+      "pedido_entregado_fecha_futura"
+    ],
+    "tipos_no_detectados": [],
+    "deteccion_por_tipo": {
+      "email_formato_invalido": {
+        "cantidad_inyectada": 5,
+        "reglas_esperadas": [
+          "email_check"
+        ],
+        "detectado": true
+      },
+      "precio_negativo": {
+        "cantidad_inyectada": 5,
+        "reglas_esperadas": [
+          "positive_check"
+        ],
+        "detectado": true
+      },
+      "cantidad_cero": {
+        "cantidad_inyectada": 5,
+        "reglas_esperadas": [
+          "positive_check"
+        ],
+        "detectado": true
+      },
+      "nulo_en_campo_obligatorio": {
+        "cantidad_inyectada": 5,
+        "reglas_esperadas": [
+          "null_check"
+        ],
+        "detectado": true
+      },
+      "fecha_entrega_anterior_pedido": {
+        "cantidad_inyectada": 5,
+        "reglas_esperadas": [
+          "date_order_check"
+        ],
+        "detectado": true
+      },
+      "total_pedido_incorrecto": {
+        "cantidad_inyectada": 5,
+        "reglas_esperadas": [
+          "total_check"
+        ],
+        "detectado": true
+      },
+      "precio_linea_distinto_catalogo": {
+        "cantidad_inyectada": 5,
+        "reglas_esperadas": [
+          "total_check"
+        ],
+        "detectado": true
+      },
+      "pedido_entregado_fecha_futura": {
+        "cantidad_inyectada": 5,
+        "reglas_esperadas": [
+          "delivered_future_check"
+        ],
+        "detectado": true
+      }
+    },
+    "tasa_deteccion_tipos": 100.0,
+    "errores_detectados_total": 40
+  }
+}

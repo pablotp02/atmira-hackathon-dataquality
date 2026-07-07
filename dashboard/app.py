@@ -261,6 +261,7 @@ with st.sidebar:
             "Anomalias inyectadas",
             "Revision de reglas",
             "Reglas generadas",
+            "Tests IA",
             "Resultados y metricas",
         ],
         label_visibility="collapsed",
@@ -606,6 +607,88 @@ def pagina_reglas():
             st.dataframe(df, use_container_width=True, hide_index=True)
 
 
+def pagina_tests():
+    st.title("Tests generados automaticamente por IA")
+    st.markdown(
+        "El LLM genera automaticamente casos de prueba para validar la logica "
+        "de las transformaciones ETL. Cada test ejecuta la funcion real con un "
+        "input conocido y compara el resultado con el esperado."
+    )
+
+    results = cargar_results()
+    if results is None:
+        st.warning("No se encontraron resultados. Ejecuta el pipeline primero.")
+        return
+
+    fixture_results   = results.get("fixture_results", [])
+    unit_tests        = results.get("unit_tests", [])
+    integration_tests = results.get("integration_tests", [])
+    edge_cases        = results.get("edge_cases", [])
+    uat_tests         = results.get("uat_tests", [])
+
+    if not fixture_results:
+        st.warning("No hay resultados de tests. Ejecuta el pipeline completo primero.")
+        return
+
+    pasados    = sum(1 for r in fixture_results if r.get("passed") is True)
+    fallados   = sum(1 for r in fixture_results if r.get("passed") is False)
+    pendientes = sum(1 for r in fixture_results if r.get("passed") is None)
+
+    col1, col2, col3, col4 = st.columns(4)
+    col1.metric("Total tests",  len(fixture_results))
+    col2.metric("Pasados",      pasados)
+    col3.metric("Fallados",     fallados)
+    col4.metric("Pendientes",   pendientes)
+
+    st.divider()
+
+    def renderizar_tests(tests_def, resultados_runner, titulo):
+        st.subheader(titulo)
+        if not tests_def:
+            st.caption("No hay tests en esta categoria.")
+            return
+
+        nombres_runner = {r["name"]: r for r in resultados_runner}
+
+        for t in tests_def:
+            nombre    = t.get("name", "sin nombre")
+            resultado = nombres_runner.get(nombre)
+
+            if resultado:
+                passed = resultado.get("passed")
+                if passed is True:
+                    icono, color = "OK",        "#1e7e34"
+                elif passed is False:
+                    icono, color = "FALLO",     "#c0392b"
+                else:
+                    icono, color = "PENDIENTE", "#888888"
+                detalle = resultado.get("detail", "")
+            else:
+                icono, color, detalle = "PENDIENTE", "#888888", "Sin resultado"
+
+            st.markdown(
+                f"<div style='border-left: 4px solid {color}; padding: 8px 12px; margin-bottom: 8px;'>"
+                f"<b style='color:{color}'>[{icono}]</b> {nombre}<br>"
+                f"<small style='color:gray'>{t.get('description', '')}</small><br>"
+                f"<small>{detalle}</small>"
+                f"</div>",
+                unsafe_allow_html=True,
+            )
+
+    tab1, tab2, tab3, tab4 = st.tabs([
+        "Unit Tests", "Integration Tests", "Edge Cases", "UAT Tests"
+    ])
+
+    with tab1:
+        renderizar_tests(unit_tests, fixture_results, "Unit Tests")
+    with tab2:
+        renderizar_tests(integration_tests, fixture_results, "Integration Tests")
+    with tab3:
+        renderizar_tests(edge_cases, fixture_results, "Edge Cases")
+    with tab4:
+        renderizar_tests(uat_tests, fixture_results, "UAT Tests")
+
+
 def pagina_resultados():
     st.title("Resultados y metricas")
     results = cargar_results()
@@ -713,5 +796,7 @@ elif pagina == "Revision de reglas":
     pagina_revision_reglas()
 elif pagina == "Reglas generadas":
     pagina_reglas()
+elif pagina == "Tests IA":
+    pagina_tests()
 elif pagina == "Resultados y metricas":
     pagina_resultados()

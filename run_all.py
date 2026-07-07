@@ -6,7 +6,10 @@ Ejecuta todos los pasos del pipeline en orden:
   1. Generacion del dataset sintetico limpio
   2. Profiling del dataset
   3. Inyeccion de anomalias
-  4. Ejecucion del pipeline de validacion y evaluacion
+  4. Generacion de reglas con el LLM
+  5. Ejecucion de fixture tests (validacion de transformaciones)
+  6. Validacion del dataset con las reglas
+  7. Evaluacion de metricas
 
 Uso:
   python run_all.py                  # seed fija (reproducible)
@@ -26,6 +29,7 @@ from src.generator.inject_anomalies import main as inyectar_anomalias
 from src.llm.generate_rules import generate_rules
 from src.validation.run_rules import run_rules
 from src.evaluation.evaluation import evaluate, imprimir_metricas
+from tests.fixture_runner import run_fixture_tests
 
 DIRTY_DIR = os.path.join(os.path.dirname(__file__), "data", "dirty")
 
@@ -61,7 +65,7 @@ def main(seed_dataset=42, seed_anomalias=99):
     separador("PASO 3 - Inyeccion de anomalias")
     inyectar_anomalias(seed=seed_anomalias)
 
-    # ── Paso 4: Pipeline de validacion ───────────────────────────────────────
+    # ── Paso 4: Generacion de reglas con el LLM ───────────────────────────────
     separador("PASO 4 - Generacion de reglas y validacion")
 
     dfs_dirty = cargar_dfs(DIRTY_DIR)
@@ -103,6 +107,38 @@ def main(seed_dataset=42, seed_anomalias=99):
         json.dump(rules, f, ensure_ascii=False, indent=2)
     print("Reglas propuestas guardadas en data/rules_propuestas.json")
 
+    # ── Paso 5: Fixture tests (validacion de transformaciones) ────────────────
+    separador("PASO 5 - Fixture tests generados por el LLM")
+
+    unit_tests        = rules_json.get("unit_tests", [])
+    integration_tests = rules_json.get("integration_tests", [])
+    edge_cases        = rules_json.get("edge_cases", [])
+    uat_tests         = rules_json.get("uat_tests", [])
+
+    todos_los_tests = unit_tests + integration_tests + edge_cases + uat_tests
+    print(f"Tests generados: {len(todos_los_tests)} "
+          f"(unit={len(unit_tests)}, integration={len(integration_tests)}, "
+          f"edge={len(edge_cases)}, uat={len(uat_tests)})")
+
+    fixture_results = run_fixture_tests(todos_los_tests)
+
+    pasados  = sum(1 for r in fixture_results if r["passed"] is True)
+    fallados = sum(1 for r in fixture_results if r["passed"] is False)
+    pendientes = sum(1 for r in fixture_results if r["passed"] is None)
+
+    print(f"\nResultados fixture tests: {pasados} OK | {fallados} FALLO | {pendientes} pendientes")
+    for r in fixture_results:
+        if r["passed"] is True:
+            estado = "OK"
+        elif r["passed"] is False:
+            estado = "FALLO"
+        else:
+            estado = "PENDIENTE"
+        print(f"  [{estado}] {r['name']} -> {r['detail']}")
+
+    # ── Paso 6: Validacion del dataset ────────────────────────────────────────
+    separador("PASO 6 - Validacion del dataset")
+
     print("Validando dataset...")
     results = run_rules(dfs_dirty, rules)
 
@@ -123,19 +159,26 @@ def main(seed_dataset=42, seed_anomalias=99):
 
     imprimir_metricas(metricas)
 
+    # Guardar todo en results.json
     results_path = os.path.join(os.path.dirname(__file__), "data", "results.json")
     os.makedirs(os.path.dirname(results_path), exist_ok=True)
     with open(results_path, "w", encoding="utf-8") as f:
         json.dump({
-            "rules":    rules,
-            "results":  results,
-            "metricas": metricas,
+            "rules":              rules,
+            "results":            results,
+            "metricas":           metricas,
+            "unit_tests":         unit_tests,
+            "integration_tests":  integration_tests,
+            "edge_cases":         edge_cases,
+            "uat_tests":          uat_tests,
+            "fixture_results":    fixture_results,
         }, f, ensure_ascii=False, indent=2)
     print("Resultados guardados en data/results.json")
 
     separador("PIPELINE COMPLETADO")
     print(f"  Modo: {modo}")
     print(f"  Tasa de deteccion final: {metricas['tasa_deteccion_tipos']}%")
+    print(f"  Fixture tests: {pasados} OK | {fallados} FALLO | {pendientes} pendientes")
 
 
 if __name__ == "__main__":

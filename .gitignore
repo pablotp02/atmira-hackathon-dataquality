@@ -26,3 +26,7 @@ Thumbs.db
 # IDEs
 .vscode/
 .idea/
+
+# Archivos generados automaticamente por el pipeline
+data/results.json
+data/rules_propuestas.json

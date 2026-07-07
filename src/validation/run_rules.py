@@ -19,10 +19,22 @@ def run_rules(dfs, rules):
     """
     results = []
 
+    # Tipos que requieren campo 'column' para funcionar
+    TIPOS_CON_COLUMNA = {"null_check", "positive_check", "email_check"}
+
     for rule in rules:
-        rule_type   = rule.get("type")
-        column      = rule.get("column")
-        tabla       = rule.get("tabla")
+        rule_type = rule.get("type")
+        column    = rule.get("column")
+        tabla     = rule.get("tabla")
+
+        # Ignorar reglas con columna nula cuando el tipo la requiere
+        if rule_type in TIPOS_CON_COLUMNA and not column:
+            results.append({
+                "rule":    rule,
+                "errors":  0,
+                "detalle": f"Regla ignorada: tipo '{rule_type}' requiere 'column' pero no se especifico",
+            })
+            continue
 
         df = dfs.get(tabla)
         if df is None and rule_type not in ("total_check", "stock_check"):

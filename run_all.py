@@ -23,6 +23,7 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 import json
 import argparse
 import pandas as pd
+from datetime import datetime
 from src.generator.generate_dataset import main as generar_dataset
 from src.profiling.profile_dataset import main as generar_profiling
 from src.generator.inject_anomalies import main as inyectar_anomalias
@@ -31,7 +32,8 @@ from src.validation.run_rules import run_rules
 from src.evaluation.evaluation import evaluate, imprimir_metricas
 from tests.fixture_runner import run_fixture_tests
 
-DIRTY_DIR = os.path.join(os.path.dirname(__file__), "data", "dirty")
+DIRTY_DIR    = os.path.join(os.path.dirname(__file__), "data", "dirty")
+HISTORY_PATH = os.path.join(os.path.dirname(__file__), "data", "rules_history.json")
 
 
 def separador(titulo: str):
@@ -47,6 +49,27 @@ def cargar_dfs(directorio: str) -> dict:
         "pedidos":       pd.read_csv(os.path.join(directorio, "pedidos.csv")),
         "lineas_pedido": pd.read_csv(os.path.join(directorio, "lineas_pedido.csv")),
     }
+
+
+def actualizar_historial(seed: int, rules: list, metricas: dict):
+    """Acumula las reglas generadas en cada ejecucion para analisis de estabilidad."""
+    historial = []
+    if os.path.exists(HISTORY_PATH):
+        with open(HISTORY_PATH, "r", encoding="utf-8") as f:
+            historial = json.load(f)
+
+    historial.append({
+        "timestamp":      datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "seed":           seed,
+        "rule_types":     [r.get("type") for r in rules],
+        "num_reglas":     len(rules),
+        "tasa_deteccion": metricas["tasa_deteccion_tipos"],
+    })
+
+    with open(HISTORY_PATH, "w", encoding="utf-8") as f:
+        json.dump(historial, f, ensure_ascii=False, indent=2)
+
+    print(f"Historial actualizado en data/rules_history.json ({len(historial)} ejecuciones registradas)")
 
 
 def main(seed_dataset=42, seed_anomalias=99):
@@ -65,7 +88,7 @@ def main(seed_dataset=42, seed_anomalias=99):
     separador("PASO 3 - Inyeccion de anomalias")
     inyectar_anomalias(seed=seed_anomalias)
 
-    # ── Paso 4: Generacion de reglas con el LLM ───────────────────────────────
+    # ── Paso 4: Generacion de reglas con el LLM ──────────────────────────────
     separador("PASO 4 - Generacion de reglas y validacion")
 
     dfs_dirty = cargar_dfs(DIRTY_DIR)
@@ -107,7 +130,7 @@ def main(seed_dataset=42, seed_anomalias=99):
         json.dump(rules, f, ensure_ascii=False, indent=2)
     print("Reglas propuestas guardadas en data/rules_propuestas.json")
 
-    # ── Paso 5: Fixture tests (validacion de transformaciones) ────────────────
+    # ── Paso 5: Fixture tests ─────────────────────────────────────────────────
     separador("PASO 5 - Fixture tests generados por el LLM")
 
     unit_tests        = rules_json.get("unit_tests", [])
@@ -122,18 +145,13 @@ def main(seed_dataset=42, seed_anomalias=99):
 
     fixture_results = run_fixture_tests(todos_los_tests)
 
-    pasados  = sum(1 for r in fixture_results if r["passed"] is True)
-    fallados = sum(1 for r in fixture_results if r["passed"] is False)
+    pasados    = sum(1 for r in fixture_results if r["passed"] is True)
+    fallados   = sum(1 for r in fixture_results if r["passed"] is False)
     pendientes = sum(1 for r in fixture_results if r["passed"] is None)
 
     print(f"\nResultados fixture tests: {pasados} OK | {fallados} FALLO | {pendientes} pendientes")
     for r in fixture_results:
-        if r["passed"] is True:
-            estado = "OK"
-        elif r["passed"] is False:
-            estado = "FALLO"
-        else:
-            estado = "PENDIENTE"
+        estado = "OK" if r["passed"] is True else "FALLO" if r["passed"] is False else "PENDIENTE"
         print(f"  [{estado}] {r['name']} -> {r['detail']}")
 
     # ── Paso 6: Validacion del dataset ────────────────────────────────────────
@@ -174,6 +192,9 @@ def main(seed_dataset=42, seed_anomalias=99):
             "fixture_results":    fixture_results,
         }, f, ensure_ascii=False, indent=2)
     print("Resultados guardados en data/results.json")
+
+    # Actualizar historial de reglas para analisis de estabilidad
+    actualizar_historial(seed_dataset, rules, metricas)
 
     separador("PIPELINE COMPLETADO")
     print(f"  Modo: {modo}")

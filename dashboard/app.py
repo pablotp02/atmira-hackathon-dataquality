@@ -31,6 +31,7 @@ DIRTY_DIR             = os.path.join(BASE_DIR, "data", "dirty")
 PROFILING_DIR         = os.path.join(BASE_DIR, "data", "profiling")
 RESULTS_PATH          = os.path.join(BASE_DIR, "data", "results.json")
 RULES_PROPUESTAS_PATH = os.path.join(BASE_DIR, "data", "rules_propuestas.json")
+HISTORY_PATH = os.path.join(BASE_DIR, "data", "rules_history.json")
 
 # ── Configuracion de pagina ───────────────────────────────────────────────────
 
@@ -81,6 +82,13 @@ def obtener_fecha_ultimo_run():
         return "Desconocida (no se encontro results.json)"
     timestamp = os.path.getmtime(RESULTS_PATH)
     return datetime.fromtimestamp(timestamp).strftime("%d/%m/%Y %H:%M:%S")
+
+@st.cache_data
+def cargar_historial():
+    if not os.path.exists(HISTORY_PATH):
+        return []
+    with open(HISTORY_PATH, "r", encoding="utf-8") as f:
+        return json.load(f)
 
 
 # ── Generador de PDF ──────────────────────────────────────────────────────────
@@ -262,6 +270,7 @@ with st.sidebar:
             "Revision de reglas",
             "Reglas generadas",
             "Tests IA",
+            "Estabilidad del sistema",
             "Resultados y metricas",
         ],
         label_visibility="collapsed",
@@ -784,6 +793,70 @@ def pagina_resultados():
         st.success("El sistema detecto el 100% de los tipos de anomalias inyectadas.")
 
 
+def pagina_estabilidad():
+    st.title("Analisis de estabilidad del sistema")
+    st.markdown(
+        "Evalua si el LLM genera reglas consistentes entre ejecuciones. "
+        "Un sistema estable genera siempre las mismas reglas independientemente del dataset."
+    )
+
+    historial = cargar_historial()
+
+    if not historial:
+        st.warning("No hay historial de ejecuciones. Ejecuta el pipeline al menos 3 veces.")
+        return
+
+    st.caption(f"Basado en {len(historial)} ejecuciones registradas.")
+
+    if st.button("Analizar estabilidad con IA", type="primary"):
+        with st.spinner("El LLM esta analizando el historial de ejecuciones..."):
+            from src.analysis.stability_analysis import analizar_estabilidad
+            resultado = analizar_estabilidad(historial)
+
+        nivel = resultado.get("nivel_estabilidad", "alto")
+        color = "#1e7e34" if nivel == "alto" else "#e67e22" if nivel == "medio" else "#c0392b"
+
+        etiquetas = {"alto": "Alta", "medio": "Media", "bajo": "Baja"}
+        etiqueta  = etiquetas.get(nivel, nivel.capitalize())
+        st.markdown(
+            f"<h2 style='color:{color}'>Estabilidad: {etiqueta}</h2>",
+            unsafe_allow_html=True,
+        )
+
+        metricas = resultado.get("metricas", {})
+        col1, col2, col3 = st.columns(3)
+        col1.metric("Ejecuciones analizadas", metricas.get("num_ejecuciones", 0))
+        col2.metric("Tasa de deteccion media", f"{metricas.get('tasa_media', 0)}%")
+        col3.metric("Reglas media por ejecucion", metricas.get("reglas_media", 0))
+
+        st.divider()
+        st.subheader("Conclusion del analisis")
+        st.info(resultado.get("conclusion", ""))
+
+        col1, col2 = st.columns(2)
+        with col1:
+            st.subheader("Puntos fuertes")
+            for p in resultado.get("puntos_fuertes", []):
+                st.success(p)
+        with col2:
+            st.subheader("Areas de mejora")
+            for a in resultado.get("areas_mejora", []):
+                st.warning(a)
+
+        st.divider()
+        st.subheader("Frecuencia de tipos de regla")
+        frecuencias = metricas.get("frecuencias", {})
+        df_freq = pd.DataFrame(
+            list(frecuencias.items()),
+            columns=["Tipo", "Frecuencia (%)"]
+        ).sort_values("Frecuencia (%)", ascending=False)
+        st.dataframe(df_freq, use_container_width=True, hide_index=True)
+
+        st.divider()
+        st.subheader("Recomendacion")
+        st.markdown(f"**{resultado.get('recomendacion', '')}**")
+
+
 # ── Router ────────────────────────────────────────────────────────────────────
 
 if pagina == "Resumen":
@@ -800,3 +873,5 @@ elif pagina == "Tests IA":
     pagina_tests()
 elif pagina == "Resultados y metricas":
     pagina_resultados()
+elif pagina == "Estabilidad del sistema":
+    pagina_estabilidad()

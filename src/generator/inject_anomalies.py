@@ -12,6 +12,7 @@ para calcular que porcentaje de anomalias detecto el sistema.
 
 Uso:
   python src/generator/inject_anomalies.py
+  python src/generator/inject_anomalies.py --seed=123
 """
 
 import os
@@ -22,13 +23,9 @@ from datetime import datetime, timedelta
 
 # ── Configuracion ─────────────────────────────────────────────────────────────
 
-SEED = 99
-random.seed(SEED)
-
 RAW_DIR   = os.path.join(os.path.dirname(__file__), "..", "..", "data", "raw")
 DIRTY_DIR = os.path.join(os.path.dirname(__file__), "..", "..", "data", "dirty")
 
-# Numero de anomalias a inyectar por tipo
 NUM_ANOMALIAS = {
     "email_formato_invalido":             5,
     "precio_negativo":                    5,
@@ -177,8 +174,7 @@ def inyectar_entregado_fecha_futura(pedidos: pd.DataFrame, log: list, n: int):
 
 
 def inyectar_stock_superado(productos: pd.DataFrame, lineas: pd.DataFrame,
-                             log: list, n: int):
-    """Stock disponible menor que la cantidad total pedida — requiere cruce de tablas."""
+                             log: list, n: int, seed: int):
     total_pedido = (
         lineas.groupby("producto_id")["cantidad"]
         .sum()
@@ -186,8 +182,7 @@ def inyectar_stock_superado(productos: pd.DataFrame, lineas: pd.DataFrame,
     )
     candidatos = productos.merge(total_pedido, on="producto_id")
     candidatos = candidatos[candidatos["stock"] > 0].copy()
-
-    seleccionados = candidatos.sample(n=min(n, len(candidatos)), random_state=SEED)
+    seleccionados = candidatos.sample(n=min(n, len(candidatos)), random_state=seed)
 
     for _, prod in seleccionados.iterrows():
         idx = productos[productos["producto_id"] == prod["producto_id"]].index[0]
@@ -204,7 +199,6 @@ def inyectar_stock_superado(productos: pd.DataFrame, lineas: pd.DataFrame,
 
 def inyectar_fecha_registro_posterior_pedido(clientes: pd.DataFrame, pedidos: pd.DataFrame,
                                               log: list, n: int):
-    """Fecha de registro del cliente posterior a su primer pedido — anomalia temporal sutil."""
     pedidos_dt = pedidos.copy()
     pedidos_dt["fecha_pedido_dt"] = pd.to_datetime(pedidos_dt["fecha_pedido"])
     primer_pedido = (
@@ -212,7 +206,6 @@ def inyectar_fecha_registro_posterior_pedido(clientes: pd.DataFrame, pedidos: pd
         .min()
         .reset_index(name="primer_pedido")
     )
-
     candidatos = clientes.merge(primer_pedido, on="cliente_id")
     ids = random.sample(candidatos["cliente_id"].tolist(), min(n, len(candidatos)))
 
@@ -235,7 +228,10 @@ def inyectar_fecha_registro_posterior_pedido(clientes: pd.DataFrame, pedidos: pd
 
 # ── Main ──────────────────────────────────────────────────────────────────────
 
-def main():
+def main(seed=99):
+    random.seed(seed)
+    print(f"Seed utilizada: {seed}")
+
     os.makedirs(DIRTY_DIR, exist_ok=True)
 
     print("Cargando dataset limpio...")
@@ -253,13 +249,13 @@ def main():
     pedidos   = inyectar_nulo_obligatorio(pedidos, log, NUM_ANOMALIAS["nulo_en_campo_obligatorio"])
 
     print("Inyectando anomalias de contexto de negocio...")
-    pedidos   = inyectar_fecha_entrega_anterior(pedidos, log, NUM_ANOMALIAS["fecha_entrega_anterior_pedido"])
-    pedidos   = inyectar_total_incorrecto(pedidos, log, NUM_ANOMALIAS["total_pedido_incorrecto"])
-    lineas    = inyectar_precio_linea_distinto(lineas, productos, log, NUM_ANOMALIAS["precio_linea_distinto_catalogo"])
-    pedidos   = inyectar_entregado_fecha_futura(pedidos, log, NUM_ANOMALIAS["pedido_entregado_fecha_futura"])
+    pedidos = inyectar_fecha_entrega_anterior(pedidos, log, NUM_ANOMALIAS["fecha_entrega_anterior_pedido"])
+    pedidos = inyectar_total_incorrecto(pedidos, log, NUM_ANOMALIAS["total_pedido_incorrecto"])
+    lineas  = inyectar_precio_linea_distinto(lineas, productos, log, NUM_ANOMALIAS["precio_linea_distinto_catalogo"])
+    pedidos = inyectar_entregado_fecha_futura(pedidos, log, NUM_ANOMALIAS["pedido_entregado_fecha_futura"])
 
     print("Inyectando anomalias avanzadas (cruce de tablas)...")
-    productos = inyectar_stock_superado(productos, lineas, log, NUM_ANOMALIAS["stock_superado"])
+    productos = inyectar_stock_superado(productos, lineas, log, NUM_ANOMALIAS["stock_superado"], seed=seed)
     clientes  = inyectar_fecha_registro_posterior_pedido(clientes, pedidos, log, NUM_ANOMALIAS["fecha_registro_posterior_pedido"])
 
     print("Guardando CSVs sucios...")
@@ -296,4 +292,8 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--seed", type=int, default=99)
+    args = parser.parse_args()
+    main(seed=args.seed)

@@ -9,7 +9,8 @@ Ejecuta todos los pasos del pipeline en orden:
   4. Ejecucion del pipeline de validacion y evaluacion
 
 Uso:
-  python run_all.py
+  python run_all.py                  # seed fija (reproducible)
+  python run_all.py --seed=123       # seed personalizada
 """
 
 import sys
@@ -17,6 +18,7 @@ import os
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 import json
+import argparse
 import pandas as pd
 from src.generator.generate_dataset import main as generar_dataset
 from src.profiling.profile_dataset import main as generar_profiling
@@ -43,10 +45,13 @@ def cargar_dfs(directorio: str) -> dict:
     }
 
 
-def main():
+def main(seed_dataset=42, seed_anomalias=99):
+    modo = "reproducible (seed fija)" if seed_dataset == 42 else f"aleatorio (seed={seed_dataset})"
+
     # ── Paso 1: Generacion del dataset ───────────────────────────────────────
     separador("PASO 1 - Generacion del dataset sintetico")
-    generar_dataset()
+    print(f"Modo: {modo}")
+    generar_dataset(seed=seed_dataset)
 
     # ── Paso 2: Profiling ────────────────────────────────────────────────────
     separador("PASO 2 - Profiling del dataset")
@@ -54,27 +59,23 @@ def main():
 
     # ── Paso 3: Inyeccion de anomalias ───────────────────────────────────────
     separador("PASO 3 - Inyeccion de anomalias")
-    inyectar_anomalias()
+    inyectar_anomalias(seed=seed_anomalias)
 
     # ── Paso 4: Pipeline de validacion ───────────────────────────────────────
     separador("PASO 4 - Generacion de reglas y validacion")
 
-    # Cargar dataset sucio
     dfs_dirty = cargar_dfs(DIRTY_DIR)
 
-    # Cargar log de anomalias inyectadas
     log_path = os.path.join(DIRTY_DIR, "injection_log.json")
     with open(log_path, "r", encoding="utf-8") as f:
         injection_log = json.load(f)
 
-    # Cargar perfil del dataset
     summary_path = os.path.join(
         os.path.dirname(__file__), "data", "profiling", "summary.json"
     )
     with open(summary_path, "r", encoding="utf-8") as f:
         summary = json.load(f)
 
-    # LLM genera reglas
     print("Generando reglas con el LLM...")
     schema = json.dumps(summary, ensure_ascii=False, indent=2)
     transformation = (
@@ -87,18 +88,18 @@ def main():
         "Validaciones adicionales: emails con formato valido en clientes, "
         "precios y cantidades positivos, fechas de entrega posteriores a fechas de pedido, "
         "campos obligatorios sin nulos (estado, cliente_id, producto_id), "
-        "pedidos en estado entregado no pueden tener fecha de entrega futura."
+        "pedidos en estado entregado no pueden tener fecha de entrega futura, "
+        "cantidad total pedida de un producto no puede superar su stock disponible, "
+        "fecha de registro del cliente no puede ser posterior a su primer pedido."
     )
 
     rules_json = generate_rules(schema, transformation)
     rules = rules_json["rules"]
     print(f"Reglas generadas: {len(rules)}")
 
-    # Validar dataset
     print("Validando dataset...")
     results = run_rules(dfs_dirty, rules)
 
-    # Calcular metricas
     results_con_fallos = [r for r in results if r["errors"] > 0]
     metricas = evaluate(injection_log, results_con_fallos)
 
@@ -116,7 +117,6 @@ def main():
 
     imprimir_metricas(metricas)
 
-    # Guardar resultados para el dashboard
     results_path = os.path.join(os.path.dirname(__file__), "data", "results.json")
     os.makedirs(os.path.dirname(results_path), exist_ok=True)
     with open(results_path, "w", encoding="utf-8") as f:
@@ -128,8 +128,17 @@ def main():
     print("Resultados guardados en data/results.json")
 
     separador("PIPELINE COMPLETADO")
+    print(f"  Modo: {modo}")
     print(f"  Tasa de deteccion final: {metricas['tasa_deteccion_tipos']}%")
 
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--seed", type=int, default=None,
+                        help="Seed para generacion aleatoria. Sin este argumento usa seeds fijas.")
+    args = parser.parse_args()
+
+    if args.seed is not None:
+        main(seed_dataset=args.seed, seed_anomalias=args.seed + 1)
+    else:
+        main(seed_dataset=42, seed_anomalias=99)

@@ -11,6 +11,7 @@ import io
 import sys
 import json
 import subprocess
+import random
 import pandas as pd
 import streamlit as st
 from datetime import datetime
@@ -248,14 +249,13 @@ def generar_pdf_informe(summary, log, results=None):
     buffer.seek(0)
     return buffer
 
-
 # ── Sidebar ───────────────────────────────────────────────────────────────────
-
+ 
 with st.sidebar:
     st.title("Data Quality")
     st.caption("Hackathon Atmira — Reto 03")
     st.divider()
-
+ 
     pagina = st.radio(
         "Navegacion",
         options=[
@@ -267,23 +267,37 @@ with st.sidebar:
         ],
         label_visibility="collapsed",
     )
-
+ 
     st.divider()
-
+ 
     st.markdown("**Ejecutar pipeline**")
     st.caption("Regenera el dataset, inyecta anomalias y ejecuta la validacion completa.")
-
+ 
+    regenerar = st.checkbox(
+        "Generar dataset nuevo (seed aleatoria)",
+        value=False,
+        help="Sin marcar: datos reproducibles con seed fija. Marcado: dataset completamente nuevo en cada ejecucion.",
+    )
+ 
     if st.button("Ejecutar pipeline completo", use_container_width=True, type="primary"):
         with st.spinner("Ejecutando pipeline..."):
             try:
+                cmd = [sys.executable, os.path.join(BASE_DIR, "run_all.py")]
+                if regenerar:
+                    seed_aleatoria = random.randint(1, 999999)
+                    cmd.append(f"--seed={seed_aleatoria}")
+ 
                 result = subprocess.run(
-                    [sys.executable, os.path.join(BASE_DIR, "run_all.py")],
+                    cmd,
                     capture_output=True,
                     text=True,
                     cwd=BASE_DIR,
                 )
                 if result.returncode == 0:
-                    st.success("Pipeline ejecutado correctamente.")
+                    if regenerar:
+                        st.success(f"Pipeline ejecutado con dataset nuevo (seed={seed_aleatoria}).")
+                    else:
+                        st.success("Pipeline ejecutado correctamente.")
                     st.cache_data.clear()
                     st.rerun()
                 else:
@@ -291,9 +305,9 @@ with st.sidebar:
                     st.code(result.stderr)
             except Exception as e:
                 st.error(f"Error: {e}")
-
+ 
     st.divider()
-
+ 
     if st.button("Exportar informe PDF", use_container_width=True):
         summary = cargar_summary()
         log     = cargar_injection_log()

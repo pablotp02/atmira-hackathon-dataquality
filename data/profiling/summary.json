@@ -49,14 +49,14 @@
         "fecha_registro": {
           "nulos": 0,
           "porcentaje_nulos": 0.0,
-          "valores_unicos": 171,
+          "valores_unicos": 169,
           "tipo": "texto_o_categorico",
           "valores_frecuentes": {
-            "2023-07-03": 4,
-            "2023-03-30": 3,
-            "2024-01-24": 3,
-            "2023-06-14": 2,
-            "2023-02-07": 2
+            "2023-09-29": 4,
+            "2023-07-14": 3,
+            "2024-03-08": 3,
+            "2023-02-02": 2,
+            "2024-07-12": 2
           }
         },
         "pais": {
@@ -65,10 +65,10 @@
           "valores_unicos": 4,
           "tipo": "texto_o_categorico",
           "valores_frecuentes": {
-            "ES": 92,
-            "CO": 37,
-            "MX": 36,
-            "AR": 35
+            "ES": 97,
+            "AR": 40,
+            "CO": 38,
+            "MX": 25
           }
         },
         "fecha_nacimiento": {
@@ -112,8 +112,8 @@
           "tipo": "texto_o_categorico",
           "valores_frecuentes": {
             "Auriculares BT": 1,
-            "Teclado mecánico": 1,
-            "Ratón gaming": 1,
+            "Teclado mecanico": 1,
+            "Raton gaming": 1,
             "Monitor 24\"": 1,
             "Webcam HD": 1
           }
@@ -124,11 +124,11 @@
           "valores_unicos": 7,
           "tipo": "texto_o_categorico",
           "valores_frecuentes": {
-            "Deportes": 8,
+            "Juguetes": 8,
             "Ropa": 7,
-            "Electrónica": 7,
+            "Electronica": 7,
             "Hogar": 7,
-            "Alimentación": 7
+            "Deportes": 7
           }
         },
         "precio_unitario": {
@@ -136,25 +136,25 @@
           "porcentaje_nulos": 0.0,
           "valores_unicos": 50,
           "tipo": "numerico",
-          "min": 7.77,
-          "max": 1418.28,
-          "media": 201.685,
-          "mediana": 79.79499999999999,
-          "std": 329.6682,
+          "min": 10.39,
+          "max": 1411.45,
+          "media": 182.956,
+          "mediana": 63.505,
+          "std": 304.6429,
           "ceros": 0,
           "negativos": 0
         },
         "stock": {
           "nulos": 0,
           "porcentaje_nulos": 0.0,
-          "valores_unicos": 46,
+          "valores_unicos": 48,
           "tipo": "numerico",
-          "min": 0.0,
-          "max": 198.0,
-          "media": 91.52,
-          "mediana": 81.5,
-          "std": 60.2929,
-          "ceros": 1,
+          "min": 6.0,
+          "max": 199.0,
+          "media": 93.54,
+          "mediana": 86.0,
+          "std": 61.1409,
+          "ceros": 0,
           "negativos": 0
         }
       }
@@ -181,13 +181,13 @@
         "cliente_id": {
           "nulos": 0,
           "porcentaje_nulos": 0.0,
-          "valores_unicos": 187,
+          "valores_unicos": 178,
           "tipo": "numerico",
           "min": 1.0,
           "max": 200.0,
-          "media": 101.09,
-          "mediana": 101.0,
-          "std": 57.4203,
+          "media": 97.404,
+          "mediana": 97.5,
+          "std": 57.7167,
           "ceros": 0,
           "negativos": 0
         },
@@ -197,24 +197,24 @@
           "valores_unicos": 361,
           "tipo": "texto_o_categorico",
           "valores_frecuentes": {
-            "2024-04-13": 4,
-            "2023-02-27": 4,
-            "2023-10-16": 4,
-            "2024-03-18": 4,
-            "2023-09-08": 3
+            "2023-05-16": 4,
+            "2024-01-17": 4,
+            "2023-04-29": 4,
+            "2024-01-03": 3,
+            "2023-10-20": 3
           }
         },
         "fecha_entrega": {
           "nulos": 0,
           "porcentaje_nulos": 0.0,
-          "valores_unicos": 358,
+          "valores_unicos": 355,
           "tipo": "texto_o_categorico",
           "valores_frecuentes": {
-            "2023-04-23": 4,
-            "2024-11-21": 4,
-            "2023-08-15": 4,
-            "2024-09-20": 4,
-            "2024-07-07": 4
+            "2023-09-26": 5,
+            "2024-08-29": 5,
+            "2023-10-10": 4,
+            "2023-09-24": 4,
+            "2023-12-06": 4
           }
         },
         "estado": {
@@ -223,10 +223,10 @@
           "valores_unicos": 4,
           "tipo": "texto_o_categorico",
           "valores_frecuentes": {
-            "entregado": 273,
-            "enviado": 114,
-            "cancelado": 60,
-            "pendiente": 53
+            "entregado": 293,
+            "enviado": 100,
+            "cancelado": 58,
+            "pendiente": 49
           }
         },
         "total": {
@@ -234,11 +234,11 @@
           "porcentaje_nulos": 0.0,
           "valores_unicos": 490,
           "tipo": "numerico",
-          "min": 7.77,
-          "max": 13490.62,
-          "media": 2041.2758,
-          "mediana": 1288.1999999999998,
-          "std": 2142.1809,
+          "min": 10.39,
+          "max": 14345.62,
+          "media": 2056.0657,
+          "mediana": 1413.8899999999999,
+          "std": 2137.3965,
           "ceros": 0,
           "negativos": 0
         }
@@ -246,20 +246,20 @@
     },
     "lineas_pedido": {
       "tabla": "lineas_pedido",
-      "filas": 1757,
+      "filas": 1829,
       "columnas": 5,
       "filas_duplicadas": 0,
       "columnas_detalle": {
         "linea_id": {
           "nulos": 0,
           "porcentaje_nulos": 0.0,
-          "valores_unicos": 1757,
+          "valores_unicos": 1829,
           "tipo": "numerico",
           "min": 1.0,
-          "max": 1757.0,
-          "media": 879.0,
-          "mediana": 879.0,
-          "std": 507.3465,
+          "max": 1829.0,
+          "media": 915.0,
+          "mediana": 915.0,
+          "std": 528.1311,
           "ceros": 0,
           "negativos": 0
         },
@@ -270,9 +270,9 @@
           "tipo": "numerico",
           "min": 1.0,
           "max": 500.0,
-          "media": 255.2686,
-          "mediana": 258.0,
-          "std": 141.8243,
+          "media": 243.7343,
+          "mediana": 237.0,
+          "std": 143.1979,
           "ceros": 0,
           "negativos": 0
         },
@@ -283,9 +283,9 @@
           "tipo": "numerico",
           "min": 1.0,
           "max": 50.0,
-          "media": 25.5196,
+          "media": 25.2767,
           "mediana": 25.0,
-          "std": 14.5017,
+          "std": 14.4698,
           "ceros": 0,
           "negativos": 0
         },
@@ -296,9 +296,9 @@
           "tipo": "numerico",
           "min": 1.0,
           "max": 5.0,
-          "media": 2.9727,
+          "media": 3.0213,
           "mediana": 3.0,
-          "std": 1.376,
+          "std": 1.4181,
           "ceros": 0,
           "negativos": 0
         },
@@ -307,11 +307,11 @@
           "porcentaje_nulos": 0.0,
           "valores_unicos": 50,
           "tipo": "numerico",
-          "min": 7.77,
-          "max": 1418.28,
-          "media": 199.4122,
-          "mediana": 77.13,
-          "std": 328.1736,
+          "min": 10.39,
+          "max": 1411.45,
+          "media": 189.7223,
+          "mediana": 63.74,
+          "std": 308.3991,
           "ceros": 0,
           "negativos": 0
         }

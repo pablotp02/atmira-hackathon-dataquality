@@ -160,8 +160,8 @@
         "tabla": "productos",
         "descripcion": "La cantidad total pedida no puede superar el stock disponible"
       },
-      "errors": 30,
-      "detalle": "30 productos con cantidad total pedida superior al stock disponible"
+      "errors": 32,
+      "detalle": "32 productos con cantidad total pedida superior al stock disponible"
     },
     {
       "rule": {
@@ -274,6 +274,6 @@
       }
     },
     "tasa_deteccion_tipos": 90.0,
-    "errores_detectados_total": 70
+    "errores_detectados_total": 72
   }
 }

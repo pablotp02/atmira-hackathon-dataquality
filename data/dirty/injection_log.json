@@ -18,81 +18,72 @@
       "tipo": "email_formato_invalido",
       "tabla": "clientes",
       "columna": "email",
-      "fila_id": 71,
-      "valor_original": "romeroelpidio@example.com",
-      "valor_nuevo": "romeroelpidioexample",
+      "fila_id": 104,
+      "valor_original": "diezadoracion@example.net",
+      "valor_nuevo": "diezadoracionexample",
       "descripcion": "Email sin @ ni dominio valido"
     },
     {
       "tipo": "email_formato_invalido",
       "tabla": "clientes",
       "columna": "email",
-      "fila_id": 147,
-      "valor_original": "encarnacionaroca@example.net",
-      "valor_nuevo": "encarnacionarocaexample",
+      "fila_id": 98,
+      "valor_original": "lara47@example.org",
+      "valor_nuevo": "lara47example",
       "descripcion": "Email sin @ ni dominio valido"
     },
     {
       "tipo": "email_formato_invalido",
       "tabla": "clientes",
       "columna": "email",
-      "fila_id": 99,
-      "valor_original": "icardona@example.org",
-      "valor_nuevo": "icardonaexample",
+      "fila_id": 52,
+      "valor_original": "rubioabel@example.net",
+      "valor_nuevo": "rubioabelexample",
       "descripcion": "Email sin @ ni dominio valido"
     },
     {
       "tipo": "email_formato_invalido",
       "tabla": "clientes",
       "columna": "email",
-      "fila_id": 96,
-      "valor_original": "galianoeufemia@example.org",
-      "valor_nuevo": "galianoeufemiaexample",
+      "fila_id": 154,
+      "valor_original": "herminia16@example.com",
+      "valor_nuevo": "herminia16example",
       "descripcion": "Email sin @ ni dominio valido"
     },
     {
       "tipo": "email_formato_invalido",
       "tabla": "clientes",
       "columna": "email",
-      "fila_id": 88,
-      "valor_original": "mariano43@example.org",
-      "valor_nuevo": "mariano43example",
+      "fila_id": 46,
+      "valor_original": "rosauracamara@example.org",
+      "valor_nuevo": "rosauracamaraexample",
       "descripcion": "Email sin @ ni dominio valido"
     },
     {
       "tipo": "precio_negativo",
       "tabla": "productos",
       "columna": "precio_unitario",
-      "fila_id": 14,
-      "valor_original": "66.35",
-      "valor_nuevo": "-66.35",
+      "fila_id": 15,
+      "valor_original": "230.95",
+      "valor_nuevo": "-230.95",
       "descripcion": "Precio unitario negativo"
     },
     {
       "tipo": "precio_negativo",
       "tabla": "productos",
       "columna": "precio_unitario",
-      "fila_id": 45,
-      "valor_original": "82.48",
-      "valor_nuevo": "-82.48",
+      "fila_id": 16,
+      "valor_original": "43.97",
+      "valor_nuevo": "-43.97",
       "descripcion": "Precio unitario negativo"
     },
     {
       "tipo": "precio_negativo",
       "tabla": "productos",
       "columna": "precio_unitario",
-      "fila_id": 47,
-      "valor_original": "82.46",
-      "valor_nuevo": "-82.46",
-      "descripcion": "Precio unitario negativo"
-    },
-    {
-      "tipo": "precio_negativo",
-      "tabla": "productos",
-      "columna": "precio_unitario",
-      "fila_id": 41,
-      "valor_original": "14.23",
-      "valor_nuevo": "-14.23",
+      "fila_id": 9,
+      "valor_original": "20.15",
+      "valor_nuevo": "-20.15",
       "descripcion": "Precio unitario negativo"
     },
     {
@@ -100,33 +91,24 @@
       "tabla": "productos",
       "columna": "precio_unitario",
       "fila_id": 49,
-      "valor_original": "116.93",
-      "valor_nuevo": "-116.93",
+      "valor_original": "69.71",
+      "valor_nuevo": "-69.71",
+      "descripcion": "Precio unitario negativo"
+    },
+    {
+      "tipo": "precio_negativo",
+      "tabla": "productos",
+      "columna": "precio_unitario",
+      "fila_id": 6,
+      "valor_original": "345.22",
+      "valor_nuevo": "-345.22",
       "descripcion": "Precio unitario negativo"
     },
     {
       "tipo": "cantidad_cero",
       "tabla": "lineas_pedido",
       "columna": "cantidad",
-      "fila_id": 1474,
-      "valor_original": "4",
-      "valor_nuevo": "0",
-      "descripcion": "Cantidad 0 en linea de pedido"
-    },
-    {
-      "tipo": "cantidad_cero",
-      "tabla": "lineas_pedido",
-      "columna": "cantidad",
-      "fila_id": 1002,
-      "valor_original": "4",
-      "valor_nuevo": "0",
-      "descripcion": "Cantidad 0 en linea de pedido"
-    },
-    {
-      "tipo": "cantidad_cero",
-      "tabla": "lineas_pedido",
-      "columna": "cantidad",
-      "fila_id": 257,
+      "fila_id": 515,
       "valor_original": "3",
       "valor_nuevo": "0",
       "descripcion": "Cantidad 0 en linea de pedido"
@@ -135,8 +117,8 @@
       "tipo": "cantidad_cero",
       "tabla": "lineas_pedido",
       "columna": "cantidad",
-      "fila_id": 922,
-      "valor_original": "1",
+      "fila_id": 1494,
+      "valor_original": "3",
       "valor_nuevo": "0",
       "descripcion": "Cantidad 0 en linea de pedido"
     },
@@ -144,8 +126,26 @@
       "tipo": "cantidad_cero",
       "tabla": "lineas_pedido",
       "columna": "cantidad",
-      "fila_id": 94,
+      "fila_id": 785,
       "valor_original": "3",
+      "valor_nuevo": "0",
+      "descripcion": "Cantidad 0 en linea de pedido"
+    },
+    {
+      "tipo": "cantidad_cero",
+      "tabla": "lineas_pedido",
+      "columna": "cantidad",
+      "fila_id": 1088,
+      "valor_original": "5",
+      "valor_nuevo": "0",
+      "descripcion": "Cantidad 0 en linea de pedido"
+    },
+    {
+      "tipo": "cantidad_cero",
+      "tabla": "lineas_pedido",
+      "columna": "cantidad",
+      "fila_id": 1402,
+      "valor_original": "2",
       "valor_nuevo": "0",
       "descripcion": "Cantidad 0 en linea de pedido"
     },
@@ -153,7 +153,7 @@
       "tipo": "nulo_en_campo_obligatorio",
       "tabla": "pedidos",
       "columna": "estado",
-      "fila_id": 401,
+      "fila_id": 359,
       "valor_original": "entregado",
       "valor_nuevo": "None",
       "descripcion": "Campo obligatorio 'estado' con valor nulo"
@@ -162,8 +162,8 @@
       "tipo": "nulo_en_campo_obligatorio",
       "tabla": "pedidos",
       "columna": "estado",
-      "fila_id": 269,
-      "valor_original": "entregado",
+      "fila_id": 276,
+      "valor_original": "pendiente",
       "valor_nuevo": "None",
       "descripcion": "Campo obligatorio 'estado' con valor nulo"
     },
@@ -171,298 +171,298 @@
       "tipo": "nulo_en_campo_obligatorio",
       "tabla": "pedidos",
       "columna": "estado",
-      "fila_id": 174,
-      "valor_original": "enviado",
-      "valor_nuevo": "None",
-      "descripcion": "Campo obligatorio 'estado' con valor nulo"
-    },
-    {
-      "tipo": "nulo_en_campo_obligatorio",
-      "tabla": "pedidos",
-      "columna": "estado",
-      "fila_id": 356,
-      "valor_original": "enviado",
-      "valor_nuevo": "None",
-      "descripcion": "Campo obligatorio 'estado' con valor nulo"
-    },
-    {
-      "tipo": "nulo_en_campo_obligatorio",
-      "tabla": "pedidos",
-      "columna": "estado",
-      "fila_id": 81,
-      "valor_original": "enviado",
-      "valor_nuevo": "None",
-      "descripcion": "Campo obligatorio 'estado' con valor nulo"
-    },
-    {
-      "tipo": "fecha_entrega_anterior_pedido",
-      "tabla": "pedidos",
-      "columna": "fecha_entrega",
-      "fila_id": 44,
-      "valor_original": "2024-01-05",
-      "valor_nuevo": "2023-12-14",
-      "descripcion": "Fecha de entrega (2023-12-14) anterior a fecha de pedido (2023-12-20)"
-    },
-    {
-      "tipo": "fecha_entrega_anterior_pedido",
-      "tabla": "pedidos",
-      "columna": "fecha_entrega",
-      "fila_id": 61,
-      "valor_original": "2023-09-16",
-      "valor_nuevo": "2023-08-24",
-      "descripcion": "Fecha de entrega (2023-08-24) anterior a fecha de pedido (2023-09-08)"
-    },
-    {
-      "tipo": "fecha_entrega_anterior_pedido",
-      "tabla": "pedidos",
-      "columna": "fecha_entrega",
-      "fila_id": 132,
-      "valor_original": "2024-08-29",
-      "valor_nuevo": "2024-07-26",
-      "descripcion": "Fecha de entrega (2024-07-26) anterior a fecha de pedido (2024-08-05)"
-    },
-    {
-      "tipo": "fecha_entrega_anterior_pedido",
-      "tabla": "pedidos",
-      "columna": "fecha_entrega",
-      "fila_id": 133,
-      "valor_original": "2024-07-02",
-      "valor_nuevo": "2024-06-22",
-      "descripcion": "Fecha de entrega (2024-06-22) anterior a fecha de pedido (2024-06-26)"
-    },
-    {
-      "tipo": "fecha_entrega_anterior_pedido",
-      "tabla": "pedidos",
-      "columna": "fecha_entrega",
-      "fila_id": 205,
-      "valor_original": "2024-11-20",
-      "valor_nuevo": "2024-10-18",
-      "descripcion": "Fecha de entrega (2024-10-18) anterior a fecha de pedido (2024-10-21)"
-    },
-    {
-      "tipo": "total_pedido_incorrecto",
-      "tabla": "pedidos",
-      "columna": "total",
       "fila_id": 46,
-      "valor_original": "744.94",
-      "valor_nuevo": "481.94",
-      "descripcion": "Total del pedido modificado (744.94 -> 481.94). No coincide con la suma de sus lineas."
+      "valor_original": "entregado",
+      "valor_nuevo": "None",
+      "descripcion": "Campo obligatorio 'estado' con valor nulo"
+    },
+    {
+      "tipo": "nulo_en_campo_obligatorio",
+      "tabla": "pedidos",
+      "columna": "estado",
+      "fila_id": 481,
+      "valor_original": "cancelado",
+      "valor_nuevo": "None",
+      "descripcion": "Campo obligatorio 'estado' con valor nulo"
+    },
+    {
+      "tipo": "nulo_en_campo_obligatorio",
+      "tabla": "pedidos",
+      "columna": "estado",
+      "fila_id": 320,
+      "valor_original": "entregado",
+      "valor_nuevo": "None",
+      "descripcion": "Campo obligatorio 'estado' con valor nulo"
+    },
+    {
+      "tipo": "fecha_entrega_anterior_pedido",
+      "tabla": "pedidos",
+      "columna": "fecha_entrega",
+      "fila_id": 251,
+      "valor_original": "2024-01-04",
+      "valor_nuevo": "2023-11-25",
+      "descripcion": "Fecha de entrega (2023-11-25) anterior a fecha de pedido (2023-12-05)"
+    },
+    {
+      "tipo": "fecha_entrega_anterior_pedido",
+      "tabla": "pedidos",
+      "columna": "fecha_entrega",
+      "fila_id": 103,
+      "valor_original": "2024-01-10",
+      "valor_nuevo": "2024-01-02",
+      "descripcion": "Fecha de entrega (2024-01-02) anterior a fecha de pedido (2024-01-06)"
+    },
+    {
+      "tipo": "fecha_entrega_anterior_pedido",
+      "tabla": "pedidos",
+      "columna": "fecha_entrega",
+      "fila_id": 216,
+      "valor_original": "2023-10-26",
+      "valor_nuevo": "2023-09-23",
+      "descripcion": "Fecha de entrega (2023-09-23) anterior a fecha de pedido (2023-10-06)"
+    },
+    {
+      "tipo": "fecha_entrega_anterior_pedido",
+      "tabla": "pedidos",
+      "columna": "fecha_entrega",
+      "fila_id": 370,
+      "valor_original": "2024-03-04",
+      "valor_nuevo": "2024-02-06",
+      "descripcion": "Fecha de entrega (2024-02-06) anterior a fecha de pedido (2024-02-21)"
+    },
+    {
+      "tipo": "fecha_entrega_anterior_pedido",
+      "tabla": "pedidos",
+      "columna": "fecha_entrega",
+      "fila_id": 314,
+      "valor_original": "2024-06-07",
+      "valor_nuevo": "2024-04-28",
+      "descripcion": "Fecha de entrega (2024-04-28) anterior a fecha de pedido (2024-05-11)"
     },
     {
       "tipo": "total_pedido_incorrecto",
       "tabla": "pedidos",
       "columna": "total",
-      "fila_id": 403,
-      "valor_original": "12.3",
-      "valor_nuevo": "9.07",
-      "descripcion": "Total del pedido modificado (12.3 -> 9.07). No coincide con la suma de sus lineas."
+      "fila_id": 192,
+      "valor_original": "2174.15",
+      "valor_nuevo": "1443.15",
+      "descripcion": "Total del pedido modificado (2174.15 -> 1443.15). No coincide con la suma de sus lineas."
     },
     {
       "tipo": "total_pedido_incorrecto",
       "tabla": "pedidos",
       "columna": "total",
-      "fila_id": 85,
-      "valor_original": "79.09",
-      "valor_nuevo": "68.54",
-      "descripcion": "Total del pedido modificado (79.09 -> 68.54). No coincide con la suma de sus lineas."
+      "fila_id": 422,
+      "valor_original": "262.7",
+      "valor_nuevo": "193.99",
+      "descripcion": "Total del pedido modificado (262.7 -> 193.99). No coincide con la suma de sus lineas."
     },
     {
       "tipo": "total_pedido_incorrecto",
       "tabla": "pedidos",
       "columna": "total",
-      "fila_id": 48,
-      "valor_original": "4407.74",
-      "valor_nuevo": "2883.97",
-      "descripcion": "Total del pedido modificado (4407.74 -> 2883.97). No coincide con la suma de sus lineas."
+      "fila_id": 199,
+      "valor_original": "2241.07",
+      "valor_nuevo": "1464.99",
+      "descripcion": "Total del pedido modificado (2241.07 -> 1464.99). No coincide con la suma de sus lineas."
     },
     {
       "tipo": "total_pedido_incorrecto",
       "tabla": "pedidos",
       "columna": "total",
-      "fila_id": 161,
-      "valor_original": "345.09",
-      "valor_nuevo": "292.52",
-      "descripcion": "Total del pedido modificado (345.09 -> 292.52). No coincide con la suma de sus lineas."
+      "fila_id": 442,
+      "valor_original": "2076.76",
+      "valor_nuevo": "1599.26",
+      "descripcion": "Total del pedido modificado (2076.76 -> 1599.26). No coincide con la suma de sus lineas."
+    },
+    {
+      "tipo": "total_pedido_incorrecto",
+      "tabla": "pedidos",
+      "columna": "total",
+      "fila_id": 350,
+      "valor_original": "483.39",
+      "valor_nuevo": "302.07",
+      "descripcion": "Total del pedido modificado (483.39 -> 302.07). No coincide con la suma de sus lineas."
     },
     {
       "tipo": "precio_linea_distinto_catalogo",
       "tabla": "lineas_pedido",
       "columna": "precio_unitario",
-      "fila_id": 157,
-      "valor_original": "171.42",
-      "valor_nuevo": "257.13",
-      "descripcion": "Precio en linea (257.13) distinto al catalogo (171.42) para producto_id=16. Sin descuento registrado."
+      "fila_id": 1468,
+      "valor_original": "70.68",
+      "valor_nuevo": "17.67",
+      "descripcion": "Precio en linea (17.67) distinto al catalogo (70.68) para producto_id=14. Sin descuento registrado."
     },
     {
       "tipo": "precio_linea_distinto_catalogo",
       "tabla": "lineas_pedido",
       "columna": "precio_unitario",
-      "fila_id": 1175,
-      "valor_original": "171.42",
-      "valor_nuevo": "342.84",
-      "descripcion": "Precio en linea (342.84) distinto al catalogo (171.42) para producto_id=16. Sin descuento registrado."
+      "fila_id": 1083,
+      "valor_original": "210.98",
+      "valor_nuevo": "421.96",
+      "descripcion": "Precio en linea (421.96) distinto al catalogo (210.98) para producto_id=23. Sin descuento registrado."
     },
     {
       "tipo": "precio_linea_distinto_catalogo",
       "tabla": "lineas_pedido",
       "columna": "precio_unitario",
-      "fila_id": 1683,
-      "valor_original": "54.84",
-      "valor_nuevo": "13.71",
-      "descripcion": "Precio en linea (13.71) distinto al catalogo (54.84) para producto_id=37. Sin descuento registrado."
+      "fila_id": 1388,
+      "valor_original": "65.24",
+      "valor_nuevo": "16.31",
+      "descripcion": "Precio en linea (16.31) distinto al catalogo (65.24) para producto_id=33. Sin descuento registrado."
     },
     {
       "tipo": "precio_linea_distinto_catalogo",
       "tabla": "lineas_pedido",
       "columna": "precio_unitario",
-      "fila_id": 1124,
-      "valor_original": "57.81",
-      "valor_nuevo": "115.62",
-      "descripcion": "Precio en linea (115.62) distinto al catalogo (57.81) para producto_id=35. Sin descuento registrado."
+      "fila_id": 1587,
+      "valor_original": "24.38",
+      "valor_nuevo": "12.19",
+      "descripcion": "Precio en linea (12.19) distinto al catalogo (24.38) para producto_id=46. Sin descuento registrado."
     },
     {
       "tipo": "precio_linea_distinto_catalogo",
       "tabla": "lineas_pedido",
       "columna": "precio_unitario",
-      "fila_id": 1462,
-      "valor_original": "116.93",
-      "valor_nuevo": "58.46",
-      "descripcion": "Precio en linea (58.46) distinto al catalogo (116.93) para producto_id=49. Sin descuento registrado."
+      "fila_id": 180,
+      "valor_original": "13.43",
+      "valor_nuevo": "26.86",
+      "descripcion": "Precio en linea (26.86) distinto al catalogo (13.43) para producto_id=48. Sin descuento registrado."
     },
     {
       "tipo": "pedido_entregado_fecha_futura",
       "tabla": "pedidos",
       "columna": "fecha_entrega",
-      "fila_id": 302,
-      "valor_original": "2024-04-15",
-      "valor_nuevo": "2026-05-22",
-      "descripcion": "Pedido marcado como 'entregado' pero fecha_entrega (2026-05-22) es futura"
+      "fila_id": 492,
+      "valor_original": "2024-09-08",
+      "valor_nuevo": "2026-06-16",
+      "descripcion": "Pedido marcado como 'entregado' pero fecha_entrega (2026-06-16) es futura"
     },
     {
       "tipo": "pedido_entregado_fecha_futura",
       "tabla": "pedidos",
       "columna": "fecha_entrega",
-      "fila_id": 197,
-      "valor_original": "2024-12-20",
-      "valor_nuevo": "2026-03-18",
-      "descripcion": "Pedido marcado como 'entregado' pero fecha_entrega (2026-03-18) es futura"
+      "fila_id": 5,
+      "valor_original": "2024-02-21",
+      "valor_nuevo": "2026-02-20",
+      "descripcion": "Pedido marcado como 'entregado' pero fecha_entrega (2026-02-20) es futura"
     },
     {
       "tipo": "pedido_entregado_fecha_futura",
       "tabla": "pedidos",
       "columna": "fecha_entrega",
-      "fila_id": 43,
-      "valor_original": "2024-03-02",
-      "valor_nuevo": "2026-02-03",
-      "descripcion": "Pedido marcado como 'entregado' pero fecha_entrega (2026-02-03) es futura"
+      "fila_id": 382,
+      "valor_original": "2024-07-20",
+      "valor_nuevo": "2026-05-29",
+      "descripcion": "Pedido marcado como 'entregado' pero fecha_entrega (2026-05-29) es futura"
     },
     {
       "tipo": "pedido_entregado_fecha_futura",
       "tabla": "pedidos",
       "columna": "fecha_entrega",
-      "fila_id": 204,
-      "valor_original": "2023-03-29",
-      "valor_nuevo": "2026-02-26",
-      "descripcion": "Pedido marcado como 'entregado' pero fecha_entrega (2026-02-26) es futura"
+      "fila_id": 172,
+      "valor_original": "2024-10-31",
+      "valor_nuevo": "2026-06-12",
+      "descripcion": "Pedido marcado como 'entregado' pero fecha_entrega (2026-06-12) es futura"
     },
     {
       "tipo": "pedido_entregado_fecha_futura",
       "tabla": "pedidos",
       "columna": "fecha_entrega",
-      "fila_id": 396,
-      "valor_original": "2024-10-13",
-      "valor_nuevo": "2026-05-06",
-      "descripcion": "Pedido marcado como 'entregado' pero fecha_entrega (2026-05-06) es futura"
+      "fila_id": 322,
+      "valor_original": "2024-08-15",
+      "valor_nuevo": "2026-03-22",
+      "descripcion": "Pedido marcado como 'entregado' pero fecha_entrega (2026-03-22) es futura"
     },
     {
       "tipo": "stock_superado",
       "tabla": "productos",
       "columna": "stock",
-      "fila_id": 38,
-      "valor_original": "188",
+      "fila_id": 17,
+      "valor_original": "139",
+      "valor_nuevo": "43",
+      "descripcion": "Stock ajustado a 43 cuando se han pedido 145 unidades en total"
+    },
+    {
+      "tipo": "stock_superado",
+      "tabla": "productos",
+      "columna": "stock",
+      "fila_id": 33,
+      "valor_original": "68",
       "valor_nuevo": "36",
-      "descripcion": "Stock ajustado a 36 cuando se han pedido 120 unidades en total"
+      "descripcion": "Stock ajustado a 36 cuando se han pedido 123 unidades en total"
     },
     {
       "tipo": "stock_superado",
       "tabla": "productos",
       "columna": "stock",
-      "fila_id": 28,
-      "valor_original": "114",
-      "valor_nuevo": "24",
-      "descripcion": "Stock ajustado a 24 cuando se han pedido 82 unidades en total"
+      "fila_id": 14,
+      "valor_original": "109",
+      "valor_nuevo": "42",
+      "descripcion": "Stock ajustado a 42 cuando se han pedido 140 unidades en total"
     },
     {
       "tipo": "stock_superado",
       "tabla": "productos",
       "columna": "stock",
       "fila_id": 12,
-      "valor_original": "73",
-      "valor_nuevo": "23",
-      "descripcion": "Stock ajustado a 23 cuando se han pedido 79 unidades en total"
+      "valor_original": "67",
+      "valor_nuevo": "19",
+      "descripcion": "Stock ajustado a 19 cuando se han pedido 64 unidades en total"
     },
     {
       "tipo": "stock_superado",
       "tabla": "productos",
       "columna": "stock",
-      "fila_id": 32,
-      "valor_original": "128",
-      "valor_nuevo": "26",
-      "descripcion": "Stock ajustado a 26 cuando se han pedido 89 unidades en total"
-    },
-    {
-      "tipo": "stock_superado",
-      "tabla": "productos",
-      "columna": "stock",
-      "fila_id": 39,
-      "valor_original": "44",
+      "fila_id": 29,
+      "valor_original": "6",
       "valor_nuevo": "36",
-      "descripcion": "Stock ajustado a 36 cuando se han pedido 123 unidades en total"
+      "descripcion": "Stock ajustado a 36 cuando se han pedido 121 unidades en total"
     },
     {
       "tipo": "fecha_registro_posterior_pedido",
       "tabla": "clientes",
       "columna": "fecha_registro",
-      "fila_id": 67,
-      "valor_original": "2024-01-22",
-      "valor_nuevo": "2023-05-05",
-      "descripcion": "Fecha de registro (2023-05-05) posterior al primer pedido (2023-04-25) del cliente"
+      "fila_id": 177,
+      "valor_original": "2024-08-20",
+      "valor_nuevo": "2023-08-04",
+      "descripcion": "Fecha de registro (2023-08-04) posterior al primer pedido (2023-07-28) del cliente"
     },
     {
       "tipo": "fecha_registro_posterior_pedido",
       "tabla": "clientes",
       "columna": "fecha_registro",
-      "fila_id": 170,
-      "valor_original": "2023-12-29",
-      "valor_nuevo": "2024-07-05",
-      "descripcion": "Fecha de registro (2024-07-05) posterior al primer pedido (2024-06-07) del cliente"
+      "fila_id": 131,
+      "valor_original": "2024-03-17",
+      "valor_nuevo": "2023-05-29",
+      "descripcion": "Fecha de registro (2023-05-29) posterior al primer pedido (2023-04-29) del cliente"
     },
     {
       "tipo": "fecha_registro_posterior_pedido",
       "tabla": "clientes",
       "columna": "fecha_registro",
-      "fila_id": 41,
-      "valor_original": "2023-01-06",
-      "valor_nuevo": "2023-05-08",
-      "descripcion": "Fecha de registro (2023-05-08) posterior al primer pedido (2023-04-30) del cliente"
+      "fila_id": 15,
+      "valor_original": "2023-08-14",
+      "valor_nuevo": "2024-01-19",
+      "descripcion": "Fecha de registro (2024-01-19) posterior al primer pedido (2023-12-27) del cliente"
     },
     {
       "tipo": "fecha_registro_posterior_pedido",
       "tabla": "clientes",
       "columna": "fecha_registro",
-      "fila_id": 155,
-      "valor_original": "2023-05-20",
-      "valor_nuevo": "2024-03-20",
-      "descripcion": "Fecha de registro (2024-03-20) posterior al primer pedido (2024-03-10) del cliente"
+      "fila_id": 102,
+      "valor_original": "2023-06-19",
+      "valor_nuevo": "2023-09-24",
+      "descripcion": "Fecha de registro (2023-09-24) posterior al primer pedido (2023-09-18) del cliente"
     },
     {
       "tipo": "fecha_registro_posterior_pedido",
       "tabla": "clientes",
       "columna": "fecha_registro",
-      "fila_id": 188,
-      "valor_original": "2024-06-17",
-      "valor_nuevo": "2024-09-27",
-      "descripcion": "Fecha de registro (2024-09-27) posterior al primer pedido (2024-09-05) del cliente"
+      "fila_id": 37,
+      "valor_original": "2024-04-09",
+      "valor_nuevo": "2023-04-08",
+      "descripcion": "Fecha de registro (2023-04-08) posterior al primer pedido (2023-03-15) del cliente"
     }
   ]
 }

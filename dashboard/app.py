@@ -7,11 +7,19 @@ Uso:
 """
 
 import os
+import io
 import sys
 import json
 import subprocess
 import pandas as pd
 import streamlit as st
+from datetime import datetime
+from reportlab.lib.pagesizes import letter
+from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.lib import colors
+from reportlab.platypus import (
+    SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, PageBreak
+)
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
@@ -48,6 +56,87 @@ def cargar_injection_log():
         return None
     with open(path, "r", encoding="utf-8") as f:
         return json.load(f)
+
+
+
+
+
+def obtener_fecha_ultimo_run(path=RESULTS_PATH):
+    """Devuelve la fecha/hora de la ultima vez que se genero results.json (ultimo run_all.py)."""
+    if not os.path.exists(path):
+        return "Desconocida (no se encontro results.json)"
+    timestamp = os.path.getmtime(path)
+    return datetime.fromtimestamp(timestamp).strftime("%d/%m/%Y %H:%M:%S")
+
+
+def generar_pdf_informe(summary, log, metricas=None):
+    """Genera un informe PDF con la fecha del ultimo analisis (run_all.py)."""
+    buffer = io.BytesIO()
+    doc = SimpleDocTemplate(buffer, pagesize=letter, topMargin=40, bottomMargin=40)
+    styles = getSampleStyleSheet()
+    story = []
+
+    fecha_analisis = obtener_fecha_ultimo_run()
+
+    # Portada
+    story.append(Paragraph("Informe de Calidad de Datos", styles["Title"]))
+    story.append(Spacer(1, 6))
+    story.append(Paragraph(f"Fecha del ultimo analisis (run_all.py): {fecha_analisis}", styles["Normal"]))
+    story.append(Spacer(1, 20))
+
+    # Resumen de metricas si estan disponibles
+    if metricas:
+        story.append(Paragraph("Resumen de deteccion", styles["Heading2"]))
+        datos_metricas = [
+            ["Total anomalias inyectadas", metricas.get("total_inyectadas", "")],
+            ["Errores detectados", metricas.get("errores_detectados_total", "")],
+            ["Tasa de deteccion (%)", metricas.get("tasa_deteccion_tipos", "")],
+        ]
+        t = Table(datos_metricas, colWidths=[280, 200])
+        t.setStyle(TableStyle([
+            ("GRID", (0, 0), (-1, -1), 0.5, colors.grey),
+            ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#f0f0f0")),
+        ]))
+        story.append(t)
+        story.append(Spacer(1, 20))
+
+    # Profiling por tabla
+    story.append(Paragraph("Profiling del dataset", styles["Heading2"]))
+    for nombre_tabla, info in summary["tablas"].items():
+        story.append(Paragraph(nombre_tabla, styles["Heading3"]))
+        story.append(Paragraph(
+            f"Filas: {info['filas']} | Columnas: {info['columnas']} | "
+            f"Duplicadas: {info['filas_duplicadas']}",
+            styles["Normal"]
+        ))
+        story.append(Spacer(1, 8))
+
+    story.append(PageBreak())
+
+    # Anomalias
+    story.append(Paragraph("Anomalias inyectadas", styles["Heading2"]))
+    story.append(Paragraph(f"Total: {log['total_anomalias']}", styles["Normal"]))
+    story.append(Spacer(1, 10))
+
+    cabecera = ["Tipo", "Tabla", "Columna", "Fila ID"]
+    filas_pdf = [cabecera]
+    for anomalia in log["detalle"]:
+        filas_pdf.append([
+            anomalia["tipo"], anomalia["tabla"],
+            anomalia["columna"], str(anomalia["fila_id"])
+        ])
+
+    tabla_anomalias = Table(filas_pdf, colWidths=[150, 90, 90, 60])
+    tabla_anomalias.setStyle(TableStyle([
+        ("GRID", (0, 0), (-1, -1), 0.5, colors.grey),
+        ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#d9d9d9")),
+        ("FONTSIZE", (0, 0), (-1, -1), 8),
+    ]))
+    story.append(tabla_anomalias)
+
+    doc.build(story)
+    buffer.seek(0)
+    return buffer
 
 
 @st.cache_data
@@ -101,7 +190,22 @@ with st.sidebar:
             except Exception as e:
                 st.error(f"Error: {e}")
 
-
+if st.sidebar.button("📄 Exportar informe PDF"):
+    summary = cargar_summary()
+    log = cargar_injection_log()
+    if summary and log:
+        results = cargar_results()
+        metricas = results["metricas"] if results else None
+        pdf_buffer = generar_pdf_informe(summary, log, metricas)
+        fecha_archivo = obtener_fecha_ultimo_run().replace("/", "-").replace(":", "").replace(" ", "_")
+        st.sidebar.download_button(
+            label="Descargar informe",
+            data=pdf_buffer,
+            file_name=f"informe_calidad_{fecha_archivo}.pdf",
+            mime="application/pdf"
+        )
+    else:
+        st.sidebar.warning("Ejecuta el pipeline primero")    
 # ── Paginas ───────────────────────────────────────────────────────────────────
 
 def pagina_resumen():

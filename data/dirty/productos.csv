@@ -10,7 +10,7 @@ producto_id,nombre,categoria,precio_unitario,stock
 9,Pantalón vaquero,Ropa,51.43,69
 10,Sudadera,Ropa,77.13,140
 11,Zapatillas,Ropa,26.58,172
-12,Chaqueta impermeable,Ropa,12.04,73
+12,Chaqueta impermeable,Ropa,12.04,23
 13,Calcetines pack 5,Ropa,91.28,107
 14,Gorra visera,Ropa,-66.35,198
 15,Lámpara escritorio,Hogar,102.71,134
@@ -26,18 +26,18 @@ producto_id,nombre,categoria,precio_unitario,stock
 25,Botella térmica,Deportes,71.31,195
 26,Banda resistencia,Deportes,140.58,0
 27,Rodillo espuma,Deportes,281.15,9
-28,Esterilla yoga v3,Deportes,160.83,114
+28,Esterilla yoga v3,Deportes,160.83,24
 29,Café molido 500g,Alimentación,7.77,150
 30,Aceite oliva 1L,Alimentación,20.2,111
 31,Miel 350g,Alimentación,12.3,156
-32,Proteína whey 1kg,Alimentación,9.1,128
+32,Proteína whey 1kg,Alimentación,9.1,26
 33,Té verde 100 sobres,Alimentación,14.47,187
 34,Café molido 500g v3,Alimentación,46.68,53
 35,Aceite oliva 1L v3,Alimentación,57.81,25
 36,Python para todos,Libros,29.0,51
 37,Clean Code,Libros,54.84,44
-38,El Quijote,Libros,12.4,188
-39,Hábitos atómicos,Libros,54.36,44
+38,El Quijote,Libros,12.4,36
+39,Hábitos atómicos,Libros,54.36,36
 40,Sapiens,Libros,51.25,65
 41,Python para todos v3,Libros,-14.23,132
 42,Clean Code v3,Libros,41.97,129

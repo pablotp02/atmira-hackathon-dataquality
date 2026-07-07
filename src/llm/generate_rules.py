@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 load_dotenv()
 import os
 import json
+import re
 
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
@@ -14,13 +15,9 @@ def extract_json(text):
     try:
         return json.loads(text)
     except (json.JSONDecodeError, ValueError):
-        # intenta limpiar formato ```json ... ```
-        import re
-
         match = re.search(r"\{.*\}", text, re.DOTALL)
         if match:
             return json.loads(match.group())
-
         raise ValueError("No se pudo parsear JSON")
 
 
@@ -37,23 +34,29 @@ No expliques nada. No añadas texto.
 Las reglas en el array "rules" deben seguir EXACTAMENTE este formato,
 usando solo estos tipos soportados:
 
-- null_check:      campo no puede ser nulo
+- null_check: campo no puede ser nulo
   ejemplo: {{"type": "null_check", "column": "estado", "tabla": "pedidos", "descripcion": "El estado es obligatorio"}}
 
-- positive_check:  campo debe ser mayor que cero
+- positive_check: campo debe ser mayor que cero
   ejemplo: {{"type": "positive_check", "column": "precio_unitario", "tabla": "productos", "descripcion": "El precio debe ser positivo"}}
 
-- email_check:     campo debe tener formato de email valido
+- email_check: campo debe tener formato de email valido
   ejemplo: {{"type": "email_check", "column": "email", "tabla": "clientes", "descripcion": "El email debe tener formato valido"}}
 
 - date_order_check: una fecha debe ser posterior a otra
   ejemplo: {{"type": "date_order_check", "column_after": "fecha_entrega", "column_before": "fecha_pedido", "tabla": "pedidos", "descripcion": "La entrega debe ser posterior al pedido"}}
 
-- total_check:     el total del pedido debe coincidir con la suma de sus lineas
+- delivered_future_check: pedido en estado entregado con fecha de entrega futura
+  ejemplo: {{"type": "delivered_future_check", "tabla": "pedidos", "descripcion": "Un pedido entregado no puede tener fecha de entrega futura"}}
+
+- total_check: el total del pedido debe coincidir con la suma de sus lineas
   ejemplo: {{"type": "total_check", "tabla": "pedidos", "descripcion": "El total debe coincidir con la suma de lineas_pedido"}}
 
-- delivered_future_check: pedido en estado 'entregado' con fecha de entrega en el futuro
-  ejemplo: {{"type": "delivered_future_check", "tabla": "pedidos", "descripcion": "Un pedido entregado no puede tener fecha de entrega futura"}}
+- stock_check: la cantidad total pedida de un producto no puede superar su stock disponible
+  ejemplo: {{"type": "stock_check", "tabla": "productos", "descripcion": "La cantidad total pedida no puede superar el stock disponible"}}
+
+- registration_date_check: la fecha de registro de un cliente no puede ser posterior a su primer pedido
+  ejemplo: {{"type": "registration_date_check", "tabla": "clientes", "descripcion": "La fecha de registro no puede ser posterior al primer pedido del cliente"}}
 
 Formato de respuesta:
 

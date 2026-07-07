@@ -30,14 +30,16 @@ DIRTY_DIR = os.path.join(os.path.dirname(__file__), "..", "..", "data", "dirty")
 
 # Numero de anomalias a inyectar por tipo
 NUM_ANOMALIAS = {
-    "email_formato_invalido":         5,
-    "precio_negativo":                5,
-    "cantidad_cero":                  5,
-    "nulo_en_campo_obligatorio":      5,
-    "fecha_entrega_anterior_pedido":  5,
-    "total_pedido_incorrecto":        5,
-    "precio_linea_distinto_catalogo": 5,
-    "pedido_entregado_fecha_futura":  5,
+    "email_formato_invalido":             5,
+    "precio_negativo":                    5,
+    "cantidad_cero":                      5,
+    "nulo_en_campo_obligatorio":          5,
+    "fecha_entrega_anterior_pedido":      5,
+    "total_pedido_incorrecto":            5,
+    "precio_linea_distinto_catalogo":     5,
+    "pedido_entregado_fecha_futura":      5,
+    "stock_superado":                     5,
+    "fecha_registro_posterior_pedido":    5,
 }
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
@@ -45,13 +47,13 @@ NUM_ANOMALIAS = {
 def registrar(log: list, tipo: str, tabla: str, columna: str, fila_id: int,
               valor_original, valor_nuevo, descripcion: str):
     log.append({
-        "tipo":             tipo,
-        "tabla":            tabla,
-        "columna":          columna,
-        "fila_id":          fila_id,
-        "valor_original":   str(valor_original),
-        "valor_nuevo":      str(valor_nuevo),
-        "descripcion":      descripcion,
+        "tipo":           tipo,
+        "tabla":          tabla,
+        "columna":        columna,
+        "fila_id":        fila_id,
+        "valor_original": str(valor_original),
+        "valor_nuevo":    str(valor_nuevo),
+        "descripcion":    descripcion,
     })
 
 
@@ -62,7 +64,6 @@ def ids_aleatorios(df: pd.DataFrame, id_col: str, n: int) -> list:
 # ── Anomalias triviales (estadisticas) ───────────────────────────────────────
 
 def inyectar_email_invalido(clientes: pd.DataFrame, log: list, n: int):
-    """Email sin @ ni dominio valido."""
     ids = ids_aleatorios(clientes, "cliente_id", n)
     for cid in ids:
         idx = clientes[clientes["cliente_id"] == cid].index[0]
@@ -75,7 +76,6 @@ def inyectar_email_invalido(clientes: pd.DataFrame, log: list, n: int):
 
 
 def inyectar_precio_negativo(productos: pd.DataFrame, log: list, n: int):
-    """Precio unitario negativo en productos."""
     ids = ids_aleatorios(productos, "producto_id", n)
     for pid in ids:
         idx = productos[productos["producto_id"] == pid].index[0]
@@ -88,7 +88,6 @@ def inyectar_precio_negativo(productos: pd.DataFrame, log: list, n: int):
 
 
 def inyectar_cantidad_cero(lineas: pd.DataFrame, log: list, n: int):
-    """Cantidad 0 en lineas de pedido."""
     ids = ids_aleatorios(lineas, "linea_id", n)
     for lid in ids:
         idx = lineas[lineas["linea_id"] == lid].index[0]
@@ -100,7 +99,6 @@ def inyectar_cantidad_cero(lineas: pd.DataFrame, log: list, n: int):
 
 
 def inyectar_nulo_obligatorio(pedidos: pd.DataFrame, log: list, n: int):
-    """Estado nulo en pedidos (campo obligatorio)."""
     ids = ids_aleatorios(pedidos, "pedido_id", n)
     for pid in ids:
         idx = pedidos[pedidos["pedido_id"] == pid].index[0]
@@ -111,10 +109,9 @@ def inyectar_nulo_obligatorio(pedidos: pd.DataFrame, log: list, n: int):
     return pedidos
 
 
-# ── Anomalias interesantes (contexto de negocio) ──────────────────────────────
+# ── Anomalias de contexto de negocio ─────────────────────────────────────────
 
 def inyectar_fecha_entrega_anterior(pedidos: pd.DataFrame, log: list, n: int):
-    """Fecha de entrega anterior a la fecha de pedido — imposible temporalmente."""
     ids = ids_aleatorios(pedidos, "pedido_id", n)
     for pid in ids:
         idx = pedidos[pedidos["pedido_id"] == pid].index[0]
@@ -131,12 +128,10 @@ def inyectar_fecha_entrega_anterior(pedidos: pd.DataFrame, log: list, n: int):
 
 
 def inyectar_total_incorrecto(pedidos: pd.DataFrame, log: list, n: int):
-    """Total del pedido que no coincide con la suma de sus lineas — error de transformacion."""
     ids = ids_aleatorios(pedidos, "pedido_id", n)
     for pid in ids:
         idx = pedidos[pedidos["pedido_id"] == pid].index[0]
         original = pedidos.at[idx, "total"]
-        # Alteramos el total entre un 10% y un 40% del valor real
         factor = random.uniform(0.6, 0.9)
         nuevo = round(original * factor, 2)
         pedidos.at[idx, "total"] = nuevo
@@ -149,14 +144,12 @@ def inyectar_total_incorrecto(pedidos: pd.DataFrame, log: list, n: int):
 
 def inyectar_precio_linea_distinto(lineas: pd.DataFrame, productos: pd.DataFrame,
                                     log: list, n: int):
-    """Precio en linea_pedido distinto al precio del catalogo — inconsistencia referencial."""
     ids = ids_aleatorios(lineas, "linea_id", n)
     for lid in ids:
         idx = lineas[lineas["linea_id"] == lid].index[0]
         pid = lineas.at[idx, "producto_id"]
         precio_catalogo = abs(productos.loc[productos["producto_id"] == pid, "precio_unitario"].values[0])
         original = lineas.at[idx, "precio_unitario"]
-        # Precio distinto al catalogo (multiplicamos por un factor aleatorio)
         factor = random.choice([0.5, 1.5, 2.0, 0.25])
         nuevo = round(precio_catalogo * factor, 2)
         lineas.at[idx, "precio_unitario"] = nuevo
@@ -168,12 +161,9 @@ def inyectar_precio_linea_distinto(lineas: pd.DataFrame, productos: pd.DataFrame
 
 
 def inyectar_entregado_fecha_futura(pedidos: pd.DataFrame, log: list, n: int):
-    """Pedido en estado 'entregado' con fecha de entrega en el futuro."""
-    # Solo pedidos en estado 'entregado'
     candidatos = pedidos[pedidos["estado"] == "entregado"]["pedido_id"].tolist()
     ids = random.sample(candidatos, min(n, len(candidatos)))
     fecha_futura_base = datetime(2026, 1, 1)
-
     for pid in ids:
         idx = pedidos[pedidos["pedido_id"] == pid].index[0]
         original = pedidos.at[idx, "fecha_entrega"]
@@ -184,6 +174,63 @@ def inyectar_entregado_fecha_futura(pedidos: pd.DataFrame, log: list, n: int):
                   original, nueva_fecha,
                   f"Pedido marcado como 'entregado' pero fecha_entrega ({nueva_fecha}) es futura")
     return pedidos
+
+
+def inyectar_stock_superado(productos: pd.DataFrame, lineas: pd.DataFrame,
+                             log: list, n: int):
+    """Stock disponible menor que la cantidad total pedida — requiere cruce de tablas."""
+    total_pedido = (
+        lineas.groupby("producto_id")["cantidad"]
+        .sum()
+        .reset_index(name="total_pedido")
+    )
+    candidatos = productos.merge(total_pedido, on="producto_id")
+    candidatos = candidatos[candidatos["stock"] > 0].copy()
+
+    seleccionados = candidatos.sample(n=min(n, len(candidatos)), random_state=SEED)
+
+    for _, prod in seleccionados.iterrows():
+        idx = productos[productos["producto_id"] == prod["producto_id"]].index[0]
+        original = productos.at[idx, "stock"]
+        nuevo_stock = max(1, int(prod["total_pedido"] * 0.3))
+        productos.at[idx, "stock"] = nuevo_stock
+        registrar(log, "stock_superado", "productos", "stock",
+                  int(prod["producto_id"]), original, nuevo_stock,
+                  f"Stock ajustado a {nuevo_stock} cuando se han pedido "
+                  f"{int(prod['total_pedido'])} unidades en total")
+
+    return productos
+
+
+def inyectar_fecha_registro_posterior_pedido(clientes: pd.DataFrame, pedidos: pd.DataFrame,
+                                              log: list, n: int):
+    """Fecha de registro del cliente posterior a su primer pedido — anomalia temporal sutil."""
+    pedidos_dt = pedidos.copy()
+    pedidos_dt["fecha_pedido_dt"] = pd.to_datetime(pedidos_dt["fecha_pedido"])
+    primer_pedido = (
+        pedidos_dt.groupby("cliente_id")["fecha_pedido_dt"]
+        .min()
+        .reset_index(name="primer_pedido")
+    )
+
+    candidatos = clientes.merge(primer_pedido, on="cliente_id")
+    ids = random.sample(candidatos["cliente_id"].tolist(), min(n, len(candidatos)))
+
+    for cid in ids:
+        idx = clientes[clientes["cliente_id"] == cid].index[0]
+        primer_pedido_fecha = candidatos.loc[
+            candidatos["cliente_id"] == cid, "primer_pedido"
+        ].values[0]
+        primer_pedido_dt = pd.Timestamp(primer_pedido_fecha)
+        original = clientes.at[idx, "fecha_registro"]
+        nueva_fecha = (primer_pedido_dt + timedelta(days=random.randint(1, 30))).strftime("%Y-%m-%d")
+        clientes.at[idx, "fecha_registro"] = nueva_fecha
+        registrar(log, "fecha_registro_posterior_pedido", "clientes", "fecha_registro", cid,
+                  original, nueva_fecha,
+                  f"Fecha de registro ({nueva_fecha}) posterior al primer pedido "
+                  f"({primer_pedido_dt.date()}) del cliente")
+
+    return clientes
 
 
 # ── Main ──────────────────────────────────────────────────────────────────────
@@ -206,10 +253,14 @@ def main():
     pedidos   = inyectar_nulo_obligatorio(pedidos, log, NUM_ANOMALIAS["nulo_en_campo_obligatorio"])
 
     print("Inyectando anomalias de contexto de negocio...")
-    pedidos = inyectar_fecha_entrega_anterior(pedidos, log, NUM_ANOMALIAS["fecha_entrega_anterior_pedido"])
-    pedidos = inyectar_total_incorrecto(pedidos, log, NUM_ANOMALIAS["total_pedido_incorrecto"])
-    lineas  = inyectar_precio_linea_distinto(lineas, productos, log, NUM_ANOMALIAS["precio_linea_distinto_catalogo"])
-    pedidos = inyectar_entregado_fecha_futura(pedidos, log, NUM_ANOMALIAS["pedido_entregado_fecha_futura"])
+    pedidos   = inyectar_fecha_entrega_anterior(pedidos, log, NUM_ANOMALIAS["fecha_entrega_anterior_pedido"])
+    pedidos   = inyectar_total_incorrecto(pedidos, log, NUM_ANOMALIAS["total_pedido_incorrecto"])
+    lineas    = inyectar_precio_linea_distinto(lineas, productos, log, NUM_ANOMALIAS["precio_linea_distinto_catalogo"])
+    pedidos   = inyectar_entregado_fecha_futura(pedidos, log, NUM_ANOMALIAS["pedido_entregado_fecha_futura"])
+
+    print("Inyectando anomalias avanzadas (cruce de tablas)...")
+    productos = inyectar_stock_superado(productos, lineas, log, NUM_ANOMALIAS["stock_superado"])
+    clientes  = inyectar_fecha_registro_posterior_pedido(clientes, pedidos, log, NUM_ANOMALIAS["fecha_registro_posterior_pedido"])
 
     print("Guardando CSVs sucios...")
     clientes.to_csv(os.path.join(DIRTY_DIR, "clientes.csv"), index=False)
@@ -217,7 +268,6 @@ def main():
     pedidos.to_csv(os.path.join(DIRTY_DIR, "pedidos.csv"), index=False)
     lineas.to_csv(os.path.join(DIRTY_DIR, "lineas_pedido.csv"), index=False)
 
-    # Guardar registro de anomalias
     registro = {
         "descripcion": (
             "Registro de anomalias inyectadas en el dataset. "

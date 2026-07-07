@@ -39,7 +39,7 @@ cliente_id,nombre,email,fecha_registro,pais,fecha_nacimiento
 38,Cayetano Isidoro Mate Ángel,eligio51@example.org,2024-03-11,CO,1970-08-29
 39,Eligio Carlos Campo,marigracia@example.org,2023-03-30,ES,2005-04-08
 40,Clara Laguna Vega,lalolujan@example.net,2023-11-14,AR,1959-11-06
-41,Saturnina Lloret Arregui,diglesias@example.org,2023-01-06,MX,1988-09-04
+41,Saturnina Lloret Arregui,diglesias@example.org,2023-05-08,MX,1988-09-04
 42,Cecilio Sala-Roma,mugicamaria-manuela@example.org,2023-12-04,ES,1988-11-13
 43,Leandro Araujo Peiró,caparroscarlos@example.net,2024-06-19,MX,2007-01-10
 44,Ximena Ariño Pallarès,titocastell@example.org,2023-07-25,ES,1966-06-28
@@ -65,7 +65,7 @@ cliente_id,nombre,email,fecha_registro,pais,fecha_nacimiento
 64,Isidro Berenguer-Macias,maria-dolores87@example.net,2023-10-22,ES,1961-10-17
 65,Anita de Contreras,lalonarvaez@example.com,2024-08-22,ES,2006-04-14
 66,Hipólito Ramón Muro,rodolfocorominas@example.net,2023-12-12,ES,1960-01-27
-67,Gema Aller Pintor,dricart@example.org,2024-01-22,MX,2002-03-11
+67,Gema Aller Pintor,dricart@example.org,2023-05-05,MX,2002-03-11
 68,Tamara Rius Giménez,waguado@example.com,2023-12-11,MX,1996-10-14
 69,Guiomar Navarrete Quiroga,rgimenez@example.com,2024-01-31,MX,1978-07-24
 70,Alba del Amores,priscilasolsona@example.org,2024-01-15,AR,1987-11-10
@@ -153,7 +153,7 @@ cliente_id,nombre,email,fecha_registro,pais,fecha_nacimiento
 152,Anabel Bou Blázquez,teofilo54@example.com,2023-01-13,AR,1955-11-25
 153,Ruperta Castillo Barreda,rosalesclemente@example.net,2023-11-23,MX,1995-10-15
 154,Teófila Aznar Maestre,herminia16@example.com,2023-09-25,ES,2004-12-17
-155,Nando Toledo Gomez,pastor19@example.net,2023-05-20,AR,1959-12-28
+155,Nando Toledo Gomez,pastor19@example.net,2024-03-20,AR,1959-12-28
 156,Rico Lopez Gonzalo,ordonezramona@example.net,2023-02-18,MX,1970-07-11
 157,Alberto Escribano-Llano,mamo@example.net,2023-02-07,ES,2001-12-16
 158,Lorenzo Pérez Baños,africa55@example.org,2023-12-17,AR,1957-11-09
@@ -168,7 +168,7 @@ cliente_id,nombre,email,fecha_registro,pais,fecha_nacimiento
 167,Tomás Millán Román,barnal@example.org,2023-03-14,AR,1976-10-19
 168,Fermín Duarte Seguí,srios@example.org,2023-07-22,AR,1973-01-28
 169,Gracia Zamora-Bermúdez,chus61@example.org,2023-06-27,CO,1975-02-28
-170,Reyes Diéguez Benito,vmenendez@example.com,2023-12-29,CO,1960-08-04
+170,Reyes Diéguez Benito,vmenendez@example.com,2024-07-05,CO,1960-08-04
 171,Desiderio Calderon Coll,vianaguillermo@example.com,2024-07-01,ES,1969-05-28
 172,Chus Uribe Simó,hector29@example.org,2024-11-25,ES,1997-03-31
 173,Anabel Somoza Salamanca,omoraleda@example.com,2023-05-09,ES,1955-10-15
@@ -186,7 +186,7 @@ cliente_id,nombre,email,fecha_registro,pais,fecha_nacimiento
 185,Ceferino Escrivá Daza,sarita92@example.net,2023-07-03,CO,1971-02-24
 186,Iván del Sanchez,aarranz@example.com,2023-04-24,ES,1991-07-17
 187,Yaiza Ferrera Pedro,bibianaharo@example.com,2024-05-23,CO,2000-07-16
-188,Lidia Álamo Riquelme,xserrano@example.com,2024-06-17,CO,1998-06-19
+188,Lidia Álamo Riquelme,xserrano@example.com,2024-09-27,CO,1998-06-19
 189,Amancio Terrón-Pera,olgaflores@example.net,2023-01-13,ES,1954-12-06
 190,Rico Cueto Llamas,villalobosrenata@example.org,2024-01-21,CO,1964-11-29
 191,Sebastian del Olmedo,jvilanova@example.com,2023-04-10,ES,1951-10-03

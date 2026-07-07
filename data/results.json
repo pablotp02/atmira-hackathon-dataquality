@@ -31,6 +31,12 @@
       "descripcion": "La cantidad debe ser positiva"
     },
     {
+      "type": "email_check",
+      "column": "email",
+      "tabla": "clientes",
+      "descripcion": "El email debe tener formato valido"
+    },
+    {
       "type": "date_order_check",
       "column_after": "fecha_entrega",
       "column_before": "fecha_pedido",
@@ -38,10 +44,9 @@
       "descripcion": "La entrega debe ser posterior al pedido"
     },
     {
-      "type": "email_check",
-      "column": "email",
-      "tabla": "clientes",
-      "descripcion": "El email debe tener formato valido"
+      "type": "delivered_future_check",
+      "tabla": "pedidos",
+      "descripcion": "Un pedido entregado no puede tener fecha de entrega futura"
     },
     {
       "type": "total_check",
@@ -49,9 +54,14 @@
       "descripcion": "El total debe coincidir con la suma de lineas_pedido"
     },
     {
-      "type": "delivered_future_check",
-      "tabla": "pedidos",
-      "descripcion": "Un pedido entregado no puede tener fecha de entrega futura"
+      "type": "stock_check",
+      "tabla": "productos",
+      "descripcion": "La cantidad total pedida no puede superar el stock disponible"
+    },
+    {
+      "type": "registration_date_check",
+      "tabla": "clientes",
+      "descripcion": "La fecha de registro no puede ser posterior al primer pedido del cliente"
     }
   ],
   "results": [
@@ -107,6 +117,16 @@
     },
     {
       "rule": {
+        "type": "email_check",
+        "column": "email",
+        "tabla": "clientes",
+        "descripcion": "El email debe tener formato valido"
+      },
+      "errors": 5,
+      "detalle": "5 emails con formato invalido en 'email'"
+    },
+    {
+      "rule": {
         "type": "date_order_check",
         "column_after": "fecha_entrega",
         "column_before": "fecha_pedido",
@@ -118,13 +138,12 @@
     },
     {
       "rule": {
-        "type": "email_check",
-        "column": "email",
-        "tabla": "clientes",
-        "descripcion": "El email debe tener formato valido"
+        "type": "delivered_future_check",
+        "tabla": "pedidos",
+        "descripcion": "Un pedido entregado no puede tener fecha de entrega futura"
       },
       "errors": 5,
-      "detalle": "5 emails con formato invalido en 'email'"
+      "detalle": "5 pedidos en estado 'entregado' con fecha_entrega a partir de 2025-01-01"
     },
     {
       "rule": {
@@ -137,16 +156,25 @@
     },
     {
       "rule": {
-        "type": "delivered_future_check",
-        "tabla": "pedidos",
-        "descripcion": "Un pedido entregado no puede tener fecha de entrega futura"
+        "type": "stock_check",
+        "tabla": "productos",
+        "descripcion": "La cantidad total pedida no puede superar el stock disponible"
       },
-      "errors": 5,
-      "detalle": "5 pedidos en estado 'entregado' con fecha_entrega a partir de 2025-01-01"
+      "errors": 30,
+      "detalle": "30 productos con cantidad total pedida superior al stock disponible"
+    },
+    {
+      "rule": {
+        "type": "registration_date_check",
+        "tabla": "clientes",
+        "descripcion": "La fecha de registro no puede ser posterior al primer pedido del cliente"
+      },
+      "errors": 0,
+      "detalle": "Tipo de regla 'registration_date_check' no soportado por el motor actual"
     }
   ],
   "metricas": {
-    "total_inyectadas": 40,
+    "total_inyectadas": 50,
     "tipos_inyectados": {
       "email_formato_invalido": 5,
       "precio_negativo": 5,
@@ -155,7 +183,9 @@
       "fecha_entrega_anterior_pedido": 5,
       "total_pedido_incorrecto": 5,
       "precio_linea_distinto_catalogo": 5,
-      "pedido_entregado_fecha_futura": 5
+      "pedido_entregado_fecha_futura": 5,
+      "stock_superado": 5,
+      "fecha_registro_posterior_pedido": 5
     },
     "tipos_detectados": [
       "email_formato_invalido",
@@ -165,9 +195,12 @@
       "fecha_entrega_anterior_pedido",
       "total_pedido_incorrecto",
       "precio_linea_distinto_catalogo",
-      "pedido_entregado_fecha_futura"
+      "pedido_entregado_fecha_futura",
+      "stock_superado"
     ],
-    "tipos_no_detectados": [],
+    "tipos_no_detectados": [
+      "fecha_registro_posterior_pedido"
+    ],
     "deteccion_por_tipo": {
       "email_formato_invalido": {
         "cantidad_inyectada": 5,
@@ -224,9 +257,23 @@
           "delivered_future_check"
         ],
         "detectado": true
+      },
+      "stock_superado": {
+        "cantidad_inyectada": 5,
+        "reglas_esperadas": [
+          "stock_check"
+        ],
+        "detectado": true
+      },
+      "fecha_registro_posterior_pedido": {
+        "cantidad_inyectada": 5,
+        "reglas_esperadas": [
+          "registration_date_check"
+        ],
+        "detectado": false
       }
     },
-    "tasa_deteccion_tipos": 100.0,
-    "errores_detectados_total": 40
+    "tasa_deteccion_tipos": 90.0,
+    "errores_detectados_total": 70
   }
 }

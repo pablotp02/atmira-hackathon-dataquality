@@ -1,6 +1,6 @@
 {
   "descripcion": "Registro de anomalias inyectadas en el dataset. Cada entrada representa un error introducido de forma controlada. Este archivo es la verdad fundamental para el modulo de evaluacion.",
-  "total_anomalias": 40,
+  "total_anomalias": 50,
   "anomalias_por_tipo": {
     "email_formato_invalido": 5,
     "precio_negativo": 5,
@@ -9,7 +9,9 @@
     "fecha_entrega_anterior_pedido": 5,
     "total_pedido_incorrecto": 5,
     "precio_linea_distinto_catalogo": 5,
-    "pedido_entregado_fecha_futura": 5
+    "pedido_entregado_fecha_futura": 5,
+    "stock_superado": 5,
+    "fecha_registro_posterior_pedido": 5
   },
   "detalle": [
     {
@@ -371,6 +373,96 @@
       "valor_original": "2024-10-13",
       "valor_nuevo": "2026-05-06",
       "descripcion": "Pedido marcado como 'entregado' pero fecha_entrega (2026-05-06) es futura"
+    },
+    {
+      "tipo": "stock_superado",
+      "tabla": "productos",
+      "columna": "stock",
+      "fila_id": 38,
+      "valor_original": "188",
+      "valor_nuevo": "36",
+      "descripcion": "Stock ajustado a 36 cuando se han pedido 120 unidades en total"
+    },
+    {
+      "tipo": "stock_superado",
+      "tabla": "productos",
+      "columna": "stock",
+      "fila_id": 28,
+      "valor_original": "114",
+      "valor_nuevo": "24",
+      "descripcion": "Stock ajustado a 24 cuando se han pedido 82 unidades en total"
+    },
+    {
+      "tipo": "stock_superado",
+      "tabla": "productos",
+      "columna": "stock",
+      "fila_id": 12,
+      "valor_original": "73",
+      "valor_nuevo": "23",
+      "descripcion": "Stock ajustado a 23 cuando se han pedido 79 unidades en total"
+    },
+    {
+      "tipo": "stock_superado",
+      "tabla": "productos",
+      "columna": "stock",
+      "fila_id": 32,
+      "valor_original": "128",
+      "valor_nuevo": "26",
+      "descripcion": "Stock ajustado a 26 cuando se han pedido 89 unidades en total"
+    },
+    {
+      "tipo": "stock_superado",
+      "tabla": "productos",
+      "columna": "stock",
+      "fila_id": 39,
+      "valor_original": "44",
+      "valor_nuevo": "36",
+      "descripcion": "Stock ajustado a 36 cuando se han pedido 123 unidades en total"
+    },
+    {
+      "tipo": "fecha_registro_posterior_pedido",
+      "tabla": "clientes",
+      "columna": "fecha_registro",
+      "fila_id": 67,
+      "valor_original": "2024-01-22",
+      "valor_nuevo": "2023-05-05",
+      "descripcion": "Fecha de registro (2023-05-05) posterior al primer pedido (2023-04-25) del cliente"
+    },
+    {
+      "tipo": "fecha_registro_posterior_pedido",
+      "tabla": "clientes",
+      "columna": "fecha_registro",
+      "fila_id": 170,
+      "valor_original": "2023-12-29",
+      "valor_nuevo": "2024-07-05",
+      "descripcion": "Fecha de registro (2024-07-05) posterior al primer pedido (2024-06-07) del cliente"
+    },
+    {
+      "tipo": "fecha_registro_posterior_pedido",
+      "tabla": "clientes",
+      "columna": "fecha_registro",
+      "fila_id": 41,
+      "valor_original": "2023-01-06",
+      "valor_nuevo": "2023-05-08",
+      "descripcion": "Fecha de registro (2023-05-08) posterior al primer pedido (2023-04-30) del cliente"
+    },
+    {
+      "tipo": "fecha_registro_posterior_pedido",
+      "tabla": "clientes",
+      "columna": "fecha_registro",
+      "fila_id": 155,
+      "valor_original": "2023-05-20",
+      "valor_nuevo": "2024-03-20",
+      "descripcion": "Fecha de registro (2024-03-20) posterior al primer pedido (2024-03-10) del cliente"
+    },
+    {
+      "tipo": "fecha_registro_posterior_pedido",
+      "tabla": "clientes",
+      "columna": "fecha_registro",
+      "fila_id": 188,
+      "valor_original": "2024-06-17",
+      "valor_nuevo": "2024-09-27",
+      "descripcion": "Fecha de registro (2024-09-27) posterior al primer pedido (2024-09-05) del cliente"
     }
   ]
 }

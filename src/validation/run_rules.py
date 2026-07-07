@@ -6,7 +6,6 @@ def run_rules(dfs, rules):
     Aplica las reglas generadas por el LLM sobre los DataFrames del dataset.
 
     dfs: diccionario con los DataFrames por nombre de tabla
-         ej. {"pedidos": df_pedidos, "clientes": df_clientes, ...}
     rules: lista de reglas generadas por el LLM
 
     Tipos de regla soportados:
@@ -16,6 +15,7 @@ def run_rules(dfs, rules):
       - date_order_check
       - delivered_future_check
       - total_check
+      - stock_check
     """
     results = []
 
@@ -25,7 +25,7 @@ def run_rules(dfs, rules):
         tabla       = rule.get("tabla")
 
         df = dfs.get(tabla)
-        if df is None:
+        if df is None and rule_type not in ("total_check", "stock_check"):
             results.append({
                 "rule":    rule,
                 "errors":  0,
@@ -83,8 +83,21 @@ def run_rules(dfs, rules):
             errores = int((abs(merged["total"] - merged["subtotal"]) > 0.01).sum())
             detalle = f"{errores} pedidos cuyo total no coincide con la suma de sus lineas"
 
+        elif rule_type == "stock_check":
+            productos = dfs["productos"]
+            lineas    = dfs["lineas_pedido"]
+            total_por_producto = (
+                lineas.groupby("producto_id")["cantidad"]
+                .sum()
+                .reset_index(name="total_pedido")
+            )
+            merged  = productos.merge(total_por_producto, on="producto_id", how="left")
+            merged["total_pedido"] = merged["total_pedido"].fillna(0)
+            errores = int((merged["total_pedido"] > merged["stock"]).sum())
+            detalle = f"{errores} productos con cantidad total pedida superior al stock disponible"
+
         else:
-            detalle = f"Tipo de regla '{rule_type}' no soportado"
+            detalle = f"Tipo de regla '{rule_type}' no soportado por el motor actual"
 
         results.append({
             "rule":    rule,

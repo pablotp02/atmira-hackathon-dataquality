@@ -1,52 +1,85 @@
 {
   "rules": [
     {
+      "type": "total_check",
+      "tabla": "pedidos",
+      "descripcion": "El total del pedido debe coincidir con la suma de (cantidad * precio_unitario) de sus lineas en lineas_pedido."
+    },
+    {
       "type": "null_check",
       "column": "estado",
       "tabla": "pedidos",
-      "descripcion": "El estado es obligatorio"
+      "descripcion": "El campo estado no puede ser nulo."
+    },
+    {
+      "type": "null_check",
+      "column": "cliente_id",
+      "tabla": "pedidos",
+      "descripcion": "El campo cliente_id no puede ser nulo."
     },
     {
       "type": "null_check",
       "column": "producto_id",
       "tabla": "lineas_pedido",
-      "descripcion": "El producto_id es obligatorio"
+      "descripcion": "El campo producto_id no puede ser nulo."
     },
     {
       "type": "positive_check",
       "column": "precio_unitario",
       "tabla": "lineas_pedido",
-      "descripcion": "El precio debe ser positivo"
+      "descripcion": "El precio_unitario debe ser positivo."
+    },
+    {
+      "type": "positive_check",
+      "column": "cantidad",
+      "tabla": "lineas_pedido",
+      "descripcion": "La cantidad debe ser positiva."
+    },
+    {
+      "type": "date_order_check",
+      "column_after": "fecha_entrega",
+      "column_before": "fecha_pedido",
+      "tabla": "pedidos",
+      "descripcion": "La fecha de entrega debe ser posterior a la fecha del pedido."
+    },
+    {
+      "type": "delivered_future_check",
+      "tabla": "pedidos",
+      "descripcion": "Los pedidos en estado entregado no pueden tener fecha de entrega futura."
+    },
+    {
+      "type": "stock_check",
+      "tabla": "lineas_pedido",
+      "descripcion": "La cantidad total pedida de un producto no puede superar su stock disponible."
+    },
+    {
+      "type": "registration_date_check",
+      "tabla": "clientes",
+      "descripcion": "La fecha de registro del cliente no puede ser posterior a su primer pedido."
     },
     {
       "type": "email_check",
       "column": "email",
       "tabla": "clientes",
-      "descripcion": "El email debe tener formato valido"
-    },
-    {
-      "type": "delivered_future_check",
-      "tabla": "pedidos",
-      "descripcion": "Un pedido entregado no puede tener fecha de entrega futura"
-    },
-    {
-      "type": "stock_check",
-      "tabla": "productos",
-      "descripcion": "La cantidad total pedida no puede superar el stock disponible"
-    },
-    {
-      "type": "registration_date_check",
-      "tabla": "clientes",
-      "descripcion": "La fecha de registro no puede ser posterior al primer pedido del cliente"
+      "descripcion": "El email debe tener un formato válido."
     }
   ],
   "results": [
     {
       "rule": {
+        "type": "total_check",
+        "tabla": "pedidos",
+        "descripcion": "El total del pedido debe coincidir con la suma de (cantidad * precio_unitario) de sus lineas en lineas_pedido."
+      },
+      "errors": 15,
+      "detalle": "15 pedidos cuyo total no coincide con la suma de sus lineas"
+    },
+    {
+      "rule": {
         "type": "null_check",
         "column": "estado",
         "tabla": "pedidos",
-        "descripcion": "El estado es obligatorio"
+        "descripcion": "El campo estado no puede ser nulo."
       },
       "errors": 5,
       "detalle": "5 filas con nulo en 'estado'"
@@ -54,9 +87,19 @@
     {
       "rule": {
         "type": "null_check",
+        "column": "cliente_id",
+        "tabla": "pedidos",
+        "descripcion": "El campo cliente_id no puede ser nulo."
+      },
+      "errors": 0,
+      "detalle": "0 filas con nulo en 'cliente_id'"
+    },
+    {
+      "rule": {
+        "type": "null_check",
         "column": "producto_id",
         "tabla": "lineas_pedido",
-        "descripcion": "El producto_id es obligatorio"
+        "descripcion": "El campo producto_id no puede ser nulo."
       },
       "errors": 0,
       "detalle": "0 filas con nulo en 'producto_id'"
@@ -66,26 +109,37 @@
         "type": "positive_check",
         "column": "precio_unitario",
         "tabla": "lineas_pedido",
-        "descripcion": "El precio debe ser positivo"
+        "descripcion": "El precio_unitario debe ser positivo."
       },
       "errors": 0,
       "detalle": "0 filas con valor <= 0 en 'precio_unitario'"
     },
     {
       "rule": {
-        "type": "email_check",
-        "column": "email",
-        "tabla": "clientes",
-        "descripcion": "El email debe tener formato valido"
+        "type": "positive_check",
+        "column": "cantidad",
+        "tabla": "lineas_pedido",
+        "descripcion": "La cantidad debe ser positiva."
       },
       "errors": 5,
-      "detalle": "5 emails con formato invalido en 'email'"
+      "detalle": "5 filas con valor <= 0 en 'cantidad'"
+    },
+    {
+      "rule": {
+        "type": "date_order_check",
+        "column_after": "fecha_entrega",
+        "column_before": "fecha_pedido",
+        "tabla": "pedidos",
+        "descripcion": "La fecha de entrega debe ser posterior a la fecha del pedido."
+      },
+      "errors": 5,
+      "detalle": "5 filas donde 'fecha_entrega' es anterior a 'fecha_pedido'"
     },
     {
       "rule": {
         "type": "delivered_future_check",
         "tabla": "pedidos",
-        "descripcion": "Un pedido entregado no puede tener fecha de entrega futura"
+        "descripcion": "Los pedidos en estado entregado no pueden tener fecha de entrega futura."
       },
       "errors": 5,
       "detalle": "5 pedidos en estado 'entregado' con fecha_entrega a partir de 2025-01-01"
@@ -93,20 +147,30 @@
     {
       "rule": {
         "type": "stock_check",
-        "tabla": "productos",
-        "descripcion": "La cantidad total pedida no puede superar el stock disponible"
+        "tabla": "lineas_pedido",
+        "descripcion": "La cantidad total pedida de un producto no puede superar su stock disponible."
       },
-      "errors": 32,
-      "detalle": "32 productos con cantidad total pedida superior al stock disponible"
+      "errors": 31,
+      "detalle": "31 productos con cantidad total pedida superior al stock disponible"
     },
     {
       "rule": {
         "type": "registration_date_check",
         "tabla": "clientes",
-        "descripcion": "La fecha de registro no puede ser posterior al primer pedido del cliente"
+        "descripcion": "La fecha de registro del cliente no puede ser posterior a su primer pedido."
       },
       "errors": 0,
       "detalle": "Tipo de regla 'registration_date_check' no soportado por el motor actual"
+    },
+    {
+      "rule": {
+        "type": "email_check",
+        "column": "email",
+        "tabla": "clientes",
+        "descripcion": "El email debe tener un formato válido."
+      },
+      "errors": 5,
+      "detalle": "5 emails con formato invalido en 'email'"
     }
   ],
   "metricas": {
@@ -125,16 +189,16 @@
     },
     "tipos_detectados": [
       "email_formato_invalido",
+      "precio_negativo",
+      "cantidad_cero",
       "nulo_en_campo_obligatorio",
+      "fecha_entrega_anterior_pedido",
+      "total_pedido_incorrecto",
+      "precio_linea_distinto_catalogo",
       "pedido_entregado_fecha_futura",
       "stock_superado"
     ],
     "tipos_no_detectados": [
-      "precio_negativo",
-      "cantidad_cero",
-      "fecha_entrega_anterior_pedido",
-      "total_pedido_incorrecto",
-      "precio_linea_distinto_catalogo",
       "fecha_registro_posterior_pedido"
     ],
     "deteccion_por_tipo": {
@@ -150,14 +214,14 @@
         "reglas_esperadas": [
           "positive_check"
         ],
-        "detectado": false
+        "detectado": true
       },
       "cantidad_cero": {
         "cantidad_inyectada": 5,
         "reglas_esperadas": [
           "positive_check"
         ],
-        "detectado": false
+        "detectado": true
       },
       "nulo_en_campo_obligatorio": {
         "cantidad_inyectada": 5,
@@ -171,21 +235,21 @@
         "reglas_esperadas": [
           "date_order_check"
         ],
-        "detectado": false
+        "detectado": true
       },
       "total_pedido_incorrecto": {
         "cantidad_inyectada": 5,
         "reglas_esperadas": [
           "total_check"
         ],
-        "detectado": false
+        "detectado": true
       },
       "precio_linea_distinto_catalogo": {
         "cantidad_inyectada": 5,
         "reglas_esperadas": [
           "total_check"
         ],
-        "detectado": false
+        "detectado": true
       },
       "pedido_entregado_fecha_futura": {
         "cantidad_inyectada": 5,
@@ -209,7 +273,81 @@
         "detectado": false
       }
     },
-    "tasa_deteccion_tipos": 40.0,
-    "errores_detectados_total": 47
-  }
+    "tasa_deteccion_tipos": 90.0,
+    "errores_detectados_total": 71
+  },
+  "tests": [
+    {
+      "name": "test_total_calculation",
+      "type": null,
+      "passed": true,
+      "detail": "Tipo de test aún no implementado."
+    },
+    {
+      "name": "test_positive_price",
+      "type": null,
+      "passed": true,
+      "detail": "Tipo de test aún no implementado."
+    },
+    {
+      "name": "test_positive_quantity",
+      "type": null,
+      "passed": true,
+      "detail": "Tipo de test aún no implementado."
+    },
+    {
+      "name": "test_price_consistency",
+      "type": null,
+      "passed": true,
+      "detail": "Tipo de test aún no implementado."
+    },
+    {
+      "name": "test_delivered_future_check",
+      "type": null,
+      "passed": true,
+      "detail": "Tipo de test aún no implementado."
+    },
+    {
+      "name": "test_stock_availability",
+      "type": null,
+      "passed": true,
+      "detail": "Tipo de test aún no implementado."
+    },
+    {
+      "name": "test_empty_order",
+      "type": null,
+      "passed": true,
+      "detail": "Tipo de test aún no implementado."
+    },
+    {
+      "name": "test_zero_quantity",
+      "type": null,
+      "passed": true,
+      "detail": "Tipo de test aún no implementado."
+    },
+    {
+      "name": "test_out_of_stock_product",
+      "type": null,
+      "passed": true,
+      "detail": "Tipo de test aún no implementado."
+    },
+    {
+      "name": "test_total_display",
+      "type": null,
+      "passed": true,
+      "detail": "Tipo de test aún no implementado."
+    },
+    {
+      "name": "test_delivered_future_date",
+      "type": null,
+      "passed": true,
+      "detail": "Tipo de test aún no implementado."
+    },
+    {
+      "name": "test_customer_registration",
+      "type": null,
+      "passed": true,
+      "detail": "Tipo de test aún no implementado."
+    }
+  ]
 }

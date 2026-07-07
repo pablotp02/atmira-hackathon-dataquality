@@ -219,10 +219,10 @@ def main():
 
     # Resumen
     print("\n Dataset generado correctamente en data/raw/")
-    print(f"   clientes.csv      → {len(clientes)} filas")
-    print(f"   productos.csv     → {len(productos)} filas")
-    print(f"   pedidos.csv       → {len(pedidos)} filas")
-    print(f"   lineas_pedido.csv → {len(lineas)} filas")
+    print(f"   clientes.csv      -> {len(clientes)} filas")
+    print(f"   productos.csv     -> {len(productos)} filas")
+    print(f"   pedidos.csv       -> {len(pedidos)} filas")
+    print(f"   lineas_pedido.csv -> {len(lineas)} filas")
 
     # Validación rápida: comprobad que los totales cuadran (dataset limpio = 0 errores)
     lineas_agg = (

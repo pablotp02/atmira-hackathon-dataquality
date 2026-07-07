@@ -31,12 +31,6 @@
       "descripcion": "La cantidad debe ser positiva"
     },
     {
-      "type": "email_check",
-      "column": "email",
-      "tabla": "clientes",
-      "descripcion": "El email debe tener formato valido"
-    },
-    {
       "type": "date_order_check",
       "column_after": "fecha_entrega",
       "column_before": "fecha_pedido",
@@ -47,6 +41,12 @@
       "type": "total_check",
       "tabla": "pedidos",
       "descripcion": "El total debe coincidir con la suma de lineas_pedido"
+    },
+    {
+      "type": "email_check",
+      "column": "email",
+      "tabla": "clientes",
+      "descripcion": "El email debe tener formato valido"
     },
     {
       "type": "delivered_future_check",
@@ -107,16 +107,6 @@
     },
     {
       "rule": {
-        "type": "email_check",
-        "column": "email",
-        "tabla": "clientes",
-        "descripcion": "El email debe tener formato valido"
-      },
-      "errors": 5,
-      "detalle": "5 emails con formato invalido en 'email'"
-    },
-    {
-      "rule": {
         "type": "date_order_check",
         "column_after": "fecha_entrega",
         "column_before": "fecha_pedido",
@@ -134,6 +124,16 @@
       },
       "errors": 15,
       "detalle": "15 pedidos cuyo total no coincide con la suma de sus lineas"
+    },
+    {
+      "rule": {
+        "type": "email_check",
+        "column": "email",
+        "tabla": "clientes",
+        "descripcion": "El email debe tener formato valido"
+      },
+      "errors": 5,
+      "detalle": "5 emails con formato invalido en 'email'"
     },
     {
       "rule": {

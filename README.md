@@ -6,7 +6,7 @@ Sistema de detección de anomalías en datos que usa IA generativa para analizar
 generar automáticamente reglas de calidad y casos de prueba de transformaciones ETL, y
 validar ambos antes de que los datos lleguen a producción.
 
-> Equipo: Pablo Tovar y Juan Torres — estudiantes de informática 
+> Equipo: Pablo Tovar y Juan Torres — estudiantes de informática  
 > Hackathon de Atmira, 22 junio – 10 julio 2025
 
 ---
@@ -40,7 +40,7 @@ Un pipeline en el que una IA generativa (GPT-4o-mini):
 flowchart TD
     A[["📦 Dataset sintético limpio<br/>(Faker: clientes, productos, pedidos, lineas_pedido)"]]
     B["📊 Profiling estadístico<br/>profile_dataset.py"]
-    C[["🧪 Inyección de anomalías<br/>inject_anomalies.py<br/>10 tipos x 5 = 50 anomalías"]]
+    C[["🧪 Inyección de anomalías<br/>inject_anomalies.py<br/>11 tipos, 53 anomalías"]]
     D["🤖 LLM — GPT-4o-mini<br/>generate_rules.py"]
     E[["📋 rules_propuestas.json"]]
     F["👤 Human-in-the-loop<br/>Revisión y aprobación de reglas"]
@@ -85,10 +85,10 @@ flowchart TD
 | 2. Profiling | `src/profiling/profile_dataset.py` | `data/raw/*.csv` | `data/profiling/summary.json` |
 | 3. Inyección de anomalías | `src/generator/inject_anomalies.py` | `data/raw/*.csv` | `data/dirty/*.csv`, `injection_log.json` |
 | 4. Generación de reglas (LLM) | `src/llm/generate_rules.py` | `summary.json` + descripción de transformaciones | `rules_propuestas.json` |
-| 5. Fixture Runner | `experiments/test_logic_runner.py` | tests generados por el LLM | `results.json` (`fixture_results`) |
+| 5. Fixture Runner | `tests/fixture_runner.py` | tests generados por el LLM | `results.json` (`fixture_results`) |
 | 6. Validación + evaluación | `src/validation/run_rules.py`, `src/evaluation/evaluation.py` | `data/dirty/*.csv` + reglas aprobadas | `results.json` (`rules`, `results`, `metricas`) |
 | 7. Historial de ejecuciones | `run_all.py` (al final de cada corrida) | métricas + tipos de regla de la ejecución actual | `data/rules_history.json` (acumulado) |
-| 8. Análisis de estabilidad (bajo demanda) | `src/analysis/stability_analysis.py` | `data/rules_history.json` (histórico de ejecuciones) | análisis de consistencia vía LLM, mostrado en el dashboard |
+| 8. Análisis de estabilidad (bajo demanda) | `src/analysis/stability_analysis.py` | `data/rules_history.json` | análisis de consistencia vía LLM, mostrado en el dashboard |
 | 9. Dashboard | `dashboard/app.py` | `results.json`, `summary.json`, `injection_log.json`, `rules_history.json` | — (visualización) |
 
 ---
@@ -105,7 +105,7 @@ sequenceDiagram
     participant IA as inject_anomalies.py
     participant LLM as generate_rules.py (GPT-4o-mini)
     participant H as Analista (human-in-the-loop)
-    participant FR as test_logic_runner.py
+    participant FR as fixture_runner.py
     participant RR as run_rules.py
     participant EV as evaluation.py
     participant R as results.json
@@ -168,14 +168,15 @@ Generado con Faker (seed configurable para reproducibilidad):
 | `pedidos` | 500 | pedido_id, cliente_id, fecha_pedido, fecha_entrega, estado, total |
 | `lineas_pedido` | ~1800 | linea_id, pedido_id, producto_id, cantidad, precio_unitario |
 
-## 🧪 Anomalías inyectadas (10 tipos, 50 en total)
+## 🧪 Anomalías inyectadas (11 tipos, 53 en total)
 
 ```mermaid
 pie showData
-    title Anomalías por categoria (50 total)
+    title Anomalías por categoria (53 total)
     "Triviales (formato/nulo/rango)" : 20
     "De negocio (fechas, totales, catalogo)" : 20
     "Avanzadas (cruce de tablas)" : 10
+    "Estadisticas (outliers)" : 3
 ```
 
 | Categoría | Tipo | Tabla |
@@ -190,6 +191,7 @@ pie showData
 | Negocio | pedido_entregado_fecha_futura | pedidos |
 | Avanzada | stock_superado | productos |
 | Avanzada | fecha_registro_posterior_pedido | clientes |
+| Estadística | outlier_precio_categoria | productos |
 
 ## 🛡️ Reglas de validación soportadas (`run_rules.py`)
 
@@ -202,6 +204,7 @@ pie showData
 | `delivered_future_check` | Pedido entregado no puede tener fecha futura | — |
 | `total_check` | total = SUM(cantidad × precio_unitario) | — |
 | `stock_check` | Cantidad pedida ≤ stock disponible | — |
+| `outlier_check` | Precio fuera de 2 desviaciones estándar para su categoría | `column`, `group_by` |
 | `registration_date_check` | Registro no posterior al primer pedido | *(roadmap)* |
 
 ## 🔧 Fixture Runner — validación de transformaciones
@@ -235,13 +238,9 @@ Este módulo responde a esa pregunta.
    envía ese histórico acumulado a un LLM (`src/analysis/stability_analysis.py`), que evalúa
    la consistencia del propio sistema generador de reglas a lo largo de las ejecuciones.
 3. El resultado se muestra en el dashboard con:
-   - **Métricas de consistencia** (por ejemplo, variación en el número y tipo de reglas generadas entre ejecuciones).
+   - **Métricas de consistencia** (variación en el número y tipo de reglas generadas entre ejecuciones).
    - **Puntos fuertes** detectados (qué se repite de forma estable).
-   - **Áreas de mejora** (qué varía más de lo esperable y por qué podría ser un riesgo).
-
-Este análisis es **bajo demanda** (no se ejecuta automáticamente en cada corrida de
-`run_all.py`) para no encarecer ni ralentizar el pipeline principal, y porque su valor
-aumenta cuantas más ejecuciones históricas haya acumuladas para comparar.
+   - **Áreas de mejora** (qué varía más de lo esperable).
 
 > **Por qué importa para el reto:** valida que la generación automática de reglas con IA no
 > es solo potente, sino también **fiable y predecible** — un requisito clave antes de confiar
@@ -253,12 +252,12 @@ aumenta cuantas más ejecuciones históricas haya acumuladas para comparar.
 
 | Métrica | Valor |
 |---|---|
-| Anomalías inyectadas | 50 |
-| Tipos de anomalía distintos | 10 |
-| Tipos detectados | 9 / 10 |
-| **Tasa de detección** | **90%** |
+| Anomalías inyectadas | 53 |
+| Tipos de anomalía distintos | 11 |
+| Tipos detectados | 10 / 11 |
+| **Tasa de detección** | **90.9%** |
 | Tipo no detectado | `fecha_registro_posterior_pedido` (roadmap) |
-| Fixture tests | ~9 OK / ~1 FALLO / ~1 pendiente |
+| Fixture tests | ~10 OK / ~0 FALLO / ~2 pendientes |
 
 > **Por qué no es 100%:** el tipo `registration_date_check` requiere cruzar dos tablas
 > (clientes y pedidos) y el motor de validación actual aún no lo implementa. Preferimos
@@ -277,13 +276,13 @@ aumenta cuantas más ejecuciones históricas haya acumuladas para comparar.
 | Revisión de reglas | Human-in-the-loop: aprobar/descartar reglas |
 | Reglas generadas | Reglas del LLM, gráfico por tipo, detalle por tabla |
 | Tests IA | Fixture tests con resultado OK / FALLO / PENDIENTE |
+| Estabilidad del sistema | Analiza con IA la consistencia del LLM entre ejecuciones |
 | Resultados y métricas | Tasa de detección + comparativa inyectadas vs detectadas |
-| **Estabilidad del sistema** *(nueva)* | Analiza con IA la consistencia del LLM entre ejecuciones: métricas de estabilidad, puntos fuertes y áreas de mejora |
 
 **Funcionalidades del sidebar:**
 - ▶️ Ejecutar pipeline completo en vivo
 - 🎲 Checkbox para generar dataset nuevo con seed aleatoria (demo de generalización)
-- 📄 Exportar informe PDF con fecha del último análisis
+- 📄 Exportar informe PDF con 7 secciones
 
 ---
 
@@ -293,7 +292,7 @@ aumenta cuantas más ejecuciones históricas haya acumuladas para comparar.
 atmira-hackathon-dataquality/
 ├── run_all.py                          # Pipeline completo end-to-end
 ├── dashboard/
-│   └── app.py                          # Dashboard Streamlit (7 paginas)
+│   └── app.py                          # Dashboard Streamlit (8 paginas)
 ├── src/
 │   ├── generator/
 │   │   ├── generate_dataset.py
@@ -308,15 +307,16 @@ atmira-hackathon-dataquality/
 │   │   └── evaluation.py
 │   └── analysis/
 │       └── stability_analysis.py       # Analiza la consistencia del LLM entre ejecuciones
+├── tests/
+│   └── fixture_runner.py               # Runner de tests generados por el LLM
 ├── experiments/
-│   ├── test_logic_runner.py             # Fixture runner de tests de transformacion
-│   └── test_runner.py
-└── data/                                # Generado automaticamente (.gitignore)
+│   └── run_pipeline.py
+└── data/                               # Generado automaticamente (.gitignore)
     ├── raw/
     ├── dirty/
     ├── profiling/
     ├── results.json
-    └── rules_history.json               # Historial acumulado de ejecuciones (para el analisis de estabilidad)
+    └── rules_history.json              # Historial acumulado de ejecuciones
 ```
 
 ---
@@ -339,7 +339,7 @@ atmira-hackathon-dataquality/
 
 ```bash
 # 1. Clonar el repositorio
-git clone <url-del-repo>
+git clone https://github.com/pablotp02/atmira-hackathon-dataquality/
 cd atmira-hackathon-dataquality
 
 # 2. Instalar dependencias
@@ -366,13 +366,15 @@ streamlit run dashboard/app.py
   **casos de prueba de transformaciones ETL** (unit, integration, edge cases, UAT) —
   cubriendo la parte del reto que suele pasarse por alto.
 - **Human-in-the-loop**: la IA propone, el analista decide qué reglas aplicar.
-- **Transparencia sobre limitaciones**: mostramos honestamente el 10% no detectado y por qué,
+- **Detección estadística de outliers**: el sistema detecta precios anómalos dentro
+  de su categoría usando desviaciones estándar — no solo valida formato sino contexto estadístico.
+- **Análisis de estabilidad**: el sistema registra el historial de reglas generadas en cada
+  ejecución y permite llamar al LLM para que analice si sus propias respuestas son consistentes
+  entre ejecuciones con distintos datasets — una IA evaluando a otra IA.
+- **Transparencia sobre limitaciones**: mostramos honestamente el ~9% no detectado y por qué,
   en vez de presentar una tasa de detección artificialmente perfecta.
 - **Demo en vivo**: el dashboard permite regenerar el dataset con una seed aleatoria delante
   del jurado, demostrando que el sistema generaliza y no está sobreajustado a un caso fijo.
-- **Autoevaluación de fiabilidad**: el sistema no solo genera reglas y tests, también analiza
-  con IA su propia consistencia entre ejecuciones — un paso poco habitual que refuerza la
-  confianza en usar generación automática de reglas en un entorno de producción real.
 
 ---
 
@@ -380,5 +382,6 @@ streamlit run dashboard/app.py
 
 - [ ] Implementar `registration_date_check` en el motor de validación (cruce clientes/pedidos).
 - [ ] Ampliar el fixture runner con más tipos de test genéricos.
-- [ ] Añadir detección de anomalías estadísticas (outliers) y semánticas.
+- [ ] Añadir detección de anomalías semánticas (nombre de producto inconsistente con su categoría).
+- [ ] Análisis de estabilidad en lote: ejecutar N ejecuciones seguidas y comparar consistencia estadística.
 - [ ] Tests automatizados (`pytest`) sobre el propio motor de validación.

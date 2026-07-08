@@ -381,7 +381,6 @@ streamlit run dashboard/app.py
 ## 📅 Roadmap
 
 - [ ] Implementar `registration_date_check` en el motor de validación (cruce clientes/pedidos).
-- [ ] Ampliar el fixture runner con más tipos de test genéricos.
-- [ ] Añadir detección de anomalías semánticas (nombre de producto inconsistente con su categoría).
-- [ ] Análisis de estabilidad en lote: ejecutar N ejecuciones seguidas y comparar consistencia estadística.
+- [ ] Ampliar el fixture runner con más tipos de test genéricos y basados en operadores reutilizables.
+- [ ] Incorporar detección de anomalías semánticas (nombre de producto inconsistente con su categoría).
 - [ ] Tests automatizados (`pytest`) sobre el propio motor de validación.

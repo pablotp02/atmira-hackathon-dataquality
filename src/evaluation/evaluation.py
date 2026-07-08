@@ -21,6 +21,7 @@ MAPEO_ANOMALIA_REGLA = {
     "pedido_entregado_fecha_futura":      ["delivered_future_check"],
     "stock_superado":                     ["stock_check"],
     "fecha_registro_posterior_pedido":    ["registration_date_check"],  # motor no soportado aun
+    "outlier_precio_categoria":           ["outlier_check"],
 }
 
 

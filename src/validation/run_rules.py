@@ -20,7 +20,7 @@ def run_rules(dfs, rules):
     results = []
 
     # Tipos que requieren campo 'column' para funcionar
-    TIPOS_CON_COLUMNA = {"null_check", "positive_check", "email_check"}
+    TIPOS_CON_COLUMNA = {"null_check", "positive_check", "email_check","outlier_check"}
 
     for rule in rules:
         rule_type = rule.get("type")
@@ -108,6 +108,24 @@ def run_rules(dfs, rules):
             errores = int((merged["total_pedido"] > merged["stock"]).sum())
             detalle = f"{errores} productos con cantidad total pedida superior al stock disponible"
 
+
+        elif rule_type == "outlier_check":
+            group_by = rule.get("group_by", "categoria")
+            tabla_productos = dfs.get("productos")
+            if tabla_productos is None or group_by not in tabla_productos.columns:
+                detalle = f"Tabla 'productos' o columna '{group_by}' no encontrada"
+            else:
+                df_temp = tabla_productos.copy()
+                stats = df_temp.groupby(group_by)[column].agg(["mean", "std"]).reset_index()
+                stats.columns = [group_by, "media", "std"]
+                df_merged = df_temp.merge(stats, on=group_by)
+                df_merged["std"] = df_merged["std"].fillna(0)
+                mask = (
+                    (df_merged["std"] > 0) &
+                    (abs(df_merged[column] - df_merged["media"]) > 3 * df_merged["std"])
+                )
+                errores = int(mask.sum())
+                detalle = f"{errores} productos con {column} fuera de 3 desviaciones estandar para su {group_by}"    
         else:
             detalle = f"Tipo de regla '{rule_type}' no soportado por el motor actual"
 

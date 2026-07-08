@@ -254,8 +254,8 @@ def inyectar_outlier_precio_categoria(productos: pd.DataFrame, log: list, n: int
     for producto_id, media, std in seleccionados:
         idx = productos[productos["producto_id"] == producto_id].index[0]
         original = productos.at[idx, "precio_unitario"]
-        # Precio a 5 desviaciones estandar por encima de la media
-        nuevo = round(media + 5 * std, 2)
+        # Precio a 8 desviaciones estandar por encima de la media
+        nuevo = round(media + 8 * std, 2)
         productos.at[idx, "precio_unitario"] = nuevo
         registrar(log, "outlier_precio_categoria", "productos", "precio_unitario",
                   int(producto_id), original, nuevo,

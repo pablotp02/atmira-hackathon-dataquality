@@ -20,7 +20,7 @@ def run_rules(dfs, rules):
     results = []
 
     # Tipos que requieren campo 'column' para funcionar
-    TIPOS_CON_COLUMNA = {"null_check", "positive_check", "email_check","outlier_check"}
+    TIPOS_CON_COLUMNA = {"null_check", "positive_check", "email_check"}
 
     for rule in rules:
         rule_type = rule.get("type")
@@ -110,22 +110,34 @@ def run_rules(dfs, rules):
 
 
         elif rule_type == "outlier_check":
+            column   = rule.get("column", "precio_unitario")
             group_by = rule.get("group_by", "categoria")
             tabla_productos = dfs.get("productos")
-            if tabla_productos is None or group_by not in tabla_productos.columns:
-                detalle = f"Tabla 'productos' o columna '{group_by}' no encontrada"
+            if tabla_productos is None:
+                detalle = "Tabla 'productos' no encontrada"
             else:
                 df_temp = tabla_productos.copy()
-                stats = df_temp.groupby(group_by)[column].agg(["mean", "std"]).reset_index()
+                # Calcular stats solo con precios positivos para evitar que
+                # anomalias de precio_negativo distorsionen la media y std
+                df_positivos = df_temp[df_temp[column] > 0]
+                stats = (
+                    df_positivos.groupby(group_by)[column]
+                    .agg(["mean", "std"])
+                    .reset_index()
+                )
                 stats.columns = [group_by, "media", "std"]
                 df_merged = df_temp.merge(stats, on=group_by)
                 df_merged["std"] = df_merged["std"].fillna(0)
                 mask = (
                     (df_merged["std"] > 0) &
-                    (abs(df_merged[column] - df_merged["media"]) > 3 * df_merged["std"])
+                    (df_merged[column] > 0) &
+                    (abs(df_merged[column] - df_merged["media"]) > 2 * df_merged["std"])
                 )
                 errores = int(mask.sum())
-                detalle = f"{errores} productos con {column} fuera de 3 desviaciones estandar para su {group_by}"    
+                detalle = (
+                    f"{errores} productos con {column} fuera de 3 desviaciones estandar "
+                    f"para su {group_by}"
+                )    
         else:
             detalle = f"Tipo de regla '{rule_type}' no soportado por el motor actual"
 

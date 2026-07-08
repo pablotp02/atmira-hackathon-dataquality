@@ -6,7 +6,7 @@ Sistema de detección de anomalías en datos que usa IA generativa para analizar
 generar automáticamente reglas de calidad y casos de prueba de transformaciones ETL, y
 validar ambos antes de que los datos lleguen a producción.
 
-> Equipo: Pablo Tovar y Juan Torres — estudiantes de informática  
+> Equipo: Pablo y compañero — estudiantes de informática (backend / desarrollo web)
 > Hackathon de Atmira, 22 junio – 10 julio 2025
 
 ---
@@ -49,6 +49,8 @@ flowchart TD
     I["🛡️ Motor de validación<br/>run_rules.py"]
     J["📈 Evaluación de métricas<br/>evaluation.py"]
     K[["💾 results.json"]]
+    M[["🗂️ rules_history.json<br/>(historial acumulado entre ejecuciones)"]]
+    N["🧭 Análisis de estabilidad<br/>stability_analysis.py<br/>(bajo demanda, vía LLM)"]
     L["📱 Dashboard Streamlit<br/>8 páginas"]
 
     A --> B
@@ -63,11 +65,16 @@ flowchart TD
     H -->|fixture_results| K
     I --> J
     J -->|métricas| K
+    K -->|tipos de regla + tasa de detección| M
+    M -->|"botón 'Analizar con IA'"| N
+    N -->|consistencia, puntos fuertes, areas de mejora| L
     K --> L
 
     style D fill:#7c3aed,color:#fff
     style F fill:#f59e0b,color:#fff
     style L fill:#0ea5e9,color:#fff
+    style N fill:#7c3aed,color:#fff
+    style M fill:#16a34a,color:#fff
 ```
 
 ### Descripción de cada paso
@@ -78,9 +85,11 @@ flowchart TD
 | 2. Profiling | `src/profiling/profile_dataset.py` | `data/raw/*.csv` | `data/profiling/summary.json` |
 | 3. Inyección de anomalías | `src/generator/inject_anomalies.py` | `data/raw/*.csv` | `data/dirty/*.csv`, `injection_log.json` |
 | 4. Generación de reglas (LLM) | `src/llm/generate_rules.py` | `summary.json` + descripción de transformaciones | `rules_propuestas.json` |
-| 5. Fixture Runner | `tests/fixture_runner.py` | tests generados por el LLM | `results.json` (`fixture_results`) |
+| 5. Fixture Runner | `experiments/test_logic_runner.py` | tests generados por el LLM | `results.json` (`fixture_results`) |
 | 6. Validación + evaluación | `src/validation/run_rules.py`, `src/evaluation/evaluation.py` | `data/dirty/*.csv` + reglas aprobadas | `results.json` (`rules`, `results`, `metricas`) |
-| 7. Dashboard | `dashboard/app.py` | `results.json`, `summary.json`, `injection_log.json` | — (visualización) |
+| 7. Historial de ejecuciones | `run_all.py` (al final de cada corrida) | métricas + tipos de regla de la ejecución actual | `data/rules_history.json` (acumulado) |
+| 8. Análisis de estabilidad (bajo demanda) | `src/analysis/stability_analysis.py` | `data/rules_history.json` (histórico de ejecuciones) | análisis de consistencia vía LLM, mostrado en el dashboard |
+| 9. Dashboard | `dashboard/app.py` | `results.json`, `summary.json`, `injection_log.json`, `rules_history.json` | — (visualización) |
 
 ---
 
@@ -96,7 +105,7 @@ sequenceDiagram
     participant IA as inject_anomalies.py
     participant LLM as generate_rules.py (GPT-4o-mini)
     participant H as Analista (human-in-the-loop)
-    participant FR as fixture_runner.py
+    participant FR as test_logic_runner.py
     participant RR as run_rules.py
     participant EV as evaluation.py
     participant R as results.json
@@ -211,6 +220,35 @@ lógica de la transformación** contra inputs conocidos:
 
 ---
 
+## 🧭 Análisis de estabilidad del LLM
+
+Como las reglas y tests se generan con un LLM, una pregunta natural es: **¿genera lo mismo
+cada vez que se ejecuta el pipeline sobre datos equivalentes, o varía de forma impredecible?**
+Este módulo responde a esa pregunta.
+
+**Cómo funciona:**
+
+1. Cada vez que corre `run_all.py`, al final de la ejecución se añade una entrada a
+   `data/rules_history.json` con los tipos de regla generados y la tasa de detección obtenida
+   en esa corrida — el histórico se **acumula**, no se sobrescribe.
+2. Desde la página **"Estabilidad del sistema"** del dashboard, un botón **"Analizar con IA"**
+   envía ese histórico acumulado a un LLM (`src/analysis/stability_analysis.py`), que evalúa
+   la consistencia del propio sistema generador de reglas a lo largo de las ejecuciones.
+3. El resultado se muestra en el dashboard con:
+   - **Métricas de consistencia** (por ejemplo, variación en el número y tipo de reglas generadas entre ejecuciones).
+   - **Puntos fuertes** detectados (qué se repite de forma estable).
+   - **Áreas de mejora** (qué varía más de lo esperable y por qué podría ser un riesgo).
+
+Este análisis es **bajo demanda** (no se ejecuta automáticamente en cada corrida de
+`run_all.py`) para no encarecer ni ralentizar el pipeline principal, y porque su valor
+aumenta cuantas más ejecuciones históricas haya acumuladas para comparar.
+
+> **Por qué importa para el reto:** valida que la generación automática de reglas con IA no
+> es solo potente, sino también **fiable y predecible** — un requisito clave antes de confiar
+> en ella para reducir incidencias en un entorno de producción real.
+
+---
+
 ## 📊 Resultados actuales
 
 | Métrica | Valor |
@@ -239,13 +277,13 @@ lógica de la transformación** contra inputs conocidos:
 | Revisión de reglas | Human-in-the-loop: aprobar/descartar reglas |
 | Reglas generadas | Reglas del LLM, gráfico por tipo, detalle por tabla |
 | Tests IA | Fixture tests con resultado OK / FALLO / PENDIENTE |
-| Estabilidad del sistema | Análisis de consistencia del LLM entre ejecuciones |
 | Resultados y métricas | Tasa de detección + comparativa inyectadas vs detectadas |
+| **Estabilidad del sistema** *(nueva)* | Analiza con IA la consistencia del LLM entre ejecuciones: métricas de estabilidad, puntos fuertes y áreas de mejora |
 
 **Funcionalidades del sidebar:**
 - ▶️ Ejecutar pipeline completo en vivo
 - 🎲 Checkbox para generar dataset nuevo con seed aleatoria (demo de generalización)
-- 📄 Exportar informe PDF con fecha del último análisis (7 secciones)
+- 📄 Exportar informe PDF con fecha del último análisis
 
 ---
 
@@ -255,7 +293,7 @@ lógica de la transformación** contra inputs conocidos:
 atmira-hackathon-dataquality/
 ├── run_all.py                          # Pipeline completo end-to-end
 ├── dashboard/
-│   └── app.py                          # Dashboard Streamlit (8 paginas)
+│   └── app.py                          # Dashboard Streamlit (7 paginas)
 ├── src/
 │   ├── generator/
 │   │   ├── generate_dataset.py
@@ -269,16 +307,16 @@ atmira-hackathon-dataquality/
 │   ├── evaluation/
 │   │   └── evaluation.py
 │   └── analysis/
-│       └── stability_analysis.py
-├── tests/
-│   └── fixture_runner.py
+│       └── stability_analysis.py       # Analiza la consistencia del LLM entre ejecuciones
 ├── experiments/
-│   └── run_pipeline.py
+│   ├── test_logic_runner.py             # Fixture runner de tests de transformacion
+│   └── test_runner.py
 └── data/                                # Generado automaticamente (.gitignore)
     ├── raw/
     ├── dirty/
     ├── profiling/
-    └── results.json
+    ├── results.json
+    └── rules_history.json               # Historial acumulado de ejecuciones (para el analisis de estabilidad)
 ```
 
 ---
@@ -301,7 +339,7 @@ atmira-hackathon-dataquality/
 
 ```bash
 # 1. Clonar el repositorio
-git clone https://github.com/pablotp02/atmira-hackathon-dataquality
+git clone <url-del-repo>
 cd atmira-hackathon-dataquality
 
 # 2. Instalar dependencias
@@ -328,19 +366,19 @@ streamlit run dashboard/app.py
   **casos de prueba de transformaciones ETL** (unit, integration, edge cases, UAT) —
   cubriendo la parte del reto que suele pasarse por alto.
 - **Human-in-the-loop**: la IA propone, el analista decide qué reglas aplicar.
-- **Análisis de estabilidad**: el sistema registra el historial de reglas generadas en cada
-  ejecución y permite llamar al LLM para que analice si sus propias respuestas son consistentes
-  entre ejecuciones con distintos datasets — una IA evaluando a otra IA.
 - **Transparencia sobre limitaciones**: mostramos honestamente el 10% no detectado y por qué,
   en vez de presentar una tasa de detección artificialmente perfecta.
 - **Demo en vivo**: el dashboard permite regenerar el dataset con una seed aleatoria delante
   del jurado, demostrando que el sistema generaliza y no está sobreajustado a un caso fijo.
+- **Autoevaluación de fiabilidad**: el sistema no solo genera reglas y tests, también analiza
+  con IA su propia consistencia entre ejecuciones — un paso poco habitual que refuerza la
+  confianza en usar generación automática de reglas en un entorno de producción real.
 
 ---
 
 ## 📅 Roadmap
 
 - [ ] Implementar `registration_date_check` en el motor de validación (cruce clientes/pedidos).
-- [ ] Análisis de estabilidad en lote: ejecutar N ejecuciones seguidas y comparar consistencia estadística.
+- [ ] Ampliar el fixture runner con más tipos de test genéricos.
 - [ ] Añadir detección de anomalías estadísticas (outliers) y semánticas.
 - [ ] Tests automatizados (`pytest`) sobre el propio motor de validación.

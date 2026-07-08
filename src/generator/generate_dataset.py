@@ -222,7 +222,7 @@ def main(seed=42):
 
     lineas_agg = (
         lineas.groupby("pedido_id")
-        .apply(lambda df: (df["cantidad"] * df["precio_unitario"]).sum(), include_groups=False)
+        .apply(lambda df: (df["cantidad"] * df["precio_unitario"]).sum())
         .reset_index(name="total_calculado")
     )
     merged = pedidos.merge(lineas_agg, on="pedido_id")

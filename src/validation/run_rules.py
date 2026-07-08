@@ -108,6 +108,36 @@ def run_rules(dfs, rules):
             errores = int((merged["total_pedido"] > merged["stock"]).sum())
             detalle = f"{errores} productos con cantidad total pedida superior al stock disponible"
 
+
+        elif rule_type == "outlier_check":
+            column   = rule.get("column", "precio_unitario")
+            group_by = rule.get("group_by", "categoria")
+            tabla_productos = dfs.get("productos")
+            if tabla_productos is None:
+                detalle = "Tabla 'productos' no encontrada"
+            else:
+                df_temp = tabla_productos.copy()
+                # Calcular stats solo con precios positivos para evitar que
+                # anomalias de precio_negativo distorsionen la media y std
+                df_positivos = df_temp[df_temp[column] > 0]
+                stats = (
+                    df_positivos.groupby(group_by)[column]
+                    .agg(["mean", "std"])
+                    .reset_index()
+                )
+                stats.columns = [group_by, "media", "std"]
+                df_merged = df_temp.merge(stats, on=group_by)
+                df_merged["std"] = df_merged["std"].fillna(0)
+                mask = (
+                    (df_merged["std"] > 0) &
+                    (df_merged[column] > 0) &
+                    (abs(df_merged[column] - df_merged["media"]) > 2 * df_merged["std"])
+                )
+                errores = int(mask.sum())
+                detalle = (
+                    f"{errores} productos con {column} fuera de 3 desviaciones estandar "
+                    f"para su {group_by}"
+                )    
         else:
             detalle = f"Tipo de regla '{rule_type}' no soportado por el motor actual"
 

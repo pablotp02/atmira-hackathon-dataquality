@@ -37,6 +37,7 @@ NUM_ANOMALIAS = {
     "pedido_entregado_fecha_futura":      5,
     "stock_superado":                     5,
     "fecha_registro_posterior_pedido":    5,
+    "outlier_precio_categoria":           3,
 }
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
@@ -225,6 +226,43 @@ def inyectar_fecha_registro_posterior_pedido(clientes: pd.DataFrame, pedidos: pd
 
     return clientes
 
+# ── Anomalias estadisticas (outliers) ─────────────────────────────────────────
+
+def inyectar_outlier_precio_categoria(productos: pd.DataFrame, log: list, n: int):
+    """
+    Precio fuera de 3 desviaciones estandar para su categoria.
+    Ejemplo: precio de 850 en categoria Alimentacion donde la media es 12.
+    """
+    registros = []
+    for categoria in productos["categoria"].unique():
+        grupo = productos[productos["categoria"] == categoria]
+        if len(grupo) < 3:
+            continue
+        media = grupo["precio_unitario"].mean()
+        std   = grupo["precio_unitario"].std()
+        if std == 0:
+            continue
+        # Seleccionar un producto de esta categoria
+        candidatos = grupo[grupo["precio_unitario"] > 0]
+        if candidatos.empty:
+            continue
+        registros.append((candidatos.iloc[0]["producto_id"], media, std))
+
+    random.shuffle(registros)
+    seleccionados = registros[:n]
+
+    for producto_id, media, std in seleccionados:
+        idx = productos[productos["producto_id"] == producto_id].index[0]
+        original = productos.at[idx, "precio_unitario"]
+        # Precio a 8 desviaciones estandar por encima de la media
+        nuevo = round(media + 8 * std, 2)
+        productos.at[idx, "precio_unitario"] = nuevo
+        registrar(log, "outlier_precio_categoria", "productos", "precio_unitario",
+                  int(producto_id), original, nuevo,
+                  f"Precio {nuevo} es outlier estadistico para su categoria "
+                  f"(media={round(media,2)}, std={round(std,2)})")
+
+    return productos
 
 # ── Main ──────────────────────────────────────────────────────────────────────
 
@@ -257,6 +295,9 @@ def main(seed=99):
     print("Inyectando anomalias avanzadas (cruce de tablas)...")
     productos = inyectar_stock_superado(productos, lineas, log, NUM_ANOMALIAS["stock_superado"], seed=seed)
     clientes  = inyectar_fecha_registro_posterior_pedido(clientes, pedidos, log, NUM_ANOMALIAS["fecha_registro_posterior_pedido"])
+
+    print("Inyectando anomalias estadisticas...")
+    productos = inyectar_outlier_precio_categoria(productos, log, NUM_ANOMALIAS["outlier_precio_categoria"])
 
     print("Guardando CSVs sucios...")
     clientes.to_csv(os.path.join(DIRTY_DIR, "clientes.csv"), index=False)

@@ -71,6 +71,9 @@ stock_check - cantidad pedida no puede superar el stock. SIN column:
 registration_date_check - fecha de registro no puede ser posterior al primer pedido. SIN column:
 {{"type": "registration_date_check", "tabla": "clientes", "descripcion": "La fecha de registro no puede ser posterior al primer pedido."}}
 
+outlier_check - precio unitario fuera de 3 desviaciones estandar para su categoria. SIN column, requiere group_by:
+{{"type": "outlier_check", "column": "precio_unitario", "group_by": "categoria", "tabla": "productos", "descripcion": "El precio unitario no debe ser un outlier estadistico para su categoria"}}
+
 CRITICO: Para null_check, positive_check y email_check el campo "column" es OBLIGATORIO.
 Una regla de estos tipos sin "column" sera ignorada por el motor de validacion.
 

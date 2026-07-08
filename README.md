@@ -301,7 +301,7 @@ atmira-hackathon-dataquality/
 
 ```bash
 # 1. Clonar el repositorio
-git clone <url-del-repo>
+git clone https://github.com/pablotp02/atmira-hackathon-dataquality
 cd atmira-hackathon-dataquality
 
 # 2. Instalar dependencias

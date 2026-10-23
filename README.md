@@ -1,4 +1,4 @@
-# 🔍 Data Quality Guardian — Hackathon Atmira 2025
+# 🔍 Data Quality Guardian — Hackathon Atmira 2026
 
 **Reto 03 — Mejora de la calidad del dato y reducción de incidencias en producción**
 

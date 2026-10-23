@@ -206,7 +206,7 @@ def main(seed=42):
     print("Generando productos...")
     productos = generar_productos(NUM_PRODUCTOS)
 
-    print("Generando pedidos y lineas de pedido...")
+    print("Generando pedidos y líneas de pedido...")
     pedidos, lineas = generar_pedidos_y_lineas(clientes, productos, NUM_PEDIDOS)
 
     clientes.to_csv(os.path.join(OUTPUT_DIR, "clientes.csv"), index=False)
@@ -230,9 +230,9 @@ def main(seed=42):
     errores = merged[merged["diferencia"] > 0.01]
 
     if errores.empty:
-        print("\nValidacion interna: todos los totales de pedido cuadran con sus lineas.")
+        print("\nValidación interna: todos los totales de pedido cuadran con sus líneas.")
     else:
-        print(f"\nATENCION: Hay {len(errores)} pedidos con total inconsistente.")
+        print(f"\nATENCIÓN: Hay {len(errores)} pedidos con total inconsistente.")
 
 
 if __name__ == "__main__":

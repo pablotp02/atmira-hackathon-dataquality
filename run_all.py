@@ -20,6 +20,11 @@ import sys
 import os
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
+# Consola en UTF-8: evita UnicodeEncodeError con tildes/ñ en terminales de Windows.
+for _flujo in (sys.stdout, sys.stderr):
+    if hasattr(_flujo, "reconfigure"):
+        _flujo.reconfigure(encoding="utf-8", errors="replace")
+
 import json
 import argparse
 import pandas as pd
@@ -76,7 +81,7 @@ def main(seed_dataset=42, seed_anomalias=99):
     modo = "reproducible (seed fija)" if seed_dataset == 42 else f"aleatorio (seed={seed_dataset})"
 
     # ── Paso 1: Generacion del dataset ───────────────────────────────────────
-    separador("PASO 1 - Generacion del dataset sintetico")
+    separador("PASO 1 - Generación del dataset sintético")
     print(f"Modo: {modo}")
     generar_dataset(seed=seed_dataset)
 
@@ -85,11 +90,11 @@ def main(seed_dataset=42, seed_anomalias=99):
     generar_profiling()
 
     # ── Paso 3: Inyeccion de anomalias ───────────────────────────────────────
-    separador("PASO 3 - Inyeccion de anomalias")
+    separador("PASO 3 - Inyección de anomalías")
     inyectar_anomalias(seed=seed_anomalias)
 
     # ── Paso 4: Generacion de reglas con el LLM ──────────────────────────────
-    separador("PASO 4 - Generacion de reglas y validacion")
+    separador("PASO 4 - Generación de reglas y validación")
 
     dfs_dirty = cargar_dfs(DIRTY_DIR)
 
@@ -155,7 +160,7 @@ def main(seed_dataset=42, seed_anomalias=99):
         print(f"  [{estado}] {r['name']} -> {r['detail']}")
 
     # ── Paso 6: Validacion del dataset ────────────────────────────────────────
-    separador("PASO 6 - Validacion del dataset")
+    separador("PASO 6 - Validación del dataset")
 
     print("Validando dataset...")
     results = run_rules(dfs_dirty, rules)
@@ -170,7 +175,7 @@ def main(seed_dataset=42, seed_anomalias=99):
     for rule in rules:
         print(f"  [{rule.get('type')}] {rule.get('tabla')}.{rule.get('column', '')} - {rule.get('descripcion', '')}")
 
-    print("\nResultados de validacion:")
+    print("\nResultados de validación:")
     for r in results:
         estado = "FALLO" if r["errors"] > 0 else "OK"
         print(f"  [{estado}] {r['rule'].get('type')} - {r.get('detalle', '')}")
@@ -198,14 +203,14 @@ def main(seed_dataset=42, seed_anomalias=99):
 
     separador("PIPELINE COMPLETADO")
     print(f"  Modo: {modo}")
-    print(f"  Tasa de deteccion final: {metricas['tasa_deteccion_tipos']}%")
+    print(f"  Tasa de detección final: {metricas['tasa_deteccion_tipos']}%")
     print(f"  Fixture tests: {pasados} OK | {fallados} FALLO | {pendientes} pendientes")
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--seed", type=int, default=None,
-                        help="Seed para generacion aleatoria. Sin este argumento usa seeds fijas.")
+                        help="Seed para generación aleatoria. Sin este argumento usa seeds fijas.")
     args = parser.parse_args()
 
     if args.seed is not None:

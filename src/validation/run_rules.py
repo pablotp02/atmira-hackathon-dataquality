@@ -32,7 +32,7 @@ def run_rules(dfs, rules):
             results.append({
                 "rule":    rule,
                 "errors":  0,
-                "detalle": f"Regla ignorada: tipo '{rule_type}' requiere 'column' pero no se especifico",
+                "detalle": f"Regla ignorada: tipo '{rule_type}' requiere 'column' pero no se especificó",
             })
             continue
 
@@ -60,7 +60,7 @@ def run_rules(dfs, rules):
             patron = r"^[^@]+@[^@]+\.[^@]+"
             invalidos = df[~df[column].astype(str).str.match(patron)]
             errores = len(invalidos)
-            detalle = f"{errores} emails con formato invalido en '{column}'"
+            detalle = f"{errores} emails con formato inválido en '{column}'"
 
         elif rule_type == "date_order_check":
             col_after  = rule.get("column_after")
@@ -93,7 +93,7 @@ def run_rules(dfs, rules):
             )
             merged  = pedidos.merge(calculado, on="pedido_id")
             errores = int((abs(merged["total"] - merged["subtotal"]) > 0.01).sum())
-            detalle = f"{errores} pedidos cuyo total no coincide con la suma de sus lineas"
+            detalle = f"{errores} pedidos cuyo total no coincide con la suma de sus líneas"
 
         elif rule_type == "stock_check":
             productos = dfs["productos"]
@@ -135,7 +135,7 @@ def run_rules(dfs, rules):
                 )
                 errores = int(mask.sum())
                 detalle = (
-                    f"{errores} productos con {column} fuera de 3 desviaciones estandar "
+                    f"{errores} productos con {column} fuera de 3 desviaciones estándar "
                     f"para su {group_by}"
                 )    
         else:

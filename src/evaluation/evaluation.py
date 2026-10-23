@@ -72,18 +72,18 @@ def evaluate(injection_log: dict, results: list) -> dict:
 
 
 def imprimir_metricas(metricas: dict):
-    print("\n=== METRICAS DE EVALUACION ===")
-    print(f"  Anomalias inyectadas:      {metricas['total_inyectadas']}")
+    print("\n=== MÉTRICAS DE EVALUACIÓN ===")
+    print(f"  Anomalías inyectadas:      {metricas['total_inyectadas']}")
     print(f"  Errores detectados:        {metricas['errores_detectados_total']}")
     print(f"  Tipos inyectados:          {len(metricas['tipos_inyectados'])}")
     print(f"  Tipos detectados:          {len(metricas['tipos_detectados'])}")
     print(f"  Tipos no detectados:       {len(metricas['tipos_no_detectados'])}")
-    print(f"  Tasa de deteccion:         {metricas['tasa_deteccion_tipos']}%")
+    print(f"  Tasa de detección:         {metricas['tasa_deteccion_tipos']}%")
 
     print("\n  Detalle por tipo:")
     for tipo, detalle in metricas["deteccion_por_tipo"].items():
         estado = "DETECTADO" if detalle["detectado"] else "NO DETECTADO"
-        print(f"    [{estado}] {tipo} ({detalle['cantidad_inyectada']} anomalias)")
+        print(f"    [{estado}] {tipo} ({detalle['cantidad_inyectada']} anomalías)")
 
     if metricas["tipos_no_detectados"]:
         print("\n  Tipos no detectados (motor no soportado — roadmap):")

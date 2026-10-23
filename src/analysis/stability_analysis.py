@@ -138,7 +138,7 @@ Devuelve EXCLUSIVAMENTE un JSON valido con esta estructura:
             "nivel_estabilidad": "alto",
             "conclusion": "El sistema muestra alta estabilidad en todas las ejecuciones analizadas.",
             "puntos_fuertes": ["Reglas consistentes entre ejecuciones"],
-            "areas_mejora": ["Ampliar el numero de ejecuciones para mayor confianza estadistica"],
+            "areas_mejora": ["Ampliar el número de ejecuciones para mayor confianza estadística"],
             "recomendacion": "El sistema es apto para uso en entornos productivos."
         }
 

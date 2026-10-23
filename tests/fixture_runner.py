@@ -28,7 +28,7 @@ def ejecutar_total_check(test: dict) -> tuple[bool, str]:
     expected   = test.get("expected")
 
     if not lineas:
-        return False, "No se proporcionaron lineas en el input"
+        return False, "No se proporcionaron líneas en el input"
 
     calculado = round(
         sum(l.get("cantidad", 0) * l.get("precio_unitario", 0) for l in lineas), 2
@@ -79,13 +79,13 @@ def ejecutar_date_order_check(test: dict) -> tuple[bool, str]:
         fp = datetime.strptime(fecha_pedido,  "%Y-%m-%d")
         fe = datetime.strptime(fecha_entrega, "%Y-%m-%d")
     except ValueError as e:
-        return False, f"Formato de fecha invalido: {e}"
+        return False, f"Formato de fecha inválido: {e}"
 
     resultado = fe >= fp
     ok        = resultado == expected
     return ok, (
         f"fecha_pedido={fecha_pedido} | fecha_entrega={fecha_entrega} | "
-        f"Valido={resultado} | Esperado={expected}"
+        f"Válido={resultado} | Esperado={expected}"
     )
 
 
@@ -107,13 +107,13 @@ def ejecutar_delivered_future_check(test: dict) -> tuple[bool, str]:
         fe        = datetime.strptime(fecha_entrega, "%Y-%m-%d")
         fecha_ref = datetime(2025, 1, 1)
     except ValueError as e:
-        return False, f"Formato de fecha invalido: {e}"
+        return False, f"Formato de fecha inválido: {e}"
 
     es_valido = not (estado == "entregado" and fe >= fecha_ref)
     ok        = es_valido == expected
     return ok, (
         f"estado={estado} | fecha_entrega={fecha_entrega} | "
-        f"Valido={es_valido} | Esperado={expected}"
+        f"Válido={es_valido} | Esperado={expected}"
     )
 
 def ejecutar_email_check(test: dict) -> tuple[bool, str]:
@@ -130,7 +130,7 @@ def ejecutar_email_check(test: dict) -> tuple[bool, str]:
     patron    = r"^[^@]+@[^@]+\.[^@]+"
     resultado = bool(re.match(patron, email))
     ok        = resultado == expected
-    return ok, f"Email='{email}' | Valido={resultado} | Esperado={expected}"
+    return ok, f"Email='{email}' | Válido={resultado} | Esperado={expected}"
 
 
 def ejecutar_positive_check(test: dict) -> tuple[bool, str]:
@@ -191,7 +191,7 @@ def run_fixture_tests(tests: list) -> list:
                 "type":        tipo,
                 "description": descripcion,
                 "passed":      None,
-                "detail":      f"Tipo '{tipo}' no soportado por el runner — pendiente de implementacion",
+                "detail":      f"Tipo '{tipo}' no soportado por el runner — pendiente de implementación",
             })
             continue
 

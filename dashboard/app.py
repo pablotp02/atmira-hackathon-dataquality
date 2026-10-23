@@ -76,7 +76,7 @@ def cargar_historial():
 
 def obtener_fecha_ultimo_run():
     if not os.path.exists(RESULTS_PATH):
-        return "Desconocida (no se encontro results.json)"
+        return "Desconocida (no se encontró results.json)"
     timestamp = os.path.getmtime(RESULTS_PATH)
     return datetime.fromtimestamp(timestamp).strftime("%d/%m/%Y %H:%M:%S")
 
@@ -115,20 +115,20 @@ def generar_pdf_informe(summary, log, results=None):
     story.append(Spacer(1, 10))
     story.append(Paragraph("Hackathon Atmira — Reto 03", styles["Heading2"]))
     story.append(Spacer(1, 6))
-    story.append(Paragraph(f"Fecha del ultimo analisis: <b>{fecha_analisis}</b>", styles["Normal"]))
+    story.append(Paragraph(f"Fecha del último análisis: <b>{fecha_analisis}</b>", styles["Normal"]))
     story.append(Spacer(1, 30))
 
     if metricas:
-        story.append(Paragraph("1. Resumen de deteccion", styles["Heading2"]))
+        story.append(Paragraph("1. Resumen de detección", styles["Heading2"]))
         story.append(Spacer(1, 8))
         datos_metricas = [
-            ["Metrica", "Valor"],
-            ["Total anomalias inyectadas", str(metricas.get("total_inyectadas", ""))],
+            ["Métrica", "Valor"],
+            ["Total anomalías inyectadas", str(metricas.get("total_inyectadas", ""))],
             ["Errores detectados",         str(metricas.get("errores_detectados_total", ""))],
             ["Tipos inyectados",           str(len(metricas.get("tipos_inyectados", {})))],
             ["Tipos detectados",           str(len(metricas.get("tipos_detectados", [])))],
             ["Tipos no detectados",        str(len(metricas.get("tipos_no_detectados", [])))],
-            ["Tasa de deteccion (%)",      str(metricas.get("tasa_deteccion_tipos", ""))],
+            ["Tasa de detección (%)",      str(metricas.get("tasa_deteccion_tipos", ""))],
         ]
         t = Table(datos_metricas, colWidths=[280, 180])
         t.setStyle(estilo_cabecera())
@@ -136,21 +136,21 @@ def generar_pdf_informe(summary, log, results=None):
         story.append(Spacer(1, 20))
 
     if metricas and metricas.get("deteccion_por_tipo"):
-        story.append(Paragraph("2. Deteccion por tipo de anomalia", styles["Heading2"]))
+        story.append(Paragraph("2. Detección por tipo de anomalía", styles["Heading2"]))
         story.append(Spacer(1, 8))
-        cab = [["Tipo de anomalia", "Cantidad inyectada", "Detectado"]]
+        cab = [["Tipo de anomalía", "Cantidad inyectada", "Detectado"]]
         filas_det = []
         for tipo, detalle in metricas["deteccion_por_tipo"].items():
             filas_det.append([
                 Paragraph(tipo, styles["Normal"]),
                 Paragraph(str(detalle["cantidad_inyectada"]), styles["Normal"]),
-                Paragraph("SI" if detalle["detectado"] else "NO", styles["Normal"]),
+                Paragraph("SÍ" if detalle["detectado"] else "NO", styles["Normal"]),
             ])
         t = Table(cab + filas_det, colWidths=[240, 120, 100])
         estilo = estilo_cabecera()
         for i, fila in enumerate(filas_det, start=1):
             detectado = fila[2].text if hasattr(fila[2], "text") else str(fila[2])
-            color_fondo = colors.HexColor("#1e7e34") if "SI" in detectado else colors.HexColor("#c0392b")
+            color_fondo = colors.HexColor("#1e7e34") if "SÍ" in detectado else colors.HexColor("#c0392b")
             estilo.add("BACKGROUND", (2, i), (2, i), color_fondo)
             estilo.add("TEXTCOLOR",  (2, i), (2, i), colors.white)
             estilo.add("FONTNAME",   (2, i), (2, i), "Helvetica-Bold")
@@ -163,7 +163,7 @@ def generar_pdf_informe(summary, log, results=None):
     if rules:
         story.append(Paragraph("3. Reglas generadas por el LLM", styles["Heading2"]))
         story.append(Spacer(1, 8))
-        cab   = [["Tipo", "Tabla", "Columna", "Descripcion"]]
+        cab   = [["Tipo", "Tabla", "Columna", "Descripción"]]
         filas = []
         for r in rules:
             filas.append([
@@ -178,7 +178,7 @@ def generar_pdf_informe(summary, log, results=None):
         story.append(Spacer(1, 20))
 
     if resultados:
-        story.append(Paragraph("4. Resultados de validacion por regla", styles["Heading2"]))
+        story.append(Paragraph("4. Resultados de validación por regla", styles["Heading2"]))
         story.append(Spacer(1, 8))
         cab   = [["Estado", "Tipo", "Tabla", "Errores", "Detalle"]]
         filas = []
@@ -217,7 +217,7 @@ def generar_pdf_informe(summary, log, results=None):
 
     story.append(PageBreak())
 
-    story.append(Paragraph("6. Anomalias inyectadas", styles["Heading2"]))
+    story.append(Paragraph("6. Anomalías inyectadas", styles["Heading2"]))
     story.append(Paragraph(f"Total: {log['total_anomalias']}", styles["Normal"]))
     story.append(Spacer(1, 10))
     cab   = [["Tipo", "Tabla", "Columna", "Fila ID"]]
@@ -237,9 +237,9 @@ def generar_pdf_informe(summary, log, results=None):
         fixture_results = results.get("fixture_results", [])
         if fixture_results:
             story.append(PageBreak())
-            story.append(Paragraph("7. Tests generados automaticamente por IA", styles["Heading2"]))
+            story.append(Paragraph("7. Tests generados automáticamente por IA", styles["Heading2"]))
             story.append(Paragraph(
-                "Tests de validacion de transformaciones generados por el LLM y ejecutados "
+                "Tests de validación de transformaciones generados por el LLM y ejecutados "
                 "contra funciones reales del pipeline.",
                 styles["Normal"]
             ))
@@ -280,21 +280,21 @@ def generar_pdf_informe(summary, log, results=None):
     return buffer
 
 with st.sidebar:
-    st.title("Data Quality")
+    st.title("Data Quality Guardian")
     st.caption("Hackathon Atmira — Reto 03")
     st.divider()
 
     pagina = st.radio(
-        "Navegacion",
+        "Navegación",
         options=[
             "Resumen",
             "Profiling del dataset",
-            "Anomalias inyectadas",
-            "Revision de reglas",
+            "Anomalías inyectadas",
+            "Revisión de reglas",
             "Reglas generadas",
             "Tests IA",
             "Estabilidad del sistema",
-            "Resultados y metricas",
+            "Resultados y métricas",
         ],
         label_visibility="collapsed",
     )
@@ -302,12 +302,12 @@ with st.sidebar:
     st.divider()
 
     st.markdown("**Ejecutar pipeline**")
-    st.caption("Regenera el dataset, inyecta anomalias y ejecuta la validacion completa.")
+    st.caption("Regenera el dataset, inyecta anomalías y ejecuta la validación completa.")
 
     regenerar = st.checkbox(
         "Generar dataset nuevo (seed aleatoria)",
         value=False,
-        help="Sin marcar: datos reproducibles con seed fija. Marcado: dataset completamente nuevo en cada ejecucion.",
+        help="Sin marcar: datos reproducibles con seed fija. Marcado: dataset completamente nuevo en cada ejecución.",
     )
 
     if st.button("Ejecutar pipeline completo", use_container_width=True, type="primary"):
@@ -317,7 +317,11 @@ with st.sidebar:
                 if regenerar:
                     seed_aleatoria = random.randint(1, 999999)
                     cmd.append(f"--seed={seed_aleatoria}")
-                result = subprocess.run(cmd, capture_output=True, text=True, cwd=BASE_DIR)
+                result = subprocess.run(
+                    cmd, capture_output=True, text=True, cwd=BASE_DIR,
+                    encoding="utf-8", errors="replace",
+                    env={**os.environ, "PYTHONIOENCODING": "utf-8"},
+                )
                 if result.returncode == 0:
                     if regenerar:
                         st.success(f"Pipeline ejecutado con dataset nuevo (seed={seed_aleatoria}).")
@@ -354,12 +358,12 @@ with st.sidebar:
 def pagina_resumen():
     st.title("Resumen del proyecto")
     st.markdown(
-        "Pipeline de deteccion de anomalias en datos de e-commerce usando IA generativa. "
-        "El sistema genera reglas de calidad automaticamente a partir del perfil estadistico "
+        "Pipeline de detección de anomalías en datos de e-commerce usando IA generativa. "
+        "El sistema genera reglas de calidad automáticamente a partir del perfil estadístico "
         "del dataset y las aplica para detectar errores antes de que lleguen a produccion."
     )
     fecha = obtener_fecha_ultimo_run()
-    st.caption(f"Ultimo pipeline ejecutado: {fecha}")
+    st.caption(f"Último pipeline ejecutado: {fecha}")
     st.divider()
     summary = cargar_summary()
     log     = cargar_injection_log()
@@ -370,20 +374,20 @@ def pagina_resumen():
         st.metric("Registros analizados", f"{filas:,}")
     with col2:
         total = log["total_anomalias"] if log else 0
-        st.metric("Anomalias inyectadas", total)
+        st.metric("Anomalías inyectadas", total)
     with col3:
         reglas = len(results["rules"]) if results else 0
         st.metric("Reglas generadas", reglas)
     with col4:
         tasa = results["metricas"]["tasa_deteccion_tipos"] if results else 0
-        st.metric("Tasa de deteccion", f"{tasa}%")
+        st.metric("Tasa de detección", f"{tasa}%")
 
 
 def pagina_profiling():
     st.title("Profiling del dataset")
     summary = cargar_summary()
     if summary is None:
-        st.warning("No se encontro summary.json. Ejecuta el pipeline primero.")
+        st.warning("No se encontró summary.json. Ejecuta el pipeline primero.")
         return
     tablas         = summary["tablas"]
     nombres_tablas = list(tablas.keys())
@@ -426,18 +430,18 @@ def pagina_profiling():
 
 
 def pagina_anomalias():
-    st.title("Anomalias inyectadas")
+    st.title("Anomalías inyectadas")
     log = cargar_injection_log()
     if log is None:
-        st.warning("No se encontro injection_log.json. Ejecuta el pipeline primero.")
+        st.warning("No se encontró injection_log.json. Ejecuta el pipeline primero.")
         return
     col1, col2 = st.columns(2)
-    col1.metric("Total anomalias inyectadas", log["total_anomalias"])
+    col1.metric("Total anomalías inyectadas", log["total_anomalias"])
     col2.metric("Tipos distintos", len(log["anomalias_por_tipo"]))
-    st.subheader("Anomalias por tipo")
+    st.subheader("Anomalías por tipo")
     df_tipos = pd.DataFrame(list(log["anomalias_por_tipo"].items()), columns=["tipo", "cantidad"]).set_index("tipo")
     st.bar_chart(df_tipos)
-    st.subheader("Detalle de anomalias")
+    st.subheader("Detalle de anomalías")
     df_detalle = pd.DataFrame(log["detalle"])
     columnas_orden     = ["tipo", "tabla", "columna", "fila_id", "valor_original", "valor_nuevo"]
     columnas_presentes = [c for c in columnas_orden if c in df_detalle.columns]
@@ -450,11 +454,11 @@ def pagina_anomalias():
 
 
 def pagina_revision_reglas():
-    st.title("Revision de reglas propuestas por la IA")
+    st.title("Revisión de reglas propuestas por la IA")
     st.markdown(
-        "La IA ha analizado el dataset y propone las siguientes reglas de validacion. "
-        "Marca o desmarca cada regla antes de ejecutar la validacion. "
-        "Solo se aplicaran las reglas que apruebes."
+        "La IA ha analizado el dataset y propone las siguientes reglas de validación. "
+        "Marca o desmarca cada regla antes de ejecutar la validación. "
+        "Solo se aplicarán las reglas que apruebes."
     )
     rules = cargar_rules_propuestas()
     if rules is None:
@@ -477,7 +481,7 @@ def pagina_revision_reglas():
             "tipo":        st.column_config.TextColumn("Tipo"),
             "tabla":       st.column_config.TextColumn("Tabla"),
             "columna":     st.column_config.TextColumn("Columna"),
-            "descripcion": st.column_config.TextColumn("Descripcion"),
+            "descripcion": st.column_config.TextColumn("Descripción"),
         },
         disabled=["tipo", "tabla", "columna", "descripcion"],
         use_container_width=True,
@@ -503,19 +507,19 @@ def pagina_revision_reglas():
             injection_log = json.load(f)
         from src.validation.run_rules import run_rules
         from src.evaluation.evaluation import evaluate
-        with st.spinner("Ejecutando validacion con las reglas seleccionadas..."):
+        with st.spinner("Ejecutando validación con las reglas seleccionadas..."):
             results            = run_rules(dfs_dirty, reglas_aprobadas)
             results_con_fallos = [r for r in results if r["errors"] > 0]
             metricas           = evaluate(injection_log, results_con_fallos)
         with open(RESULTS_PATH, "w", encoding="utf-8") as f:
             json.dump({"rules": reglas_aprobadas, "results": results, "metricas": metricas}, f, ensure_ascii=False, indent=2)
         st.cache_data.clear()
-        st.success(f"{n_aprobadas} reglas aplicadas. Tasa de deteccion: {metricas['tasa_deteccion_tipos']}%")
+        st.success(f"{n_aprobadas} reglas aplicadas. Tasa de detección: {metricas['tasa_deteccion_tipos']}%")
         st.divider()
         col1, col2, col3 = st.columns(3)
         col1.metric("Reglas aplicadas",   n_aprobadas)
         col2.metric("Errores detectados", metricas["errores_detectados_total"])
-        col3.metric("Tasa de deteccion",  f"{metricas['tasa_deteccion_tipos']}%")
+        col3.metric("Tasa de detección",  f"{metricas['tasa_deteccion_tipos']}%")
         filas_res = []
         for r in results:
             estado = "FALLO" if r["errors"] > 0 else "OK"
@@ -540,9 +544,9 @@ def pagina_reglas():
     col1, col2, col3 = st.columns(3)
     col1.metric("Reglas generadas", len(rules))
     col2.metric("Tablas cubiertas", tablas_cubiertas)
-    col3.metric("Tipos de validacion", tipos_distintos)
+    col3.metric("Tipos de validación", tipos_distintos)
     st.divider()
-    st.subheader("Reglas por tipo de validacion")
+    st.subheader("Reglas por tipo de validación")
     conteo_tipos = {}
     for r in rules:
         tipo = r.get("type", "desconocido")
@@ -556,13 +560,13 @@ def pagina_reglas():
     for tab, tabla in zip(tabs, tablas):
         with tab:
             reglas_tabla = [r for r in rules if r.get("tabla") == tabla]
-            filas = [{"Tipo": r.get("type", ""), "Columna": r.get("column") or r.get("column_after") or "—", "Descripcion": r.get("descripcion", "")} for r in reglas_tabla]
+            filas = [{"Tipo": r.get("type", ""), "Columna": r.get("column") or r.get("column_after") or "—", "Descripción": r.get("descripcion", "")} for r in reglas_tabla]
             st.dataframe(pd.DataFrame(filas), use_container_width=True, hide_index=True)
 
 
 def pagina_tests():
-    st.title("Tests generados automaticamente por IA")
-    st.markdown("El LLM genera automaticamente casos de prueba para validar la logica de las transformaciones ETL.")
+    st.title("Tests generados automáticamente por IA")
+    st.markdown("El LLM genera automáticamente casos de prueba para validar la lógica de las transformaciones ETL.")
     results = cargar_results()
     if results is None:
         st.warning("No se encontraron resultados. Ejecuta el pipeline primero.")
@@ -587,7 +591,7 @@ def pagina_tests():
     def renderizar_tests(tests_def, resultados_runner, titulo):
         st.subheader(titulo)
         if not tests_def:
-            st.caption("No hay tests en esta categoria.")
+            st.caption("No hay tests en esta categoría.")
             return
         nombres_runner = {r["name"]: r for r in resultados_runner}
         for t in tests_def:
@@ -623,15 +627,15 @@ def pagina_tests():
 
 
 def pagina_estabilidad():
-    st.title("Analisis de estabilidad del sistema")
-    st.markdown("Evalua si el LLM genera reglas consistentes entre ejecuciones. Un sistema estable genera siempre las mismas reglas independientemente del dataset.")
+    st.title("Análisis de estabilidad del sistema")
+    st.markdown("Evalúa si el LLM genera reglas consistentes entre ejecuciones. Un sistema estable genera siempre las mismas reglas independientemente del dataset.")
     historial = cargar_historial()
     if not historial:
         st.warning("No hay historial de ejecuciones. Ejecuta el pipeline al menos 3 veces.")
         return
     st.caption(f"Basado en {len(historial)} ejecuciones registradas.")
     if st.button("Analizar estabilidad con IA", type="primary"):
-        with st.spinner("El LLM esta analizando el historial de ejecuciones..."):
+        with st.spinner("El LLM está analizando el historial de ejecuciones..."):
             from src.analysis.stability_analysis import analizar_estabilidad
             resultado = analizar_estabilidad(historial)
         nivel = resultado.get("nivel_estabilidad", "alto")
@@ -642,10 +646,10 @@ def pagina_estabilidad():
         metricas = resultado.get("metricas", {})
         col1, col2, col3 = st.columns(3)
         col1.metric("Ejecuciones analizadas",    metricas.get("num_ejecuciones", 0))
-        col2.metric("Tasa de deteccion media",   f"{metricas.get('tasa_media', 0)}%")
-        col3.metric("Reglas media por ejecucion", metricas.get("reglas_media", 0))
+        col2.metric("Tasa de detección media",   f"{metricas.get('tasa_media', 0)}%")
+        col3.metric("Reglas media por ejecución", metricas.get("reglas_media", 0))
         st.divider()
-        st.subheader("Conclusion del analisis")
+        st.subheader("Conclusión del análisis")
         st.info(resultado.get("conclusion", ""))
         col1, col2 = st.columns(2)
         with col1:
@@ -653,7 +657,7 @@ def pagina_estabilidad():
             for p in resultado.get("puntos_fuertes", []):
                 st.success(p)
         with col2:
-            st.subheader("Areas de mejora")
+            st.subheader("Áreas de mejora")
             for a in resultado.get("areas_mejora", []):
                 st.warning(a)
         st.divider()
@@ -662,12 +666,12 @@ def pagina_estabilidad():
         df_freq = pd.DataFrame(list(frecuencias.items()), columns=["Tipo", "Frecuencia (%)"]).sort_values("Frecuencia (%)", ascending=False)
         st.dataframe(df_freq, use_container_width=True, hide_index=True)
         st.divider()
-        st.subheader("Recomendacion")
+        st.subheader("Recomendación")
         st.markdown(f"**{resultado.get('recomendacion', '')}**")
 
 
 def pagina_resultados():
-    st.title("Resultados y metricas")
+    st.title("Resultados y métricas")
     results = cargar_results()
     if results is None:
         st.warning("No se encontraron resultados. Ejecuta el pipeline primero.")
@@ -682,29 +686,29 @@ def pagina_resultados():
     color = "green" if tasa == 100.0 else "orange" if tasa >= 75.0 else "red"
     st.markdown(
         f"<h1 style='text-align:center; color:{color}; font-size:5rem;'>{tasa}%</h1>"
-        f"<p style='text-align:center; color:gray; font-size:1.2rem;'>Tasa de deteccion</p>",
+        f"<p style='text-align:center; color:gray; font-size:1.2rem;'>Tasa de detección</p>",
         unsafe_allow_html=True,
     )
     st.divider()
     col1, col2, col3, col4 = st.columns(4)
-    col1.metric("Anomalias inyectadas", total_inyectadas)
+    col1.metric("Anomalías inyectadas", total_inyectadas)
     col2.metric("Errores detectados",   errores_total)
     col3.metric("Tipos detectados",     f"{tipos_detectados} / {tipos_detectados + tipos_no_detect}")
     col4.metric("Tipos no detectados",  tipos_no_detect)
     st.divider()
-    st.subheader("Anomalias inyectadas vs detectadas por tipo")
+    st.subheader("Anomalías inyectadas vs detectadas por tipo")
     deteccion_por_tipo = metricas["deteccion_por_tipo"]
     filas_comparativa  = []
     for tipo, detalle in deteccion_por_tipo.items():
-        filas_comparativa.append({"Tipo de anomalia": tipo, "Inyectadas": detalle["cantidad_inyectada"], "Detectado": "SI" if detalle["detectado"] else "NO"})
+        filas_comparativa.append({"Tipo de anomalía": tipo, "Inyectadas": detalle["cantidad_inyectada"], "Detectado": "SÍ" if detalle["detectado"] else "NO"})
     df_comparativa = pd.DataFrame(filas_comparativa)
     def colorear_detectado(val):
-        if val == "SI":
+        if val == "SÍ":
             return "background-color: #1e7e34; color: white; font-weight: bold"
         return "background-color: #c0392b; color: white; font-weight: bold"
     st.dataframe(df_comparativa.style.applymap(colorear_detectado, subset=["Detectado"]), use_container_width=True, hide_index=True)
     st.divider()
-    st.subheader("Resultados de validacion por regla")
+    st.subheader("Resultados de validación por regla")
     filas_resultados = []
     for r in resultados:
         rule   = r["rule"]
@@ -723,16 +727,16 @@ def pagina_resultados():
             st.warning(f"Tipo no detectado: {tipo}")
     else:
         st.divider()
-        st.success("El sistema detecto el 100% de los tipos de anomalias inyectadas.")
+        st.success("El sistema detectó el 100% de los tipos de anomalías inyectadas.")
 
 
 if pagina == "Resumen":
     pagina_resumen()
 elif pagina == "Profiling del dataset":
     pagina_profiling()
-elif pagina == "Anomalias inyectadas":
+elif pagina == "Anomalías inyectadas":
     pagina_anomalias()
-elif pagina == "Revision de reglas":
+elif pagina == "Revisión de reglas":
     pagina_revision_reglas()
 elif pagina == "Reglas generadas":
     pagina_reglas()
@@ -740,5 +744,5 @@ elif pagina == "Tests IA":
     pagina_tests()
 elif pagina == "Estabilidad del sistema":
     pagina_estabilidad()
-elif pagina == "Resultados y metricas":
+elif pagina == "Resultados y métricas":
     pagina_resultados()

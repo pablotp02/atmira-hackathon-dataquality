@@ -69,7 +69,7 @@ def inyectar_email_invalido(clientes: pd.DataFrame, log: list, n: int):
         nuevo = original.replace("@", "").replace(".com", "").replace(".net", "").replace(".org", "")
         clientes.at[idx, "email"] = nuevo
         registrar(log, "email_formato_invalido", "clientes", "email", cid,
-                  original, nuevo, "Email sin @ ni dominio valido")
+                  original, nuevo, "Email sin @ ni dominio válido")
     return clientes
 
 
@@ -92,7 +92,7 @@ def inyectar_cantidad_cero(lineas: pd.DataFrame, log: list, n: int):
         original = lineas.at[idx, "cantidad"]
         lineas.at[idx, "cantidad"] = 0
         registrar(log, "cantidad_cero", "lineas_pedido", "cantidad", lid,
-                  original, 0, "Cantidad 0 en linea de pedido")
+                  original, 0, "Cantidad 0 en línea de pedido")
     return lineas
 
 
@@ -136,7 +136,7 @@ def inyectar_total_incorrecto(pedidos: pd.DataFrame, log: list, n: int):
         registrar(log, "total_pedido_incorrecto", "pedidos", "total", pid,
                   original, nuevo,
                   f"Total del pedido modificado ({original} -> {nuevo}). "
-                  f"No coincide con la suma de sus lineas.")
+                  f"No coincide con la suma de sus líneas.")
     return pedidos
 
 
@@ -153,7 +153,7 @@ def inyectar_precio_linea_distinto(lineas: pd.DataFrame, productos: pd.DataFrame
         lineas.at[idx, "precio_unitario"] = nuevo
         registrar(log, "precio_linea_distinto_catalogo", "lineas_pedido", "precio_unitario", lid,
                   original, nuevo,
-                  f"Precio en linea ({nuevo}) distinto al catalogo ({precio_catalogo}) "
+                  f"Precio en línea ({nuevo}) distinto al catálogo ({precio_catalogo}) "
                   f"para producto_id={pid}. Sin descuento registrado.")
     return lineas
 
@@ -259,7 +259,7 @@ def inyectar_outlier_precio_categoria(productos: pd.DataFrame, log: list, n: int
         productos.at[idx, "precio_unitario"] = nuevo
         registrar(log, "outlier_precio_categoria", "productos", "precio_unitario",
                   int(producto_id), original, nuevo,
-                  f"Precio {nuevo} es outlier estadistico para su categoria "
+                  f"Precio {nuevo} es outlier estadístico para su categoría "
                   f"(media={round(media,2)}, std={round(std,2)})")
 
     return productos
@@ -280,23 +280,23 @@ def main(seed=99):
 
     log = []
 
-    print("Inyectando anomalias triviales...")
+    print("Inyectando anomalías triviales...")
     clientes  = inyectar_email_invalido(clientes, log, NUM_ANOMALIAS["email_formato_invalido"])
     productos = inyectar_precio_negativo(productos, log, NUM_ANOMALIAS["precio_negativo"])
     lineas    = inyectar_cantidad_cero(lineas, log, NUM_ANOMALIAS["cantidad_cero"])
     pedidos   = inyectar_nulo_obligatorio(pedidos, log, NUM_ANOMALIAS["nulo_en_campo_obligatorio"])
 
-    print("Inyectando anomalias de contexto de negocio...")
+    print("Inyectando anomalías de contexto de negocio...")
     pedidos = inyectar_fecha_entrega_anterior(pedidos, log, NUM_ANOMALIAS["fecha_entrega_anterior_pedido"])
     pedidos = inyectar_total_incorrecto(pedidos, log, NUM_ANOMALIAS["total_pedido_incorrecto"])
     lineas  = inyectar_precio_linea_distinto(lineas, productos, log, NUM_ANOMALIAS["precio_linea_distinto_catalogo"])
     pedidos = inyectar_entregado_fecha_futura(pedidos, log, NUM_ANOMALIAS["pedido_entregado_fecha_futura"])
 
-    print("Inyectando anomalias avanzadas (cruce de tablas)...")
+    print("Inyectando anomalías avanzadas (cruce de tablas)...")
     productos = inyectar_stock_superado(productos, lineas, log, NUM_ANOMALIAS["stock_superado"], seed=seed)
     clientes  = inyectar_fecha_registro_posterior_pedido(clientes, pedidos, log, NUM_ANOMALIAS["fecha_registro_posterior_pedido"])
 
-    print("Inyectando anomalias estadisticas...")
+    print("Inyectando anomalías estadísticas...")
     productos = inyectar_outlier_precio_categoria(productos, log, NUM_ANOMALIAS["outlier_precio_categoria"])
 
     print("Guardando CSVs sucios...")
@@ -307,9 +307,9 @@ def main(seed=99):
 
     registro = {
         "descripcion": (
-            "Registro de anomalias inyectadas en el dataset. "
+            "Registro de anomalías inyectadas en el dataset. "
             "Cada entrada representa un error introducido de forma controlada. "
-            "Este archivo es la verdad fundamental para el modulo de evaluacion."
+            "Este archivo es la verdad fundamental para el módulo de evaluación."
         ),
         "total_anomalias": len(log),
         "anomalias_por_tipo": {},
@@ -325,7 +325,7 @@ def main(seed=99):
         json.dump(registro, f, ensure_ascii=False, indent=2)
 
     print("\nDataset sucio generado en data/dirty/")
-    print(f"Total de anomalias inyectadas: {len(log)}")
+    print(f"Total de anomalías inyectadas: {len(log)}")
     print("\nDesglose por tipo:")
     for tipo, cantidad in registro["anomalias_por_tipo"].items():
         print(f"  {tipo}: {cantidad}")

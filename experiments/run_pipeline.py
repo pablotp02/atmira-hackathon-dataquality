@@ -31,7 +31,7 @@ def main():
     with open(log_path, "r", encoding="utf-8") as f:
         injection_log = json.load(f)
 
-    print(f"Anomalias inyectadas: {injection_log['total_anomalias']}")
+    print(f"Anomalías inyectadas: {injection_log['total_anomalias']}")
 
     # 3. Cargar perfil del dataset para el LLM
     summary_path = os.path.join(
@@ -72,7 +72,7 @@ def main():
     for rule in rules:
         print(f"  [{rule.get('type')}] {rule.get('tabla')}.{rule.get('column', '')} - {rule.get('descripcion', '')}")
 
-    print("\n=== RESULTADOS VALIDACION ===")
+    print("\n=== RESULTADOS VALIDACIÓN ===")
     for r in results:
         estado = "FALLO" if r["errors"] > 0 else "OK"
         print(f"  [{estado}] {r['rule'].get('type')} - {r.get('detalle', '')}")

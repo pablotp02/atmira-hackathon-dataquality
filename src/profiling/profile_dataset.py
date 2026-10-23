@@ -122,7 +122,7 @@ def generar_html(df: pd.DataFrame, resumen: dict, nombre: str, ruta: str):
   <thead>
     <tr>
       <th>Columna</th><th>Tipo</th><th>Nulos</th>
-      <th>Valores unicos</th><th>Estadisticas</th>
+      <th>Valores únicos</th><th>Estadísticas</th>
     </tr>
   </thead>
   <tbody>{filas_resumen}

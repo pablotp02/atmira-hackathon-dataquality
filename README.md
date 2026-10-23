@@ -7,7 +7,7 @@ generar automáticamente reglas de calidad y casos de prueba de transformaciones
 validar ambos antes de que los datos lleguen a producción.
 
 > Equipo: Pablo Tovar y Juan Torres — estudiantes de informática  
-> Hackathon de Atmira, 22 junio – 10 julio 2025
+> Hackathon de Atmira, 22 junio – 10 julio 2026
 
 ---
 
